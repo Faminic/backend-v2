@@ -23,8 +23,8 @@ function create_payment(name, price, callback) {
         intent: 'sale',
         payer: {payment_method: 'paypal'},
         redirect_urls: {
-            return_url: 'http://localhost:8080/paypal/ok',
-            cancel_url: 'http://localhost:8080/paypal/cancel',
+            return_url: 'http://localhost:5000/api/paypal/ok',
+            cancel_url: 'http://localhost:5000/api/paypal/cancel',
         },
         transactions: [{
             description: `PVCC: ${name}`,

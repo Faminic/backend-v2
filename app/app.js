@@ -17,9 +17,9 @@ local_app.prototype.init = function (app) {
     app.use(express.urlencoded({extended: false}));
 
     // routes
-    app.use('/contact-us', require('./routes/contact-us'));
-    app.use('/paypal',     require('./routes/paypal'));
-    app.use('/booking',    require('./routes/booking'));
+    app.use('/api/contact-us', require('./routes/contact-us'));
+    app.use('/api/paypal',     require('./routes/paypal'));
+    app.use('/api/booking',    require('./routes/booking'));
 }
 
 module.exports = new local_app()
