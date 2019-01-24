@@ -11,15 +11,20 @@ const local_app = function () {}
 // *	@return {nothing}
 // * ———————————————————————————————————————————————————————— * //
 local_app.prototype.init = function (app) {
+    // Make sure that we're registering middleware and routes into
+    // our router, otherwise we may interfere with the admin interface.
+    const router = new express.Router();
     // middleware
     app.use(morgan('dev'));
-    app.use(express.json());
-    app.use(express.urlencoded({extended: false}));
+
+    router.use(express.json());
+    router.use(express.urlencoded({extended: false}));
 
     // routes
-    app.use('/api/contact-us', require('./routes/contact-us'));
-    app.use('/api/paypal',     require('./routes/paypal'));
-    app.use('/api/booking',    require('./routes/booking'));
+    router.use('/contact-us', require('./routes/contact-us'));
+    router.use('/paypal',     require('./routes/paypal'));
+    router.use('/booking',    require('./routes/booking'));
+    app.use('/api', router);
 }
 
 module.exports = new local_app()
