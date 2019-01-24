@@ -9,6 +9,12 @@
 	"author": "author goes here",
 	"license": "MIT",
 	"dependencies": {
-		"enduro": "*"
+		"enduro": "*",
+		"express": "^4.16.4",
+		"googleapis": "^36.0.0",
+		"moment": "^2.24.0",
+		"morgan": "^1.9.1",
+		"nodemailer": "^5.1.1",
+		"paypal-rest-sdk": "^1.8.1"
 	}
 }

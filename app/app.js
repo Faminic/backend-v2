@@ -1,3 +1,6 @@
+const express = require('express');
+const morgan = require('morgan');
+
 const local_app = function () {}
 
 // * ———————————————————————————————————————————————————————— * //
@@ -8,8 +11,15 @@ const local_app = function () {}
 // *	@return {nothing}
 // * ———————————————————————————————————————————————————————— * //
 local_app.prototype.init = function (app) {
-	// express app available here
-	// don't forget these routes will be available on production server server (defaults to localhost:5000)
+    // middleware
+    app.use(morgan('dev'));
+    app.use(express.json());
+    app.use(express.urlencoded({extended: false}));
+
+    // routes
+    app.use('/contact-us', require('./routes/contact-us'));
+    app.use('/paypal',     require('./routes/paypal'));
+    app.use('/booking',    require('./routes/booking'));
 }
 
 module.exports = new local_app()
