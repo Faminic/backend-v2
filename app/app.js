@@ -16,7 +16,6 @@ local_app.prototype.init = function (app) {
     const router = new express.Router();
     // middleware
     app.use(morgan('dev'));
-
     router.use(express.json());
     router.use(express.urlencoded({extended: false}));
 

@@ -22,6 +22,12 @@ function within_closing_times(venue, m) {
 }
 
 
+function is_valid_venue(venue) {
+    return closing_info.hasOwnProperty(venue);
+}
+
+
 module.exports = {
     within_closing_times,
+    is_valid_venue,
 };

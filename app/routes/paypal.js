@@ -28,7 +28,7 @@ router.get('/ok', (req, res) => {
     }
 
     const today = moment().startOf('day');
-    calendar.findLock(calendar.auth, {
+    calendar.findLock({
         start: utils.momentToCalendarDate(today),
         end:   utils.momentToCalendarDate(today.add(1, 'month')),
         predicate: (_, d) => d.token === token && d.payment_id == paymentId,
@@ -43,23 +43,19 @@ router.get('/ok', (req, res) => {
         const desc = JSON.parse(event.description);
         paypal.execute_payment(paymentId, PayerID, (err, payment) => {
             if (err) throw err;
-            calendar.addSlot(
-                calendar.ids[event.summary],
-                calendar.auth,
-                {
-                    start: event.start,
-                    end:   event.end,
-                    summary: event.summary,
-                    description: `Name: ${desc.details.name}\nPhone Number: ${desc.details.phone_number}`
-                },
-                (err, resource) => {
-                    if (err) throw err;
-                    // delete paypal lock from calendar
-                    calendar.deleteLock(calendar.auth, event.id, (err) => err && console.error(err));
-                    res.write("Payment approved.");
-                    res.end();
-                }
-            );
+            const slotEvent = {
+                start: event.start,
+                end:   event.end,
+                summary: event.summary,
+                description: `Name: ${desc.details.name}\nPhone Number: ${desc.details.phone_number}`
+            };
+            calendar.addSlot(slotEvent, (err, resource) => {
+                if (err) throw err;
+                // delete paypal lock from calendar
+                calendar.deleteLock(event.id, (err) => err && console.error(err));
+                res.write("Payment approved.");
+                res.end();
+            });
         });
     });
 });
@@ -75,13 +71,13 @@ router.get('/cancel', (req, res) => {
     }
     // find + delete paypal lock from calendar
     const today = moment().startOf('day');
-    calendar.findLock(calendar.auth, {
+    calendar.findLock({
         start: utils.momentToCalendarDate(today),
         end:   utils.momentToCalendarDate(today.add(1, 'month')),
         predicate: (_, d) => d.token === token,
     }, (err, event) => {
         if (event) {
-            calendar.deleteLock(calendar.auth, event.id, (err) => err && console.error(err));
+            calendar.deleteLock(event.id, (err) => err && console.error(err));
         }
         res.write("Payment cancelled");
         res.end();

@@ -2,12 +2,9 @@ const {google} = require('googleapis');
 const moment = require('moment');
 const calendar = google.calendar('v3');
 const privatekey = require('./keys/privatekey.json');
+
 const PAYPAL_ID = '1mlpohc4b7q3ujqvpndg27vna4@group.calendar.google.com'; // paypal calendar
-
-
-const IDS = {
-    astro_turf: 'tur9s2qokdfi7rs2056o84hgms@group.calendar.google.com',
-};
+const MAIN_ID   = 'durhamredthunder2018@gmail.com'; // main calendar
 
 
 function connect() {
@@ -25,51 +22,41 @@ function connect() {
         }
         console.log('API access authenticated');
         calendar.calendarList.list({auth: jwtClient}, (a, b) => {
-            console.log(a);
-            b.data.items.forEach(cal => {
-                console.log(cal.id, cal.summary);
-            });
+            b.data.items.forEach(cal => console.log(cal.id, cal.summary));
         });
     });
 
     return jwtClient;
 }
 
-// auth is the jwtClient object returned by connect()
+const AUTH = connect();
+
 // resource can have start, end, summary, description and id
 // start and end should be like:
 //   { dateTime: 'string', timeZone: 'string' }
-function addLock(auth, resource, callback) {
-    addSlot(PAYPAL_ID, auth, resource, callback);
-}
-
-function addSlot(calendarId, auth, resource, callback) {
+function addEvent(calendarId, resource, callback) {
     calendar.events.insert({
         calendarId,
-        auth,
+        auth: AUTH,
         resource,
     }, callback);
 }
 
-function deleteLock(auth, eventId, callback) {
-    deleteSlot(PAYPAL_ID, auth, eventId, callback);
-}
 
-
-function deleteSlot(calendarId, auth, eventId, callback) {
+function deleteEvent(calendarId, eventId, callback) {
     calendar.events.delete({
         calendarId,
-        auth,
+        auth: AUTH,
         eventId,
     }, callback);
 }
 
 
-function listEvents(calendarId, auth, query, callback) {
+function listEvents(calendarId, query, callback) {
     let events = [];
     let params = {
         calendarId,
-        auth,
+        auth: AUTH,
         timeMin: query.start,
         timeMax: query.end,
         maxResults: 2500,
@@ -91,19 +78,24 @@ function listEvents(calendarId, auth, query, callback) {
 }
 
 
-function findLock(auth, query, callback) {
+function findLock(query, callback) {
     const og = query.predicate || (() => true);
     const timeout = moment().subtract(15, 'minutes');
     query.predicate = (event) =>
         moment(event.updated).isAfter(timeout) &&
             og(event, JSON.parse(event.description));
-    return findFirst(PAYPAL_ID, auth, query, callback);
+    return findFirst(PAYPAL_ID, query, callback);
 }
 
 
-function findFirst(calendarId, auth, query, callback) {
+function findSlot(query, callback) {
+    return findFirst(MAIN_ID, query, callback);
+}
+
+
+function findFirst(calendarId, query, callback) {
     query.predicate = query.predicate || (() => true);
-    listEvents(calendarId, auth, query, (err, events) => {
+    listEvents(calendarId, query, (err, events) => {
         if (err) {
             callback(err, null);
             return;
@@ -114,13 +106,11 @@ function findFirst(calendarId, auth, query, callback) {
 }
 
 module.exports = {
-    auth: connect(),
-    ids: IDS,
     PAYPAL_ID,
     findLock,
-    findFirst,
-    addLock,
-    addSlot,
-    deleteLock,
+    findSlot,
+    addLock: (resource, callback) => addEvent(PAYPAL_ID, resource, callback),
+    addSlot: (resource, callback) => addEvent(MAIN_ID, resource, callback),
+    deleteLock: (eventId, callback) => deleteEvent(PAYPAL_ID, eventId, callback),
     listEvents,
 };

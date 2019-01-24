@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
         || !details.name
         || !details.phone_number
         || !venue
-        || !calendar.ids[venue]
+        || !booking_info.is_valid_venue(venue)
         || !booking_info.within_closing_times(venue, start)
         || !booking_info.within_closing_times(venue, end)) {
         res.status(400).end();
@@ -39,27 +39,25 @@ router.post('/', (req, res) => {
 
     // check first if someone else is trying to book
     // the same slot.
-    calendar.findLock(calendar.auth, {
+    calendar.findLock({
         start: start_date,
         end:   end_date,
         predicate: (event) => event.summary === venue,
     }, (err, event) => {
         if (err) throw err;
-        if (event) {
-            res.status(400).end();
-            return;
-        }
+        if (event) return res.status(400).end();
         // now check if there is a booking in place
-        calendar.findFirst(calendar.ids[venue], calendar.auth, {
+        calendar.findSlot({
             start: start_date,
             end:   end_date,
+            predicate: (event) => event.summary === venue,
         }, (err, event) => {
             if (err) throw err;
             if (event) return res.status(400).end();
             // ok, lock + redirect to payment
             paypal.create_payment(`${venue} (${duration/2} hours)`, price, (err, payment, info) => {
                 if (err) throw err;
-                calendar.addLock(calendar.auth, {
+                calendar.addLock({
                     start:   {dateTime: start_date, timeZone: 'Europe/London'},
                     end:     {dateTime: end_date,   timeZone: 'Europe/London'},
                     summary: venue,
