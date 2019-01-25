@@ -1,0 +1,54 @@
+{{#> layout}}
+<div class="jumbotron jumbotron-fluid" style="background-size: cover; background-position: center; padding: 10em; background-image: url({{banner}})"></div>
+<div class="container">
+  <h1>What's On</h1>
+  <p>
+    Whether your looking for sports and fitness or adult education opportunities,
+    our weekly programme offers a large variety of activities and sessions for all.
+
+  {{#whatsOnCalendar}}
+  <h2>Children & Young People</h2>
+  <table class="whats-on-table">
+    <tr>
+    {{#each this.young.days}}
+      <th>{{this}}</th>
+    {{/each}}
+    </tr>
+    {{#each this.young.rows}}
+    <tr>
+      {{#each this}}
+      <td class="activity-slot">
+        {{#if this.name}}
+          <span class='activity-name'><a href='{{this.link}}'>{{this.name}}</a></span>
+          <span class='activity-time'>{{this.start}} - {{this.end}}</span>
+        {{/if}}
+      </td>
+      {{/each}}
+    </tr>
+    {{/each}}
+  </table>
+
+  <p>
+  <h2>Adult Activities</h2>
+  <table class='whats-on-table'>
+    <tr>
+    {{#each this.adult.days}}
+      <th>{{this}}</th>
+    {{/each}}
+    </tr>
+    {{#each this.adult.rows}}
+    <tr>
+      {{#each this}}
+      <td class="activity-slot">
+        {{#if this.name}}
+          <span class='activity-name'><a href='{{this.link}}'>{{this.name}}</a></span>
+          <span class='activity-time'>{{this.start}} - {{this.end}}</span>
+        {{/if}}
+      </td>
+      {{/each}}
+    </tr>
+    {{/each}}
+  </table>
+  {{/whatsOnCalendar}}
+</div>
+{{/layout}}

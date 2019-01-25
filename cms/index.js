@@ -1,3 +1,3 @@
 ({
-	text: 'Hello World, hope you\'re listening'
+	text: 'Hello World, hope you\'re listening',
 })

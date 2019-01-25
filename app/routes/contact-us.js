@@ -28,7 +28,7 @@ ${req.body.query}`
             console.error(error);
         }
     });
-    res.redirect('/contact-us');
+    res.json({});
 });
 
 
