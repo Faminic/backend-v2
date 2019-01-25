@@ -9,9 +9,12 @@
 	"author": "author goes here",
 	"license": "MIT",
 	"dependencies": {
+		"bluebird": "^3.5.3",
 		"enduro": "*",
+		"enduro_quill": "^1.0.6",
 		"express": "^4.16.4",
 		"googleapis": "^36.0.0",
+		"lodash": "^4.17.11",
 		"moment": "^2.24.0",
 		"morgan": "^1.9.1",
 		"nodemailer": "^5.1.1",

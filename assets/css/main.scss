@@ -50,3 +50,27 @@
   cursor: pointer;
   background: rgba(0, 0, 0, 80%);
 }
+
+.activity-slot p { margin: 0; padding: 0; }
+.activity-slot .activity-name { display: block; font-size: 1.25em; }
+.activity-slot .activity-time { display: block; color: #666; }
+.whats-on-table th {
+    font-size: 1.25em;
+    background-color: #333;
+    color: #FFF;
+    border: 1px solid #666;
+    text-align: center;
+    padding: 0.25em 0;
+}
+
+.whats-on-table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.whats-on-table td {
+    text-align: center;
+    border: 1px solid #666;
+    padding: 1em 0.5em 2em 0.5em;
+}
