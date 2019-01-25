@@ -1,82 +1,52 @@
 @import 'variables/*';
 
-body {
-	background-color: $black;
-	color: $white;
-	font-family: 'Lato', sans-serif;
-	font-weight: 200;
-	padding: 0;
-	margin: 0;
+.banner {
+  text-transform: uppercase;
+  font-variant: all-small-caps;
+  font-weight: bold;
+  background: $yellow;
+  padding: 1em;
+  font-size: 2em;
+  text-align: center;
 }
 
-.center_block {
-	text-align: center;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+.navbar {
+  border-top: 5px solid $yellow;
+}
+.navbar .nav-item {
+  text-transform: uppercase;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+#book-now-button {
+  text-transform: uppercase;
+  background-color: $yellow;
+  padding: 1em 2em;
+  display: inline;
+  border: 0;
+}
+#book-now-button:hover {
+  cursor: pointer;
 }
 
-.bottom_block {
-	text-align: center;
-	position: absolute;
-	bottom: 10px;
-	left: 50%;
-	transform: translateX(-50%);
+.carousel-caption {
+  background: rgba(0, 0, 0, 60%);
+  border-left: 5px solid $yellow;
 }
 
-.screen {
-	height: 100vh;
-	position: relative;
+.carousel-caption h5 { text-transform: uppercase; color: #FFF; font-size: 2em; }
+.carousel-caption p { color: #FFF; font-size: 1.1em; }
 
-	&.half {
-		height: 50vh;
-	}
-
-	&.color1 {
-		background-color: $color1;
-	}
-
-	&.color2 {
-		background-color: $color2;
-	}
+.rtd-buttons button {
+  font-variant: small-caps;
+  background: rgba(0, 0, 0, 50%);
+  color: #FFF;
+  border: 2px solid $yellow;
+  padding: 0.5em 2em;
+  margin: 0 1em;
 }
 
-// animations
-.vertical_pulsate {
-	animation: vertical_pulsate 3s infinite;
-}
-
-@keyframes vertical_pulsate {
-	0% { transform: translate(-50%, 0px); }
-	80% { transform: translate(-50%, 0px); }
-	85% { transform: translate(-50%, 10px); }
-	90% { transform: translate(-50%, 0px); }
-	95% { transform: translate(-50%, 10px); }
-	100% { transform: translate(-50%, 0px); }
-}
-
-// typography
-p {
-	font-size: 20px;
-	margin-bottom: 10px;
-	margin-top: 0px;
-}
-
-a {
-	color: $white;
-}
-
-.huge {
-	font-size: 75px;
-	font-weight: 100;
-}
-
-// lists
-ul {
-	text-align: left;
-}
-
-li {
-	list-style-type: none;
+.rtd-buttons button:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 80%);
 }
