@@ -3,7 +3,7 @@
 		Facility:{
 			Relative_Link:"",
 			Image:"",
-			$Image_type:"Image",
+			$Image_type: "image",
 			Facility_Name:""
 		}
 	}
