@@ -1,0 +1,21 @@
+{{#> layout}}
+<div class="jumbotron jumbotron-fluid" style="background-size: cover; background-position: center; padding: 10em; background-image: url({{banner}})"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md">
+      <h1>{{Title}}</h1>
+
+      {{#each Paragraph}}
+        <h5>
+          <strong>{{this.title}}</strong>
+        </h5>
+        <p>
+          {{this.text}} <a href="/{{this.linkSrc}}">{{this.textToBeLinked}}</a>
+        </p>
+      {{/each}}
+
+    </div>
+    {{>facebook}}
+  </div>
+</div>
+{{/layout}}
