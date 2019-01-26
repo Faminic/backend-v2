@@ -34,84 +34,78 @@ const AUTH = connect();
 // resource can have start, end, summary, description and id
 // start and end should be like:
 //   { dateTime: 'string', timeZone: 'string' }
-function addEvent(calendarId, resource, callback) {
-    calendar.events.insert({
+function addEvent(calendarId, resource) {
+    return calendar.events.insert({
         calendarId,
         auth: AUTH,
         resource,
-    }, callback);
+    });
 }
 
 
-function deleteEvent(calendarId, eventId, callback) {
-    calendar.events.delete({
+function deleteEvent(calendarId, eventId) {
+    return calendar.events.delete({
         calendarId,
         auth: AUTH,
         eventId,
-    }, callback);
-}
-
-
-function listEvents(calendarId, query, callback) {
-    let events = [];
-    let params = {
-        calendarId,
-        auth: AUTH,
-        timeMin: query.start,
-        timeMax: query.end,
-        maxResults: 2500,
-    };
-    const loop = () => calendar.events.list(params, (err, res) => {
-        if (err) {
-            callback(err, events);
-            return;
-        }
-        events = events.concat(res.data.items);
-        if (res.data.nextPageToken) {
-            params.pageToken = res.data.nextPageToken;
-            loop();
-        } else {
-            callback(null, events);
-        }
     });
-    loop();
 }
 
 
-function findLock(query, callback) {
+function listEvents(calendarId, query) {
+    const pred = query.predicate || (() => true);
+    return new Promise((resolve, reject) => {
+        let events = [];
+        let params = {
+            calendarId,
+            auth: AUTH,
+            timeMin: query.start,
+            timeMax: query.end,
+            maxResults: 2500,
+        };
+        const loop = () => calendar.events.list(params, (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            events = events.concat(res.data.items);
+            if (res.data.nextPageToken) {
+                params.pageToken = res.data.nextPageToken;
+                loop();
+            } else {
+                resolve(events.filter(pred));
+            }
+        });
+        loop();
+    });
+}
+
+
+function augment_lock_query(query) {
+    const q2 = Object.assign({}, query);
     const og = query.predicate || (() => true);
     const timeout = moment().subtract(15, 'minutes');
-    query.predicate = (event) =>
+    q2.predicate = (event) =>
         moment(event.updated).isAfter(timeout) &&
             og(event, JSON.parse(event.description));
-    return findFirst(PAYPAL_ID, query, callback);
+    return q2;
 }
 
 
-function findSlot(query, callback) {
-    return findFirst(MAIN_ID, query, callback);
+function findFirst(calendarId, query) {
+    const pred = query.predicate || (() => true);
+    return listEvents(calendarId, query).then(events => events.find(e => pred(e)));
 }
 
-
-function findFirst(calendarId, query, callback) {
-    query.predicate = query.predicate || (() => true);
-    listEvents(calendarId, query, (err, events) => {
-        if (err) {
-            callback(err, null);
-            return;
-        }
-        const event = events.find((event) => query.predicate(event));
-        callback(null, event);
-    });
-}
 
 module.exports = {
     PAYPAL_ID,
     MAIN_ID,
-    findLock,
-    findSlot,
-    addLock: (resource, callback) => addEvent(PAYPAL_ID, resource, callback),
-    addSlot: (resource, callback) => addEvent(MAIN_ID, resource, callback),
-    deleteLock: (eventId, callback) => deleteEvent(PAYPAL_ID, eventId, callback),
-    listEvents,
+    addLock:    (resource) => addEvent(PAYPAL_ID, resource),
+    addSlot:    (resource) => addEvent(MAIN_ID, resource),
+    deleteLock: (eventId) => deleteEvent(PAYPAL_ID, eventId),
+    listLocks:  (query) => listEvents(PAYPAL_ID, augment_lock_query(query)),
+    listSlots:  (query) => listEvents(MAIN_ID, query),
+    findLock:   (query) => findFirst(PAYPAL_ID, augment_lock_query(query)),
+    findSlot:   (query) => findFirst(MAIN_ID, query),
 };

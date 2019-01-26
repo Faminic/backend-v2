@@ -20,22 +20,19 @@ router.get('/taken', (req, res) => {
     const end_date = utils.momentToCalendarDate(end);
     let times = [];
 
-    calendar.listEvents(calendar.PAYPAL_ID, {
+    const query = {
         start: start_date,
         end:   end_date,
         predicate: (event) => event.summary === venue,
-    }, (err, locks) => {
-        if (err) throw err;
-        times = times.concat(locks.map(x => [x.start.dateTime, x.end.dateTime]));
-        calendar.listEvents(calendar.MAIN_ID, {
-            start: start_date,
-            end:   end_date,
-            predicate: (event) => event.summary === venue,
-        }, (err, events) => {
-            if (err) throw err;
-            times = times.concat(events.map(x => [x.start.dateTime, x.end.dateTime]));
-            res.json(times);
-        });
+    };
+
+    Promise.all([
+        calendar.listLocks(query),
+        calendar.listSlots(query),
+    ]).then(([locks, events]) => {
+        res.json(locks.concat(events).map(x => [x.start.dateTime, x.end.dateTime]));
+    }).catch(err => {
+        throw err;
     });
 });
 
@@ -69,42 +66,38 @@ router.post('/', (req, res) => {
 
     const start_date = utils.momentToCalendarDate(start);
     const end_date   = utils.momentToCalendarDate(end);
-
-    // check first if someone else is trying to book
-    // the same slot.
-    calendar.findLock({
+    const query = {
         start: start_date,
         end:   end_date,
         predicate: (event) => event.summary === venue,
-    }, (err, event) => {
-        if (err) throw err;
-        if (event) return res.status(400).end();
-        // now check if there is a booking in place
-        calendar.findSlot({
-            start: start_date,
-            end:   end_date,
-            predicate: (event) => event.summary === venue,
-        }, (err, event) => {
+    };
+
+    // check if someone else is trying to book the same slot, or if
+    // the slot is already booked.
+    Promise.all([
+        calendar.findLock(query),
+        calendar.findSlot(query),
+    ]).then(([a, b]) => {
+        if (a || b) {
+            res.status(400).end();
+            return;
+        }
+        paypal.create_payment(`${venue} (${duration/2} hours)`, price, (err, payment, info) => {
             if (err) throw err;
-            if (event) return res.status(400).end();
-            // ok, lock + redirect to payment
-            paypal.create_payment(`${venue} (${duration/2} hours)`, price, (err, payment, info) => {
-                if (err) throw err;
-                calendar.addLock({
-                    start:   {dateTime: start_date, timeZone: 'Europe/London'},
-                    end:     {dateTime: end_date,   timeZone: 'Europe/London'},
-                    summary: venue,
-                    description: JSON.stringify({
-                        payment_id: payment.id,
-                        token:      info.token,
-                        details:    details,
-                    }),
-                }, err => {
-                    if (err) throw err;
-                    res.redirect(info.redirect);
-                });
-            });
+            calendar.addLock({
+                start:   {dateTime: start_date, timeZone: 'Europe/London'},
+                end:     {dateTime: end_date,   timeZone: 'Europe/London'},
+                summary: venue,
+                description: JSON.stringify({
+                    payment_id: payment.id,
+                    token:      info.token,
+                    details:    details,
+                }),
+            }).then(_ => res.redirect(info.redirect))
+              .catch(err => { throw err; });
         });
+    }).catch(err => {
+        throw err;
     });
 });
 
