@@ -6,6 +6,40 @@ const paypal = require('../paypalAPI');
 const booking_info = require('../booking_info');
 
 
+router.get('/taken', (req, res) => {
+    const venue = req.body.venue;
+    const start = moment();
+    const end   = start.clone().add(31, 'days');
+
+    if (!venue || !booking_info.is_valid_venue(venue)) {
+        res.status(400).end();
+        return;
+    }
+
+    const start_date = utils.momentToCalendarDate(start);
+    const end_date = utils.momentToCalendarDate(end);
+    let times = [];
+
+    calendar.listEvents(calendar.PAYPAL_ID, {
+        start: start_date,
+        end:   end_date,
+        predicate: (event) => event.summary === venue,
+    }, (err, locks) => {
+        if (err) throw err;
+        times = times.concat(locks.map(x => [x.start.dateTime, x.end.dateTime]));
+        calendar.listEvents(calendar.MAIN_ID, {
+            start: start_date,
+            end:   end_date,
+            predicate: (event) => event.summary === venue,
+        }, (err, events) => {
+            if (err) throw err;
+            times = times.concat(events.map(x => [x.start.dateTime, x.end.dateTime]));
+            res.json(times);
+        });
+    });
+});
+
+
 router.post('/', (req, res) => {
     const venue   = req.body.venue;
     const start   = utils.clientDateToMoment(req.body.start);
@@ -24,15 +58,14 @@ router.post('/', (req, res) => {
         || !details.phone_number
         || !venue
         || !booking_info.is_valid_venue(venue)
-        || !booking_info.within_closing_times(venue, start)
-        || !booking_info.within_closing_times(venue, end)) {
+        || !booking_info.within_opening_hours(venue, start)
+        || !booking_info.within_opening_hours(venue, end)) {
         res.status(400).end();
         return;
     }
 
-    // TODO: price lists
     const duration = end.diff(start, 'minutes') / 30;
-    const price = (10 * duration).toString() + ".00";
+    const price = (booking_info.get_price(venue) * duration).toString() + ".00";
 
     const start_date = utils.momentToCalendarDate(start);
     const end_date   = utils.momentToCalendarDate(end);

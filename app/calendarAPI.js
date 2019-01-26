@@ -107,6 +107,7 @@ function findFirst(calendarId, query, callback) {
 
 module.exports = {
     PAYPAL_ID,
+    MAIN_ID,
     findLock,
     findSlot,
     addLock: (resource, callback) => addEvent(PAYPAL_ID, resource, callback),
