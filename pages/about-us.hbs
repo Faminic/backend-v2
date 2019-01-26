@@ -3,17 +3,8 @@
 <div class="container">
   <div class="row">
     <div class="col-md">
-      <h1>{{Title}}</h1>
-
-      {{#each Paragraph}}
-        <h5>
-          <strong>{{this.title}}</strong>
-        </h5>
-        <p>
-          {{this.text}} <a href="/{{this.linkSrc}}">{{this.textToBeLinked}}</a>
-        </p>
-      {{/each}}
-
+      <h1>{{title}}</h1>
+      {{{ content }}}
     </div>
     {{>facebook}}
   </div>

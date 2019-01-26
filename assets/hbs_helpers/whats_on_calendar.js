@@ -57,7 +57,6 @@ enduro.templating_engine.registerHelper('whatsOnCalendar', function(options) {
                 },
             };
 
-            console.log(context.young.rows);
             return options.fn(context);
         });
 })
