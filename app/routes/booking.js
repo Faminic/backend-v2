@@ -73,8 +73,8 @@ router.post('/', (req, res) => {
     Promise.all([
         calendar.findLock(query),
         calendar.findSlot(query),
-    ]).then(([a, b]) => {
-        if (a || b) {
+    ]).then(([lock, slot]) => {
+        if (lock || slot) {
             res.status(400).end();
             return;
         }
