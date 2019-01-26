@@ -32,7 +32,7 @@ router.get('/ok', (req, res) => {
         start: utils.momentToCalendarDate(today),
         end:   utils.momentToCalendarDate(today.add(1, 'month')),
         predicate: (_, d) => d.token === token && d.payment_id == paymentId,
-    }, (err, event) => {
+    }).then(event => {
         // make sure that the lock still exists and isn't
         // already deleted.
         if (!event) {
@@ -49,13 +49,12 @@ router.get('/ok', (req, res) => {
                 summary: event.summary,
                 description: `Name: ${desc.details.name}\nPhone Number: ${desc.details.phone_number}`
             };
-            calendar.addSlot(slotEvent, (err, resource) => {
-                if (err) throw err;
-                // delete paypal lock from calendar
-                calendar.deleteLock(event.id, (err) => err && console.error(err));
-                res.write("Payment approved.");
-                res.end();
-            });
+            calendar.addSlot(slotEvent)
+                    .then(resource => {
+                        res.write("Payment approved.");
+                        res.end();
+                        return calendar.deleteLock(event.id);
+                    }).catch(err => { throw err; });
         });
     });
 });
@@ -75,12 +74,14 @@ router.get('/cancel', (req, res) => {
         start: utils.momentToCalendarDate(today),
         end:   utils.momentToCalendarDate(today.add(1, 'month')),
         predicate: (_, d) => d.token === token,
-    }, (err, event) => {
-        if (event) {
-            calendar.deleteLock(event.id, (err) => err && console.error(err));
-        }
+    }).then((event) => {
         res.write("Payment cancelled");
         res.end();
+        if (event) {
+            return calendar.deleteLock(event.id);
+        }
+    }).catch(err => {
+        throw err;
     });
 });
 
