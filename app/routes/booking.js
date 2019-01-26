@@ -16,24 +16,20 @@ router.get('/taken', (req, res) => {
         return;
     }
 
-    const start_date = utils.momentToCalendarDate(start);
-    const end_date = utils.momentToCalendarDate(end);
-    let times = [];
-
     const query = {
-        start: start_date,
-        end:   end_date,
+        start: utils.momentToCalendarDate(start),
+        end:   utils.momentToCalendarDate(end),
         predicate: (event) => event.summary === venue,
     };
 
     Promise.all([
         calendar.listLocks(query),
         calendar.listSlots(query),
-    ]).then(([locks, events]) => {
-        res.json(locks.concat(events).map(x => [x.start.dateTime, x.end.dateTime]));
-    }).catch(err => {
-        throw err;
-    });
+    ])
+        .then(([locks, events]) => {
+            res.json(locks.concat(events).map(x => [x.start.dateTime, x.end.dateTime]))
+        })
+        .catch(err => { throw err; });
 });
 
 
