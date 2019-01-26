@@ -1,8 +1,21 @@
 const info = {
-    astro_turf: {
-        price: 10,
+    '11_v_11_football_pitch': {
+        price_per_hour: 20,
         opening_hours: [
-            // opening times - closing times
+            [[ 9, 00], [17, 00]], // Sun
+            [[16, 30], [22, 00]], // Mon
+            [[16, 30], [22, 00]], // Tue
+            [[16, 30], [22, 00]], // Wed
+            [[16, 30], [22, 00]], // Thu
+            [[16, 30], [22, 00]], // Fri
+            [[ 7, 00], [22, 00]], // Sat
+        ],
+    },
+    astro_turf: {
+        price_per_hour: 30,
+        price_half_day: 80,  // 3 hours
+        price_full_day: 120, // 8 hours
+        opening_hours: [
             [[10, 00], [12, 30]], // Sun
             [[18, 00], [21, 30]], // Mon
             [[18, 00], [21, 30]], // Tue
@@ -15,8 +28,31 @@ const info = {
 };
 
 
-function get_price(venue) {
-    return info[venue].price;
+function get_price(venue, hours) {
+    let price = 0;
+    let type = best_rate(venue, hours);
+    switch (type) {
+        case "full_day": price = info[venue].price_full_day; break;
+        case "half_day": price = info[venue].price_half_day; break;
+        case "hour":     price = info[venue].price_per_hour * hours; break;
+    }
+    return {
+        price,
+        type,
+    };
+}
+
+
+function best_rate(venue, hours) {
+    const prices = info[venue];
+    const full_price = prices.price_per_hour * hours;
+    if (3 < hours && hours <= 7 && prices.price_full_day && prices.price_full_day < full_price) {
+        return "full_day";
+    }
+    if (1 < hours && hours <= 3 && prices.price_half_day && prices.price_half_day < full_price) {
+        return "half_day";
+    }
+    return "hour";
 }
 
 

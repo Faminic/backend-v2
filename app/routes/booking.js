@@ -57,9 +57,7 @@ router.post('/', (req, res) => {
         return;
     }
 
-    const duration = end.diff(start, 'minutes') / 30;
-    const price = (booking_info.get_price(venue) * duration).toString() + ".00";
-
+    const price = booking_info.get_price(venue, end.diff(start, 'minutes') / 60).toPrecision(2);
     const start_date = utils.momentToCalendarDate(start);
     const end_date   = utils.momentToCalendarDate(end);
     const query = {
