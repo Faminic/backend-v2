@@ -1,0 +1,27 @@
+{{#> layout}}
+<div class="jumbotron jumbotron-fluid" style="background-size: cover; background-position: center; padding: 10em; background-image: url({{Banner}})"></div>
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<h1>{{Header}}</h1>
+			<p>{{Description}}</p>
+		</div>
+	</div>
+	<div class= "row">
+	{{#each Facilities}}
+		<div class="col-md-4 d-flex align-self-stretch">
+			<a href="{{this.Relative_Link}}">
+				<div class="card mb-4 shadow-sm d-flex align-self-stretch" >
+
+					<img class="card-img-top" src="{{this.Image}}">
+					<div class="card-body">
+						<p class="card-text">{{this.Facility_Name}}</p>
+					</div>
+				</div>
+			</a>
+		</div>
+	{{/each}}
+	</div>
+  
+</div>
+{{/layout}}

@@ -1,0 +1,10 @@
+{
+	facility_card:{
+		Facility:{
+			Relative_Link:"",
+			Image:"",
+			$Image_type:"Image",
+			Facility_Name:""
+		}
+	}
+}
