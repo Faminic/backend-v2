@@ -9,11 +9,11 @@
 	</div>
 	<div class= "row">
 	{{#each Facilities}}
-		<div class="col-md-4">
+		<div class="col-md-4 d-flex align-self-stretch">
 			<a href="{{this.Relative_Link}}">
-				<div class="card mb-4 shadow-sm">
+				<div class="card mb-4 shadow-sm d-flex align-self-stretch" >
 
-					<img src="{{this.Image}}">
+					<img class="card-img-top" src="{{this.Image}}">
 					<div class="card-body">
 						<p class="card-text">{{this.Facility_Name}}</p>
 					</div>

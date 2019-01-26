@@ -1,11 +1,11 @@
 {{#> layout}}
 
 
-<div class="jumbotron jumbotron-fluid" style="background-size: cover; background-position: center; padding: 10em; background-image: url({{Facility_Banner}})"></div>
+<div class="jumbotron jumbotron-fluid" style="background-size: cover; background-position: center; padding: 10em; background-image: url({{Banner}})"></div>
 <div class="container">
 	<div class="row">
 		<div class="col-md">
-			<h1>{{ Facility_Name }}</h1>
+			<h1>{{ Name }}</h1>
 			<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
 				<ol class="carousel-indicators">
 				{{#each Facility_Images}}
@@ -30,10 +30,10 @@
 			</div>
 		</div>
 		<div class="col-md pt-4 mt-4">
-			<p>{{Facility_Description}}</p>
-			{{#if Facility_Times.Monday }}
+			<p>{{{Description}}}</p>
+			{{#if Available_Times.Monday }}
 				<h5>Availability</h5>
-				{{#each Facility_Times}}
+				{{#each Available_Times}}
 				{{#if this}}  
 				<p>{{@key}} : {{this}}</p>
 				{{/if}}
