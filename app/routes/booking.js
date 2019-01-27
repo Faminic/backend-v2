@@ -7,13 +7,13 @@ const {Venue, Reservation} = require('../models');
 
 
 router.get('/', (req, res) => {
-    Venue.find({}).
-        then(docs => res.json(docs)).
-        catch(err => {
+    Venue.find({}).select('-rooms -opening_hours -products.rooms').exec((err, docs) => {
+        if (err) {
             console.error(err);
-            res.status(500);
-            res.end();
-        });
+            return res.status(500).end();
+        }
+        res.json(docs);
+    });
 });
 
 
@@ -25,32 +25,28 @@ router.get('/taken/:venue_id/:product_id', (req, res) => {
         res.status(400).end();
         return;
     }
-    Venue.findById(venue_id).
-        then(venue => {
-            if (!venue) return Promise.reject();
-            const product = venue.get_product(product_id);
-            if (!product) return Promise.reject();
-            return Reservation.find({
-                start: { $gte: new Date() },
-                $and:  [
-                    { $or: product.rooms.map(room_id => ({ rooms: room_id })) },
-                    { $or: [
-                        { confirmed: true },
-                        { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
-                    ]},
-                ],
-            });
-        }).
-        then(reservations => {
+    Venue.findById(venue_id, (err, venue) => {
+        if (err)    return res.status(500).end();
+        if (!venue) return res.status(404).end();
+        const product = venue.get_product(product_id);
+        if (!product) return res.status(404).end();
+        Reservation.find({
+            start: { $gte: new Date() },
+            $and:  [
+                { $or: product.rooms.map(room_id => ({ rooms: room_id })) },
+                { $or: [
+                    { confirmed: true },
+                    { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
+                ]},
+            ],
+        }, (err, reservations) => {
+            if (err) return res.status(500).end();
             res.json(reservations.map(x => [
                 utils.momentToCalendarDate(moment(x.start)),
                 utils.momentToCalendarDate(moment(x.end)),
             ]));
-        }).
-        catch(err => {
-            res.status(500).end();
-            throw err;
-        });
+        })
+    });
 });
 
 
@@ -59,7 +55,7 @@ router.post('/:venue_id/:product_id', (req, res) => {
     const product_id = req.params.product_id;
     const start    = utils.clientDateToMoment(req.body.start);
     const end      = utils.clientDateToMoment(req.body.end);
-    const details  = {
+    const customer = {
         name:  req.body.name,
         phone_number: req.body.phone_number,
     };
@@ -69,40 +65,32 @@ router.post('/:venue_id/:product_id', (req, res) => {
         || !end.isAfter(start)
         || end.diff(start, 'days') > 0
         || start.diff(moment(), 'days') > 31
-        || !details.name
-        || !details.phone_number
+        || !customer.name
+        || !customer.phone_number
         || !venue_id
         || !product_id) {
         res.status(400).end();
         return;
     }
 
-    let venue = null;
-    Venue.findById(venue_id).
-        then(_venue => {
-            if (!_venue) return Promise.reject();
-            venue = _venue;
-        }).
+    Venue.findById(venue_id, (err, venue) => {
+        if (!venue) return res.status(404).end();
         // Check that we can book the product
-        then(() => venue.check_product(product_id, start, end)).
-        then(can_book => {
+        venue.check_product(product_id, start, end).then(can_book => {
             if (!can_book) return res.status(400).end();
             // calculate prices
             const duration = end.diff(start, 'minutes') / 60;
-            const {price, type} = booking_info.get_price(
+            const { price, rate } = booking_info.get_price(
                 venue.get_product(product_id),
                 duration
             );
             return new Promise((resolve, reject) => {
                 // can book so we create payment and then make reservation
                 paypal.create_payment(`${venue.name} (${duration} hours)`, price, (err, payment, info) => {
-                    if (err) return res.status(400).end();
+                    if (err) return reject(err);
                     venue.book_product(product_id, {
-                        start:     start,
-                        end:       end,
-                        customer:  details,
+                        start, end, customer, rate,
                         confirmed: false,
-                        rate:      type,
                         payment: {
                             token: info.token,
                             id:    payment.id,
@@ -112,11 +100,11 @@ router.post('/:venue_id/:product_id', (req, res) => {
                         catch(reject);
                 });
             });
-        }).
-        catch(err => {
+        }).catch(err => {
+            console.error(err);
             res.status(500).end();
-            throw err;
         });
+    });
 });
 
 

@@ -71,7 +71,7 @@ venueSchema.methods.check_product = function(product_id, start, end) {
     //   end: moment
     const prod = this.get_product(product_id);
     if (!prod || !within_opening_hours(this, start) || !within_opening_hours(this, end))
-        return Promise.reject();
+        return Promise.resolve(false);
     return Reservation.findOne({
             venue_id: this.id,
             start: { $gte: start.toDate() },
@@ -84,7 +84,7 @@ venueSchema.methods.check_product = function(product_id, start, end) {
                 ]},
             ],
         }).
-        then(x => x ? false : true);
+        then(x => (x ? false : true));
 };
 
 

@@ -1,14 +1,14 @@
 function get_price(product, hours) {
     let price = 0;
-    let type = best_rate(product, hours);
-    switch (type) {
+    let rate = best_rate(product, hours);
+    switch (rate) {
         case "full_day": price = product.price_full_day; break;
         case "half_day": price = product.price_half_day; break;
         case "hour":     price = product.price_per_hour * hours;
     }
     return {
         price: price.toPrecision(2),
-        type,
+        rate,
     };
 }
 

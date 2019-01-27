@@ -20,6 +20,9 @@ function write_reservation_to_calendar(reservation) {
                 `Payment ID: ${reservation.payment.id}`,
             ].join('\n'),
         });
+    }).catch(err => {
+        console.error("Cannot create calendar entry:")
+        console.error(err);
     });
 }
 
@@ -41,23 +44,25 @@ router.get('/ok', (req, res) => {
             return;
         }
         return new Promise((resolve, reject) => {
-            paypal.execute_payment(paymentId, PayerID, (err) => {
+            paypal.execute_payment(paymentId, PayerID, (err, payment) => {
                 if (err) return reject(err);
+                console.log(payment);
                 reservation.confirmed = true;
                 reservation.save().
-                    then(() => write_reservation_to_calendar(reservation)).
                     then(() => {
+                        write_reservation_to_calendar(reservation);
                         res.write("Payment approved.");
                         res.end();
                     }).
                     then(resolve).
                     catch(reject);
-            })
+            });
         });
     })
     .catch(err => {
         console.error(err);
-        res.status(500).end();
+        res.status(500);
+        res.end();
     });
 });
 
@@ -77,7 +82,9 @@ router.get('/cancel', (req, res) => {
             res.end();
         }).
         catch(err => {
-            throw err;
+            console.error(err);
+            res.status(500);
+            res.end();
         });
 });
 

@@ -75,7 +75,7 @@ POST /api/booking/5c4cf8c00333176c83077b10/d92b00d7-284e-4aa1-9889-c2249ff18f0d
 Similarly you can make a request to see which slots are taken:
 
 ```
-GET /api/booking/5c4cf8c00333176c83077b10/d92b00d7-284e-4aa1-9889-c2249ff18f0d
+GET /api/booking/taken/5c4cf8c00333176c83077b10/d92b00d7-284e-4aa1-9889-c2249ff18f0d
 [
     ['2019-01-27T10:00:00.000Z', '2019-01-27T12:00:00.000Z'],
     ['2019-01-28T18:00:00.000Z', '2019-01-28T19:00:00.000Z'],
