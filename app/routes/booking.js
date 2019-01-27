@@ -17,9 +17,9 @@ router.get('/', (req, res) => {
 });
 
 
-router.get('/taken', (req, res) => {
-    const venue_id   = req.body.venue_id;
-    const product_id = req.body.product_id;
+router.get('/taken/:venue_id/:product_id', (req, res) => {
+    const venue_id   = req.params.venue_id;
+    const product_id = req.params.product_id;
     // sanity check
     if (!venue_id || !product_id) {
         res.status(400).end();
@@ -43,8 +43,8 @@ router.get('/taken', (req, res) => {
         }).
         then(reservations => {
             res.json(reservations.map(x => [
-                utils.momentToCalendarDate(x.start),
-                utils.momentToCalendarDate(x.end),
+                utils.momentToCalendarDate(moment(x.start)),
+                utils.momentToCalendarDate(moment(x.end)),
             ]));
         }).
         catch(err => {
