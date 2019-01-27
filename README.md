@@ -4,6 +4,9 @@ PVCC website with a shitty CMS.
 
 ## Run
 
+Install MongoDB ([Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/), [Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)).
+Ensure that your MongoDB instance is running.
+
 Keys need to be placed in the `app/keys/` folder.
 
 ```sh
