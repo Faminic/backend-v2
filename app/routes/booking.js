@@ -1,43 +1,54 @@
 const moment = require('moment');
 const router = require('express').Router();
 const utils = require('../utils');
-const calendar = require('../calendarAPI');
 const paypal = require('../paypalAPI');
 const booking_info = require('../booking_info');
+const {Venue, Reservation} = require('../models');
 
 
 router.get('/taken', (req, res) => {
-    const venue = req.body.venue;
-    const start = moment();
-    const end   = start.clone().add(31, 'days');
-
-    if (!venue || !booking_info.is_valid_venue(venue)) {
+    const venue_id   = req.body.venue_id;
+    const product_id = req.body.product_id;
+    // sanity check
+    if (!venue_id || !product_id) {
         res.status(400).end();
         return;
     }
-
-    const query = {
-        start: utils.momentToCalendarDate(start),
-        end:   utils.momentToCalendarDate(end),
-        predicate: (event) => event.summary === venue,
-    };
-
-    Promise.all([
-        calendar.listLocks(query),
-        calendar.listSlots(query),
-    ])
-        .then(([locks, events]) => {
-            res.json(locks.concat(events).map(x => [x.start.dateTime, x.end.dateTime]))
-        })
-        .catch(err => { throw err; });
+    Venue.findById(venue_id).
+        then(venue => {
+            if (!venue) return Promise.reject();
+            const product = venue.get_product(product_id);
+            if (!product) return Promise.reject();
+            return Reservation.find({
+                start: { $gte: new Date() },
+                $and:  [
+                    { $or: product.rooms.map(room_id => ({ rooms: room_id })) },
+                    { $or: [
+                        { confirmed: true },
+                        { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
+                    ]},
+                ],
+            });
+        }).
+        then(reservations => {
+            res.json(reservations.map(x => [
+                utils.momentToCalendarDate(x.start),
+                utils.momentToCalendarDate(x.end),
+            ]));
+        }).
+        catch(err => {
+            res.status(500).end();
+            throw err;
+        });
 });
 
 
 router.post('/', (req, res) => {
-    const venue   = req.body.venue;
-    const start   = utils.clientDateToMoment(req.body.start);
-    const end     = utils.clientDateToMoment(req.body.end);
-    const details = {
+    const venue_id = req.body.venue_id;
+    const product_id = req.body.product_id;
+    const start    = utils.clientDateToMoment(req.body.start);
+    const end      = utils.clientDateToMoment(req.body.end);
+    const details  = {
         name:  req.body.name,
         phone_number: req.body.phone_number,
     };
@@ -49,50 +60,54 @@ router.post('/', (req, res) => {
         || start.diff(moment(), 'days') > 31
         || !details.name
         || !details.phone_number
-        || !venue
-        || !booking_info.is_valid_venue(venue)
-        || !booking_info.within_opening_hours(venue, start)
-        || !booking_info.within_opening_hours(venue, end)) {
+        || !venue_id
+        || !product_id) {
         res.status(400).end();
         return;
     }
 
-    const price = booking_info.get_price(venue, end.diff(start, 'minutes') / 60).toPrecision(2);
-    const start_date = utils.momentToCalendarDate(start);
-    const end_date   = utils.momentToCalendarDate(end);
-    const query = {
-        start: start_date,
-        end:   end_date,
-        predicate: (event) => event.summary === venue,
-    };
-
-    // check if someone else is trying to book the same slot, or if
-    // the slot is already booked.
-    Promise.all([
-        calendar.findLock(query),
-        calendar.findSlot(query),
-    ]).then(([lock, slot]) => {
-        if (lock || slot) {
-            res.status(400).end();
-            return;
-        }
-        paypal.create_payment(`${venue} (${duration/2} hours)`, price, (err, payment, info) => {
-            if (err) throw err;
-            calendar.addLock({
-                start:   {dateTime: start_date, timeZone: 'Europe/London'},
-                end:     {dateTime: end_date,   timeZone: 'Europe/London'},
-                summary: venue,
-                description: JSON.stringify({
-                    payment_id: payment.id,
-                    token:      info.token,
-                    details:    details,
-                }),
-            }).then(_ => res.redirect(info.redirect))
-              .catch(err => { throw err; });
+    let venue = null;
+    Venue.findById(venue_id).
+        then(_venue => {
+            if (!_venue) return Promise.reject();
+            venue = _venue;
+        }).
+        then(() => venue.check_product(product_id, start, end)).
+        then(can_book => {
+            if (!can_book) return res.status(400).end();
+            const duration = end.diff(start, 'minutes') / 60;
+            const {price, type} = booking_info.get_price(
+                venue.get_product(product_id),
+                duration
+            );
+            return new Promise((resolve, reject) => {
+                // can book so we create payment and then make reservation
+                paypal.create_payment(`${venue.name} (${duration} hours)`, price, (err, payment, info) => {
+                    if (err) {
+                        console.log(err);
+                        console.log(err.response.details);
+                        return res.status(400).end();
+                    }
+                    venue.book_product(product_id, {
+                        start:     start,
+                        end:       end,
+                        customer:  details,
+                        confirmed: false,
+                        rate:      type,
+                        payment: {
+                            token: info.token,
+                            id:    payment.id,
+                        }
+                    }).
+                        then(_ => resolve(res.redirect(info.redirect))).
+                        catch(reject);
+                });
+            });
+        }).
+        catch(err => {
+            res.status(500).end();
+            throw err;
         });
-    }).catch(err => {
-        throw err;
-    });
 });
 
 

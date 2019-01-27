@@ -3,19 +3,25 @@ const router = require('express').Router();
 const paypal = require('../paypalAPI');
 const calendar = require('../calendarAPI');
 const utils = require('../utils');
+const {Reservation, Venue} = require('../models');
 
 
-// Paypal Lock schema
-// Start/End <=> timeslot
-// Summary: venue
-// Description: {
-//   "token": "...",
-//   "payment_id": "...",
-//   "details": {
-//     "name": "...",
-//     "phone_number": "..."
-//   }
-// }
+function write_reservation_to_calendar(reservation) {
+    return Venue.findOne(reservation.venue_id).then(venue => {
+        const rooms = reservation.rooms.map(room_id => venue.rooms.find(r => r.id === room_id).name).join(', ');
+        return calendar.addEvent({
+            start:   {dateTime: utils.momentToCalendarDate(moment(reservation.start)), timeZone: 'Europe/London'},
+            end:     {dateTime: utils.momentToCalendarDate(moment(reservation.end)),   timeZone: 'Europe/London'},
+            summary: venue.name,
+            description: [
+                `Rooms: ${rooms}`,
+                `Name: ${reservation.customer.name}`,
+                `Phone Number: ${reservation.customer.phone_number}`,
+                `Payment ID: ${reservation.payment.id}`,
+            ].join('\n'),
+        });
+    });
+}
 
 
 router.get('/ok', (req, res) => {
@@ -27,35 +33,31 @@ router.get('/ok', (req, res) => {
         return;
     }
 
-    const today = moment().startOf('day');
-    calendar.findLock({
-        start: utils.momentToCalendarDate(today),
-        end:   utils.momentToCalendarDate(today.add(1, 'month')),
-        predicate: (_, d) => d.token === token && d.payment_id == paymentId,
-    }).then(event => {
-        // make sure that the lock still exists and isn't
-        // already deleted.
-        if (!event) {
-            res.status(404);
+    Reservation.find_payment({'payment.id': paymentId, 'payment.token': token}).then(reservation => {
+        // make sure that the reservation still exists
+        if (!reservation) {
+            res.status(400);
             res.end();
             return;
         }
-        const desc = JSON.parse(event.description);
-        paypal.execute_payment(paymentId, PayerID, (err, payment) => {
-            if (err) throw err;
-            const slotEvent = {
-                start: event.start,
-                end:   event.end,
-                summary: event.summary,
-                description: `Name: ${desc.details.name}\nPhone Number: ${desc.details.phone_number}`
-            };
-            calendar.addSlot(slotEvent)
-                    .then(resource => {
+        return new Promise((resolve, reject) => {
+            paypal.execute_payment(paymentId, PayerID, (err) => {
+                if (err) return reject(err);
+                reservation.confirmed = true;
+                reservation.save().
+                    then(() => write_reservation_to_calendar(reservation)).
+                    then(() => {
                         res.write("Payment approved.");
                         res.end();
-                        return calendar.deleteLock(event.id);
-                    }).catch(err => { throw err; });
+                    }).
+                    then(resolve).
+                    catch(reject);
+            })
         });
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).end();
     });
 });
 
@@ -68,21 +70,15 @@ router.get('/cancel', (req, res) => {
         res.end();
         return;
     }
-    // find + delete paypal lock from calendar
-    const today = moment().startOf('day');
-    calendar.findLock({
-        start: utils.momentToCalendarDate(today),
-        end:   utils.momentToCalendarDate(today.add(1, 'month')),
-        predicate: (_, d) => d.token === token,
-    }).then((event) => {
-        res.write("Payment cancelled");
-        res.end();
-        if (event) {
-            return calendar.deleteLock(event.id);
-        }
-    }).catch(err => {
-        throw err;
-    });
+    // find + delete reservation
+    Reservation.cancel_payment({'payment.token': token}).
+        then(() => {
+            res.write("Payment cancelled");
+            res.end();
+        }).
+        catch(err => {
+            throw err;
+        });
 });
 
 
