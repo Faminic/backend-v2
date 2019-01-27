@@ -6,6 +6,17 @@ const booking_info = require('../booking_info');
 const {Venue, Reservation} = require('../models');
 
 
+router.get('/', (req, res) => {
+    Venue.find({}).
+        then(docs => res.json(docs)).
+        catch(err => {
+            console.error(err);
+            res.status(500);
+            res.end();
+        });
+});
+
+
 router.get('/taken', (req, res) => {
     const venue_id   = req.body.venue_id;
     const product_id = req.body.product_id;
@@ -43,9 +54,9 @@ router.get('/taken', (req, res) => {
 });
 
 
-router.post('/', (req, res) => {
-    const venue_id = req.body.venue_id;
-    const product_id = req.body.product_id;
+router.post('/:venue_id/:product_id', (req, res) => {
+    const venue_id   = req.params.venue_id;
+    const product_id = req.params.product_id;
     const start    = utils.clientDateToMoment(req.body.start);
     const end      = utils.clientDateToMoment(req.body.end);
     const details  = {
@@ -72,9 +83,11 @@ router.post('/', (req, res) => {
             if (!_venue) return Promise.reject();
             venue = _venue;
         }).
+        // Check that we can book the product
         then(() => venue.check_product(product_id, start, end)).
         then(can_book => {
             if (!can_book) return res.status(400).end();
+            // calculate prices
             const duration = end.diff(start, 'minutes') / 60;
             const {price, type} = booking_info.get_price(
                 venue.get_product(product_id),
@@ -83,11 +96,7 @@ router.post('/', (req, res) => {
             return new Promise((resolve, reject) => {
                 // can book so we create payment and then make reservation
                 paypal.create_payment(`${venue.name} (${duration} hours)`, price, (err, payment, info) => {
-                    if (err) {
-                        console.log(err);
-                        console.log(err.response.details);
-                        return res.status(400).end();
-                    }
+                    if (err) return res.status(400).end();
                     venue.book_product(product_id, {
                         start:     start,
                         end:       end,
