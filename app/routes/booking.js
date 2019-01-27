@@ -45,7 +45,7 @@ router.get('/taken/:venue_id/:product_id', (req, res) => {
                 utils.momentToCalendarDate(moment(x.start)),
                 utils.momentToCalendarDate(moment(x.end)),
             ]));
-        })
+        });
     });
 });
 
@@ -61,14 +61,13 @@ router.post('/:venue_id/:product_id', (req, res) => {
     };
 
     // sanity checks
-    if (!start.isAfter(moment())
+    const now = moment();
+    if (!start.isAfter(now)
         || !end.isAfter(start)
         || end.diff(start, 'days') > 0
-        || start.diff(moment(), 'days') > 31
+        || start.diff(now, 'days') > 31
         || !customer.name
-        || !customer.phone_number
-        || !venue_id
-        || !product_id) {
+        || !customer.phone_number) {
         res.status(400).end();
         return;
     }
