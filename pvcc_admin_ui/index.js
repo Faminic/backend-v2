@@ -11,13 +11,20 @@ router.use(express.json());
 router.use(express.static('pvcc_admin_ui/public'));
 
 
+function log_500(res) {
+    return (err) => {
+        console.error(err);
+        res.status(500);
+        res.end();
+    };
+}
+
+
 router.get('/venues', (req, res) => {
     // Gets a list of venues
     Venue.find({}, ['name', '_id'])
         .then(docs => res.json(docs))
-        .catch(err => {
-            throw err;
-        });
+        .catch(log_500(res));
 });
 
 
@@ -25,11 +32,17 @@ router.post('/venue/:id', (req, res) => {
     // Modifies a venue.
     // req.body should be JSON, refer to app/models.js for
     // venue schema.
-    Venue.findByIdAndUpdate(req.params.id, req.body)
-         .then(result => res.json(result))
-         .catch(err => {
-             throw err;
-         });
+    Venue.findById(req.params.id)
+         .then(venue => {
+             if (!venue) {
+                 res.status(404);
+                 res.end();
+                 return;
+             }
+             Object.assign(venue, req.body);
+             return venue.save().then(() => res.json(venue));
+         })
+         .catch(log_500(res));
 });
 
 
@@ -37,9 +50,7 @@ router.get('/venue/:id', (req, res) => {
     // Gets detail for a venue
     Venue.findById(req.params.id)
          .then(result => res.json(result))
-         .catch(err => {
-             throw err;
-         });
+         .catch(log_500(res));
 });
 
 
@@ -63,9 +74,7 @@ router.get('/venue/:id/:product_id/reservations', (req, res) => {
                 { skip: 25 * page, sort: { created: -1 } });
         }).
         then(docs => res.json(docs)).
-        catch(err => {
-            throw err;
-        });
+        catch(log_500(res));
 });
 
 
@@ -81,9 +90,7 @@ router.post('/venue/:id/:product_id/reservations', (req, res) => {
             confirmed: true,
         })).
         then(reservation => res.json(reservation)).
-        catch(err => {
-            throw err;
-        });
+        catch(log_500(res));
 });
 
 
@@ -91,9 +98,7 @@ router.delete('/reservation/:id', (req, res) => {
     // Delete a reservation by id
     Reservations.findByIdAndDelete(req.params.id).
         then(() => res.json({})).
-        catch(err => {
-            throw err;
-        });
+        catch(log_500(res));
 });
 
 

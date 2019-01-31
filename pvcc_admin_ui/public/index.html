@@ -1,0 +1,191 @@
+<!doctype HTML>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>PVCC Bookings Admin</title>
+  <style>
+body {
+  font-size: 16px;
+  font-family: sans-serif;
+  margin: 0 auto;
+  width: 85%;
+}
+
+button {
+  font: inherit;
+}
+
+h3 {
+  margin-bottom: 0;
+}
+
+input {
+  font: inherit;
+}
+
+#sidebar {
+  width: 15em;
+  padding: 1em;
+  float: left;
+}
+
+#sidebar ul {
+  margin: 0;
+  list-style-type: none;
+  padding: 0;
+}
+
+#sidebar li {
+  display: block;
+  padding: 0.25em;
+}
+
+#sidebar li a {
+  color: #666;
+  text-decoration: none;
+}
+
+#sidebar li.selected a { color: #000; font-weight: bold; }
+
+#content {
+  padding: 1em;
+  float: left;
+  width: calc(100% - 15em - 4em);
+}
+
+#footer     { padding-top: 0.5em; }
+#venue-name { font-size: 2em; }
+
+.product {
+  border: 1px solid #666;
+  margin:  0 0 0.5em 0;
+  padding: 0.5em;
+  width:   50em;
+}
+
+.product-room      { width: 20em; height: 2em; }
+.product-room span { width: 15em; }
+.product-room button { float: right; }
+.room-controls       { width: 20em; }
+.room-controls select { width: 15em; display: block; }
+.room-controls options { width: 15em; }
+.room-controls button { float: right; }
+
+select { font: inherit; }
+option { font: inherit; }
+  </style>
+</head>
+<body>
+  <div>
+    <div id="sidebar"></div>
+    <div id="content">Hello</div>
+  </div>
+
+  <script id="ms-sidebar" type="x-tmpl-mustache">
+    <h3>Venues</h3>
+    <ul>
+      {{#venues}}
+      <li data-id='{{ _id }}'><a href="#/venue/{{ _id }}">{{ name }}</a></li>
+      {{/venues}}
+    </ul>
+  </script>
+
+  <script id="ms-welcome" type="x-tmpl-mustache">
+    Welcome to the PVCC Bookings Admin UI
+  </script>
+
+  <script id="ms-product-room" type="x-tmpl-mustache">
+    <div class='product-room' data-id='{{ id }}'>
+      <span>{{ name }}</span><button class='delete-product-room'>x</button>
+    </div>
+  </script>
+
+  <script id="ms-product" type="x-tmpl-mustache">
+    <div class='product' data-id='{{ id }}'>
+      <b>Name:</b> <input type='text' value='{{ name }}' name='name'/><button class='delete-product'>x</button><br/>
+      <b>Rooms:</b>
+      <div class='rooms'></div>
+      <div class='rooms-controls'>
+        <select class='room-options'></select>
+        <button class='add-product-room'>+</button>
+      </div>
+      <br/>
+      <b>Prices:</b>
+      <table>
+        <tr><td>Per Hour:</td> <td><input type="number" name="price_per_hour" value='{{ price_per_hour }}'/></td></tr>
+        <tr><td>Half Day:</td> <td><input type="number" name="price_half_day" value='{{ price_half_day }}'/></td></tr>
+        <tr><td>Full Day:</td> <td><input type="number" name="price_full_day" value='{{ price_full_day }}'/></td></tr>
+      </table>
+    </div>
+  </script>
+
+  <script id="ms-room" type="x-tmpl-mustache">
+    <div class='room'>
+      <input type='text' value='{{ name }}' name='name'/>
+      <button class='delete-room'>x</button>
+    </div>
+  </script>
+
+  <script id="ms-venue-form" type="x-tmpl-mustache">
+    <input id='venue-name' name='name' type='text' value='{{ name }}' />
+    <h3>Opening Times:</h3>
+    <table>
+      <tr>
+        <td>Monday</td>
+        <td><input name="monday.open"  type="time" value='{{ opening_hours.monday.open }}'/></td>
+        <td><input name="monday.close" type="time" value='{{ opening_hours.monday.close }}'/></td>
+      </tr>
+      <tr>
+        <td>Tuesday</td>
+        <td><input name="tuesday.open"  type="time" value='{{ opening_hours.tuesday.open }}'/></td>
+        <td><input name="tuesday.close" type="time" value='{{ opening_hours.tuesday.close }}'/></td>
+      </tr>
+      <tr>
+        <td>Wednesday</td>
+        <td><input name="wednesday.open"  type="time" value='{{ opening_hours.wednesday.open }}'/></td>
+        <td><input name="wednesday.close" type="time" value='{{ opening_hours.wednesday.close }}'/></td>
+      </tr>
+      <tr>
+        <td>Thursday</td>
+        <td><input name="thursday.open"  type="time" value='{{ opening_hours.thursday.open }}'/></td>
+        <td><input name="thursday.close" type="time" value='{{ opening_hours.thursday.close }}'/></td>
+      </tr>
+      <tr>
+        <td>Friday</td>
+        <td><input name="friday.open"  type="time" value='{{ opening_hours.friday.open }}'/></td>
+        <td><input name="friday.close" type="time" value='{{ opening_hours.friday.close }}'/></td>
+      </tr>
+      <tr>
+        <td>Saturday</td>
+        <td><input name="saturday.open"  type="time" value='{{ opening_hours.saturday.open }}'/></td>
+        <td><input name="saturday.close" type="time" value='{{ opening_hours.saturday.close }}'/></td>
+      </tr>
+      <tr>
+        <td>Sunday</td>
+        <td><input name="sunday.open"  type="time" value='{{ opening_hours.sunday.open }}'/></td>
+        <td><input name="sunday.close" type="time" value='{{ opening_hours.sunday.close }}'/></td>
+      </tr>
+    </table>
+    </ul>
+    <h3>Rooms</h3>
+    <div id='rooms'>
+    </div>
+    <button id="add-room">Add Room</button>
+    <h3>Products</h3>
+    <div id='products'>
+    </div>
+    <button id="add-product">Add Product</button>
+
+    <div id='footer'>
+      <button id="save">Save</button>
+    </div>
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="/js/jquery.hashroute.js"></script>
+  <script src="/js/mustache.min.js"></script>
+  <script src="/js/uuid.js"></script>
+  <script src="/js/insignia.js"></script>
+  <script src="/js/ui.js"></script>
+</body>
+</html>
