@@ -8,7 +8,8 @@ const {Reservation, Venue} = require('../models');
 
 function write_reservation_to_calendar(reservation) {
     return Venue.findOne(reservation.venue_id).then(venue => {
-        const rooms = reservation.rooms.map(room_id => venue.rooms.find(r => r.id === room_id).name).join(', ');
+        if (!venue) return;
+        const rooms = reservation.rooms.map(room_id => venue.get_room(room_id).name).join(', ');
         return calendar.addEvent({
             start:   {dateTime: utils.momentToCalendarDate(moment(reservation.start)), timeZone: 'Europe/London'},
             end:     {dateTime: utils.momentToCalendarDate(moment(reservation.end)),   timeZone: 'Europe/London'},
@@ -48,14 +49,13 @@ router.get('/ok', (req, res) => {
                 if (err) return reject(err);
                 console.log(payment);
                 reservation.confirmed = true;
-                reservation.save().
-                    then(() => {
-                        write_reservation_to_calendar(reservation);
-                        res.write("Payment approved.");
-                        res.end();
-                    }).
-                    then(resolve).
-                    catch(reject);
+                reservation.save((err) => {
+                    if (err) return reject(err);
+                    write_reservation_to_calendar(reservation);
+                    res.write("Payment approved.");
+                    res.end();
+                    resolve();
+                });
             });
         });
     })
@@ -76,7 +76,7 @@ router.get('/cancel', (req, res) => {
         return;
     }
     // find + delete reservation
-    Reservation.cancel_payment({'payment.token': token}).
+    Reservation.cancel_payment(token).
         then(() => {
             res.write("Payment cancelled");
             res.end();

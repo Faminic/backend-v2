@@ -57,6 +57,13 @@ const reservationSchema = new mongoose.Schema({
 });
 
 
+venueSchema.methods.get_room = function(room_id) {
+    // Finds the product with the given product_id
+    //   product_id: String
+    return this.rooms.find(p => p.id === room_id);
+};
+
+
 venueSchema.methods.get_product = function(product_id) {
     // Finds the product with the given product_id
     //   product_id: String
@@ -135,16 +142,12 @@ reservationSchema.statics.find_payment = function(payment) {
 };
 
 
-reservationSchema.statics.cancel_payment = function(payment) {
-    // Cancels a payment, at least one of payment.token or payment.id
-    // should be specified.
-    //      payment: {
-    //          'payment.token': String (optional)
-    //          'payment.id':    String (optional)
-    //      }
+reservationSchema.statics.cancel_payment = function(token) {
+    // Cancels a payment with the given token.
+    //      token: String
     return Reservation.deleteOne({
         confirmed: false,
-        ...payment,
+        'payment.token': token,
     });
 };
 

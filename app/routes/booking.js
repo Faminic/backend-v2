@@ -10,7 +10,8 @@ router.get('/', (req, res) => {
     Venue.find({}).select('-rooms -opening_hours -products.rooms').exec((err, docs) => {
         if (err) {
             console.error(err);
-            return res.status(500).end();
+            res.status(500).end();
+            return;
         }
         res.json(docs);
     });
