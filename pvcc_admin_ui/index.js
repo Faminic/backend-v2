@@ -11,6 +11,7 @@ router.use(express.json());
 
 
 router.get('/venues', (req, res) => {
+    // Gets a list of venues
     Venue.find({}, ['name', '_id'])
         .then(docs => res.json(docs))
         .catch(err => {
@@ -20,6 +21,9 @@ router.get('/venues', (req, res) => {
 
 
 router.post('/venues/:id', (req, res) => {
+    // Modifies a venue.
+    // req.body should be JSON, refer to app/models.js for
+    // venue schema.
     Venue.findByIdAndUpdate(req.params.id, req.body)
          .then(result => res.json(result))
          .catch(err => {
@@ -29,6 +33,7 @@ router.post('/venues/:id', (req, res) => {
 
 
 router.get('/venues/:id', (req, res) => {
+    // Gets detail for a venue
     Venue.findById(req.params.id)
          .then(result => res.json(result))
          .catch(err => {
@@ -38,6 +43,8 @@ router.get('/venues/:id', (req, res) => {
 
 
 router.get('/venues/:id/products/:product_id/reservations', (req, res) => {
+    // Gets a list of reservations which have not expired for
+    // a given venue and product
     const page = (req.query.page || 1) - 1;
     Venue.findById(req.params.id).
         then(venue => {
@@ -62,6 +69,8 @@ router.get('/venues/:id/products/:product_id/reservations', (req, res) => {
 
 
 router.post('/venues/:id/products/:product_id/reservations', (req, res) => {
+    // Creates a reservation for a given venue and product
+    // See app/models.js for schema
     Venue.findById(req.params.id).
         then(venue => venue.book_product(req.params.product_id, {
             customer:  req.body.customer,
@@ -78,6 +87,7 @@ router.post('/venues/:id/products/:product_id/reservations', (req, res) => {
 
 
 router.delete('/reservations/:id', (req, res) => {
+    // Delete a reservation by id
     Reservations.findByIdAndDelete(req.params.id).
         then(() => res.json({})).
         catch(err => {

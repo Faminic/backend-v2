@@ -40,7 +40,7 @@ const venueSchema = new mongoose.Schema({
 const reservationSchema = new mongoose.Schema({
     venue_id:   mongoose.Schema.Types.ObjectId,
     // Reservation can span multiple rooms
-    rooms:      [String],
+    rooms:      [String], // Should point to id attribute in Venue's rooms
     rate:       { type: String, match: /hour|half_day|full_day/ },
     start:      Date,
     end:        Date,
