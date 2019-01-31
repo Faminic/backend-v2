@@ -8,6 +8,7 @@ const utils = require('../app/utils');
 
 router.use(morgan('dev'));
 router.use(express.json());
+router.use(express.static('pvcc_admin_ui/public'));
 
 
 router.get('/venues', (req, res) => {
@@ -20,7 +21,7 @@ router.get('/venues', (req, res) => {
 });
 
 
-router.post('/venues/:id', (req, res) => {
+router.post('/venue/:id', (req, res) => {
     // Modifies a venue.
     // req.body should be JSON, refer to app/models.js for
     // venue schema.
@@ -32,7 +33,7 @@ router.post('/venues/:id', (req, res) => {
 });
 
 
-router.get('/venues/:id', (req, res) => {
+router.get('/venue/:id', (req, res) => {
     // Gets detail for a venue
     Venue.findById(req.params.id)
          .then(result => res.json(result))
@@ -42,7 +43,7 @@ router.get('/venues/:id', (req, res) => {
 });
 
 
-router.get('/venues/:id/products/:product_id/reservations', (req, res) => {
+router.get('/venue/:id/:product_id/reservations', (req, res) => {
     // Gets a list of reservations which have not expired for
     // a given venue and product
     const page = (req.query.page || 1) - 1;
@@ -68,7 +69,7 @@ router.get('/venues/:id/products/:product_id/reservations', (req, res) => {
 });
 
 
-router.post('/venues/:id/products/:product_id/reservations', (req, res) => {
+router.post('/venue/:id/:product_id/reservations', (req, res) => {
     // Creates a reservation for a given venue and product
     // See app/models.js for schema
     Venue.findById(req.params.id).
@@ -86,7 +87,7 @@ router.post('/venues/:id/products/:product_id/reservations', (req, res) => {
 });
 
 
-router.delete('/reservations/:id', (req, res) => {
+router.delete('/reservation/:id', (req, res) => {
     // Delete a reservation by id
     Reservations.findByIdAndDelete(req.params.id).
         then(() => res.json({})).
