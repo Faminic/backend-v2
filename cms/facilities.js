@@ -6,61 +6,61 @@
 	$Facilities_templatitator: '@@global.facility_card',
 	Facilities: [
 		{
-			Relative_Link: '/facilities/astro-turf',
+			Relative_Link: '/facility/astro-turf',
 			Image: '/remote/direct_uploads/1548506645_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'Astro Turf'
 		},
 		{
-			Relative_Link: '/facilities/sports-field',
+			Relative_Link: '/facility/sports-field',
 			Image: '/remote/direct_uploads/1548507131_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'Sports Field'
 		},
 		{
-			Relative_Link: '/facilities/theatre',
+			Relative_Link: '/facility/theatre',
 			Image: '/remote/direct_uploads/1548507486_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'Theatre'
 		},
 		{
-			Relative_Link: '/facilities/sports-hall',
+			Relative_Link: '/facility/sports-hall',
 			Image: '/remote/direct_uploads/1548506925_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'Sports Hall'
 		},
 		{
-			Relative_Link: '/facilities/dining-hall',
+			Relative_Link: '/facility/dining-hall',
 			Image: '/remote/direct_uploads/1548507726_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'Dining Hall'
 		},
 		{
-			Relative_Link: '/facilities/classrooms',
+			Relative_Link: '/facility/classrooms',
 			Image: '/remote/direct_uploads/1548507212_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'Classrooms'
 		},
 		{
-			Relative_Link: '/facilities/gymnasium',
+			Relative_Link: '/facility/gymnasium',
 			Image: '/remote/direct_uploads/1548507553_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'Gymnasium'
 		},
 		{
-			Relative_Link: '/facilities/performing-arts',
+			Relative_Link: '/facility/performing-arts',
 			Image: '/remote/direct_uploads/1548507618_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'Performing Arts'
 		},
 		{
-			Relative_Link: '/facilities/green-room',
+			Relative_Link: '/facility/green-room',
 			Image: '/remote/direct_uploads/1548508461_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'The Green Room'
 		},
 		{
-			Relative_Link: '/facilities/it-suite',
+			Relative_Link: '/facility/it-suite',
 			Image: '/remote/direct_uploads/1548507297_image.png',
 			$Image_type: 'image',
 			Facility_Name: 'IT Suite'

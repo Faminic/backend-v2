@@ -39,6 +39,8 @@ router.post('/venue/:id', (req, res) => {
                  res.end();
                  return;
              }
+             // Should use this instead of findByIdAndUpdate because we want
+             // some schema checking.
              Object.assign(venue, req.body);
              return venue.save().then(() => res.json(venue));
          })
@@ -57,21 +59,28 @@ router.get('/venue/:id', (req, res) => {
 router.get('/venue/:id/:product_id/reservations', (req, res) => {
     // Gets a list of reservations which have not expired for
     // a given venue and product
-    const page = (req.query.page || 1) - 1;
+    // add ?page=n for the n-th page (starts from 1)
+    const page = (req.query.page ? parseInt(req.query.page) : 1) - 1;
     Venue.findById(req.params.id).
         then(venue => {
+            const timeout = moment().subtract(15, 'minutes').toDate();
             const prod = venue.get_product(req.params.product_id);
+            if (!prod) {
+                res.status(404);
+                res.end();
+                return;
+            }
             return Reservation.find({
                     $and: [
                         { $or: prod.rooms.map(room_id => ({ rooms: room_id })) },
                         { $or: [
                             { confirmed: true },
-                            { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
+                            { confirmed: false, created: { $gte: timeout } },
                         ]},
                     ],
                 },
                 null,
-                { skip: 25 * page, sort: { created: -1 } });
+                { skip: 25 * page, sort: { created: -1 }, limit: 25 });
         }).
         then(docs => res.json(docs)).
         catch(log_500(res));
