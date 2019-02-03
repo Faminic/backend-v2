@@ -37,115 +37,148 @@ $(document).hashroute('/', function() {
 });
 
 
-function render_room(venue, room) {
-    var $room = $(Mustache.render($('#ms-room').html(), room));
+function bindChange($input, obj, attr, is_price) {
+    $input.change(function() {
+        var val = $input.val();
+        if (val.length > 0 || is_price) {
+            if (is_price) {
+                if (val.length > 0) {
+                    val = parseInt(val);
+                    if (isNaN(val)) return;
+                } else {
+                    val = undefined;
+                }
+            }
+            obj[attr] = val;
+        }
+    });
+}
 
+
+function render_room(room, obsProducts, obsRooms) {
+    var $room = $(Mustache.render($("#ms-room").html(), room));
+
+    // update rooms if necessary
     $room.find('input[name=name]').change(function() {
         room.name = $room.find('input[name=name]').val();
-        // Make sure to update products' rooms
-        $('.product-room[data-id="' + room.id + '"] span').text(room.name);
-        update_product_dropdowns(venue);
+        obsRooms(obsRooms());
     });
 
     $room.find('.delete-room').click(function() {
-        venue.rooms.splice(venue.rooms.indexOf(room.id), 1);
-        // Make sure to delete products' rooms
-        venue.products.forEach(function(product) {
-            var i = product.rooms.indexOf(room.id);
-            if (i >= 0)
-                product.rooms.splice(i, 1);
-        });
-        $('.product-room[data-id="' + room.id + '"]').remove();
-        update_product_dropdowns(venue);
-        $room.remove();
+        var rooms = obsRooms();
+        rooms.splice(rooms.indexOf(room), 1);
+        obsRooms(rooms);
     });
+
     return $room;
 }
 
 
-function add_room(venue) {
-    var room = { id: uuidv4(), name: '' };
-    venue.rooms.push(room);
-    $('#rooms').append(render_room(venue, room));
-}
+function render_product(product, obsProducts, obsRooms) {
+    var $product = $(Mustache.render($("#ms-product").html(), product));
+    var $select  = $product.find('select.room-options');
+    var $rooms   = $product.find('.rooms');
 
+    var obsProductRooms = trkl([]);
+    obsProductRooms.subscribe(function(room_ids) {
+        var rooms = obsRooms();
+        product.rooms = room_ids;
 
-function bindChange($el, obj, attr, is_int) {
-    $el.change(function() {
-        var val = $el.val();
-        if (is_int && val.length !== 0) {
-            val = parseInt(val);
-            if (isNaN(val)) {
-                return;
-            }
-        }
-        obj[attr] = val;
-    });
-}
+        // Re-render the rooms
+        $rooms.html('');
+        room_ids.forEach(function(room_id) {
+            var $room = $(Mustache.render(
+                $('#ms-product-room').html(),
+                rooms.find(function(r) { return r.id === room_id })
+            ));
+            $room.find('.delete-product-room').click(function() {
+                product.rooms.splice(product.rooms.indexOf(room_id), 1);
+                obsProductRooms(product.rooms);
+                $room.remove();
+            });
+            $rooms.append($room);
+        });
 
-
-function update_product_dropdowns(venue) {
-    venue.products.forEach(function(product) {
-        var $select = $('.product[data-id="' + product.id + '"] select.room-options');
-        $select.html('');
+        // Re-render dropdown
         $select.val('');
-        venue.rooms.forEach(function(room) {
-            // add if we cannot find the room in the product
-            // and if the room name is not blank
-            if (!room.name) return;
+        $select.html('');
+        rooms.forEach(function(room) {
             if (product.rooms.indexOf(room.id) === -1) {
-                $select.append($('<option value="' + room.id + '">' + room.name + '</option>'));
+                $select.append($("<option value="+room.id+"/>").text(room.name));
             }
         });
     });
-}
 
-
-function render_product(venue, product) {
-    var $product = $(Mustache.render($('#ms-product').html(), product));
-    var $rooms = $product.find('.rooms');
-
+    // bind inputs
     bindChange($product.find('input[name=name]'), product, 'name');
     bindChange($product.find('input[name=price_per_hour]'), product, 'price_per_hour', true);
     bindChange($product.find('input[name=price_half_day]'), product, 'price_half_day', true);
     bindChange($product.find('input[name=price_full_day]'), product, 'price_full_day', true);
 
-    $product.find('.delete-product').click(function() {
-        venue.products.splice(venue.products.indexOf(product), 1);
-        $product.remove();
+    // Update the list of rooms associated with the
+    // product, and the dropdown select when necessary
+    obsRooms.subscribe(function(rooms) {
+        // remove deleted rooms
+        obsProductRooms(product.rooms.filter(function(room_id) {
+            return rooms.find(function(room) {
+                return room.id === room_id;
+            });
+        }));
     });
 
     $product.find('.add-product-room').click(function() {
-        var val = $product.find('.room-options').val();
+        var val = $select.val();
         if (val) {
             product.rooms.push(val);
-            render_rooms();
+            obsProductRooms(product.rooms);
         }
     });
 
-    function render_rooms() {
-        $rooms.html('');
-        product.rooms.forEach(function(room_id) {
-            var room = venue.rooms.find(function(x) { return x.id === room_id });
-            if (!room) return;
-            var $room = $(Mustache.render($('#ms-product-room').html(), room));
-            $room.find('.delete-product-room').click(function() {
-                product.rooms.splice(product.rooms.indexOf(room_id), 1);
-                $room.remove();
-            });
-            $rooms.append($room);
-        });
-    }
+    $product.find('.delete-product').click(function() {
+        var products = obsProducts();
+        products.splice(products.indexOf(product), 1);
+        obsProducts(products);
+    });
 
-    render_rooms();
+    obsProductRooms(product.rooms);
     return $product;
 }
 
 
-function add_product(venue) {
-    var product = { id: uuidv4(), name: '', rooms: [], price_per_hour: 0, price_half_day: 0, price_full_day: 0 };
-    venue.products.push(product);
-    $('#products').append(render_product(venue, product));
+function setup_venue(venue) {
+    var obsRooms = trkl([]);
+    var obsProducts = trkl([]);
+
+    var $rooms = $('#rooms');
+    var $products = $('#products');
+
+    obsRooms.subscribe(function(rooms) {
+        venue.rooms = rooms;
+        $rooms.html('');
+        rooms.forEach(function(room) {
+            $rooms.append(render_room(room, obsProducts, obsRooms));
+        });
+    });
+
+    obsProducts.subscribe(function(products) {
+        venue.products = products;
+        $products.html('');
+        products.forEach(function(product) {
+            $products.append(render_product(product, obsProducts, obsRooms));
+        });
+    });
+
+    $('#add-room').click(function() {
+        obsRooms(venue.rooms.concat([{ id: uuidv4(), name: "" }]));
+    });
+
+    $('#add-product').click(function() {
+        obsProducts(venue.products.concat([{ id: uuidv4(), name: "", rooms: [], price_per_hour: 0, price_half_day: 0, price_full_day: 0 }]));
+    });
+
+    // kickstart
+    obsRooms(venue.rooms);
+    obsProducts(venue.products);
 }
 
 
@@ -166,12 +199,9 @@ $(document).hashroute('/venue/:id', function(e) {
         venue.products.forEach(function(product) { delete product._id; });
 
         $('#sidebar li[data-id="' + venue_id + '"]').addClass('selected');
-        $('#content').html(Mustache.render(
-            $('#ms-venue-form').html(),
-            venue
-        ));
-        venue.rooms.forEach(function(room) { $('#rooms').append(render_room(venue, room)); });
-        venue.products.forEach(function(product) { $('#products').append(render_product(venue, product)); });
+        $('#content').html(Mustache.render($('#ms-venue-form').html(), venue));
+        setup_venue(venue);
+        window.venue = venue;
 
         DAYS.forEach(function(day) {
             OPEN_CLOSE.forEach(function(type) {
@@ -179,12 +209,7 @@ $(document).hashroute('/venue/:id', function(e) {
             });
         });
 
-        update_product_dropdowns(venue);
-        $('#add-room').click(function() { add_room(venue); });
-        $('#add-product').click(function() { add_product(venue); });
         $('#save').click(function() {
-            venue.rooms    = venue.rooms.filter(function(r) { return r.name.length > 0; });
-            venue.products = venue.products.filter(function(v) { return v.rooms.length > 0; });
             $.ajax('/venue/' + venue_id, {
                 method: 'POST',
                 data:   JSON.stringify(venue),
