@@ -80,7 +80,6 @@ venueSchema.methods.check_product = function(product_id, start, end) {
     if (!prod || !within_opening_hours(this, start) || !within_opening_hours(this, end))
         return Promise.resolve(false);
     return Reservation.findOne({
-            venue_id: this.id,
             start: { $gte: start.toDate() },
             end:   { $lte: end.toDate() },
             $and:  [
