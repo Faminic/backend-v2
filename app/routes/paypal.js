@@ -7,20 +7,17 @@ const {Reservation, Venue} = require('../models');
 
 
 function write_reservation_to_calendar(reservation) {
-    return Venue.findOne(reservation.venue_id).then(venue => {
-        if (!venue) return;
-        const rooms = reservation.rooms.map(room_id => venue.get_room(room_id).name).join(', ');
-        return calendar.addEvent({
-            start:   {dateTime: utils.momentToCalendarDate(moment(reservation.start)), timeZone: 'Europe/London'},
-            end:     {dateTime: utils.momentToCalendarDate(moment(reservation.end)),   timeZone: 'Europe/London'},
-            summary: venue.name,
-            description: [
-                `Rooms: ${rooms}`,
-                `Name: ${reservation.customer.name}`,
-                `Phone Number: ${reservation.customer.phone_number}`,
-                `Payment ID: ${reservation.payment.id}`,
-            ].join('\n'),
-        });
+    const rooms = reservation.rooms.map(room => room.name).join(', ');
+    calendar.addEvent({
+        start:   {dateTime: utils.momentToCalendarDate(moment(reservation.start)), timeZone: 'Europe/London'},
+        end:     {dateTime: utils.momentToCalendarDate(moment(reservation.end)),   timeZone: 'Europe/London'},
+        summary: reservation.venue,
+        description: [
+            `Rooms: ${rooms}`,
+            `Name: ${reservation.customer.name}`,
+            `Phone Number: ${reservation.customer.phone_number}`,
+            `Payment ID: ${reservation.payment.id}`,
+        ].join('\n'),
     }).catch(err => {
         console.error("Cannot create calendar entry:")
         console.error(err);

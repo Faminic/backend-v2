@@ -38,9 +38,9 @@ const venueSchema = new mongoose.Schema({
 
 
 const reservationSchema = new mongoose.Schema({
-    venue_id:   mongoose.Schema.Types.ObjectId,
-    // Reservation can span multiple rooms
-    rooms:      [String], // Should point to id attribute in Venue's rooms
+    // Reservations can span multiple rooms
+    venue:      String, // venue name
+    rooms:      [{ id:   String, name: String }],
     rate:       { type: String, match: /hour|half_day|full_day/ },
     start:      Date,
     end:        Date,
@@ -84,7 +84,7 @@ venueSchema.methods.check_product = function(product_id, start, end) {
             start: { $gte: start.toDate() },
             end:   { $lte: end.toDate() },
             $and:  [
-                { $or: prod.rooms.map(room_id => ({ rooms: room_id })) },
+                { $or: prod.rooms.map(room_id => ({ 'rooms.id': room_id })) },
                 { $or: [
                     { confirmed: true },
                     { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
@@ -113,15 +113,14 @@ venueSchema.methods.book_product = function(product_id, {customer, payment, star
     const prod = this.get_product(product_id);
     if (!prod)
         return Promise.reject();
-    const now = new Date();
     return Reservation.create({
-        venue_id: this.id,
-        rooms: prod.rooms,
+        venue: this.name,
+        rooms: prod.rooms.map(room_id => this.get_room(room_id)),
         customer,
         payment,
         start: start.toDate(),
         end:   end.toDate(),
-        created: now,
+        created: new Date(),
         confirmed: confirmed || false,
     });
 };

@@ -152,6 +152,7 @@ function setup_venue(venue) {
     var $rooms = $('#rooms');
     var $products = $('#products');
 
+
     obsRooms.subscribe(function(rooms) {
         venue.rooms = rooms;
         $rooms.html('');
@@ -174,6 +175,12 @@ function setup_venue(venue) {
 
     $('#add-product').click(function() {
         obsProducts(venue.products.concat([{ id: uuidv4(), name: "", rooms: [], price_per_hour: 0, price_half_day: 0, price_full_day: 0 }]));
+    });
+
+    DAYS.forEach(function(day) {
+        OPEN_CLOSE.forEach(function(type) {
+            bindChange($('input[name="' + day + '.' + type + '"]'), venue.opening_hours[day], type);
+        });
     });
 
     // kickstart
@@ -202,12 +209,6 @@ $(document).hashroute('/venue/:id', function(e) {
         $('#content').html(Mustache.render($('#ms-venue-form').html(), venue));
         setup_venue(venue);
         window.venue = venue;
-
-        DAYS.forEach(function(day) {
-            OPEN_CLOSE.forEach(function(type) {
-                bindChange($('input[name="' + day + '.' + type + '"]'), venue.opening_hours[day], type);
-            });
-        });
 
         $('#save').click(function() {
             $.ajax('/venue/' + venue_id, {
