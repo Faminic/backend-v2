@@ -72,7 +72,7 @@ router.get('/venue/:id/:product_id/reservations', (req, res) => {
             }
             return Reservation.find({
                     $and: [
-                        { $or: prod.rooms.map(room_id => ({ rooms: room_id })) },
+                        { $or: prod.rooms.map(room_id => ({ 'rooms.id': room_id })) },
                         { $or: [
                             { confirmed: true },
                             { confirmed: false, created: { $gte: timeout } },
