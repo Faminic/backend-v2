@@ -1,3 +1,91 @@
 {{#> layout}}
-{{ text }}
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+  {{#each Banner_Images}}
+    <li data-target="#carouselExampleControls" data-slide-to="{{@index}}" {{#unless @index}}class="active"{{/unless}}></li>
+  {{/each}}
+  </ol>
+  <div class="carousel-inner">
+    {{#each Banner_Images}}
+    <div class="carousel-item {{#unless @index}}active{{/unless}}">
+      <img class="d-block w-100" src="{{ this.Image }}"/>
+      <div class="carousel-caption">
+        {{{this.content}}}
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+<br>
+<div class="container-fluid">
+  <div class="jumbotron">
+    {{{bannertext}}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8 offset-md-1">
+    <h1>{{first_header}}</h1>
+    <p>{{text_under_first_header}}</p>
+    <div class="row">
+      {{#each whats_on_boxes}}
+      <div class="col-md-4 d-flex align-self-stretch">
+        <a href="{{this.link}}">
+          <div class="card mb-4 shadow-sm d-flex align-self-stretch" >
+            <img class="card-img-top" src="{{this.Image}}">
+            <div class="card-body">
+              <p class="card-text">{{{this.content}}}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      {{/each}}
+    </div>
+    <a href="/whats-on"><button type="button">View All</button></a>
+  </div>
+  <div class="col-md-3">
+    {{>facebook}}
+  </div>
+  <br>
+  <br>
+  <br>
+  <div class="col-md-8 offset-md-1">
+    <h1>{{second_header}}</h1>
+    <p>{{text_under_second_header}}</p>
+    <div class="row">
+      {{#each facility_boxes}}
+      <div class="col-md-4 d-flex align-self-stretch">
+        <a href="{{this.link}}">
+          <div class="card mb-4 shadow-sm d-flex align-self-stretch" >
+            <img class="card-img-top" src="{{this.Image}}">
+            <div class="card-body">
+              <p class="card-text">{{{this.content}}}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<br>
+<div class="col-md-6 offset-md-3">
+  <a href="{{charity_link}}">
+    <img src="{{charity_image}}" class="img-fluid">
+  </a>
+</div>
+
+
+</div>
+
+<link rel="stylesheet" href="/assets/css/index.css">
 {{/layout}}
