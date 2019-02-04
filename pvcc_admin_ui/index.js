@@ -6,6 +6,17 @@ const {Venue, Reservation} = require('../app/models');
 const utils = require('../app/utils');
 
 
+const default_opening_hours = {
+    monday:    {open: "18:00", close: "21:30"},
+    tuesday:   {open: "18:00", close: "21:30"},
+    wednesday: {open: "18:00", close: "21:30"},
+    thursday:  {open: "18:00", close: "21:30"},
+    friday:    {open: "18:00", close: "21:30"},
+    saturday:  {open: "10:00", close: "16:30"},
+    sunday:    {open: "10:00", close: "12:30"},
+};
+
+
 router.use(morgan('dev'));
 router.use(express.json());
 router.use(express.static('pvcc_admin_ui/public'));
@@ -18,6 +29,17 @@ function log_500(res) {
         res.end();
     };
 }
+
+
+router.post('/venues', (req, res) => {
+    // Creates a venue, need to specify req.body.name
+    let venue = new Venue();
+    venue.name = req.body.name;
+    venue.opening_hours = default_opening_hours;
+    venue.save()
+        .then(() => res.json(venue))
+        .catch(log_500(res));
+});
 
 
 router.get('/venues', (req, res) => {
