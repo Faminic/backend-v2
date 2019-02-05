@@ -7,8 +7,81 @@
   font-weight: bold;
 }
 
+#maincontainer {
+  border-right: 1px solid #000000;
+}
+
 .card-body {
   text-align:center;
   background-color: #222222;
   color: #FFFFFF;
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.5);
+  right: auto;
+  left: 15%;
+  bottom: auto;
+  top: 20%;
+  max-width: 450px;
+  max-height: 450px;
+  text-align:left;
+}
+
+.home-header {
+  width:100%;
+  text-align:left;
+  border-bottom: 0.5px solid #eaeaea;
+  line-height:0.1em;
+  margin:10px 0 0px;
+}
+
+.home-header span {
+  background:#fff;
+  padding:0 10px;
+}
+
+#whatsonbutton {
+  border: 3px solid black;
+  background-color: white;
+  color: black;
+  padding: 10px 15px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#whatsonbutton:hover {
+  background-color: #e7e7e7;
+}
+
+#charityhowitworks, #powered_by_section {
+  background-color: #F0F0F0;
+}
+
+#firstcharitysection button, #moneyraised button {
+  border: 0px;
+  background-color: #45A94D;
+  color: #FFFFFF;
+  font-weight: bold;
+  padding: 14px 50px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#featuredin img {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+#moneyraised h1{
+  color: #45A94D;
+}
+
+#moneyraised h2{
+  color: #116CA7;
+}
+
+#powered_by_section {
+  padding-top: 20px;
+  padding-bottom: 40px;
 }
