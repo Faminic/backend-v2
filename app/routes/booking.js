@@ -34,7 +34,7 @@ router.get('/taken/:venue_id/:product_id', (req, res) => {
         Reservation.find({
             start: { $gte: new Date() },
             $and:  [
-                { $or: product.rooms.map(room_id => ({ rooms: room_id })) },
+                { $or: product.rooms.map(room_id => ({ 'rooms.id': room_id })) },
                 { $or: [
                     { confirmed: true },
                     { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
