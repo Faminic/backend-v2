@@ -4,42 +4,42 @@
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549223368_slide-1.jpg',
-			content: '<p><strong>YOUR LOCAL COMMUNITY CENTRE</strong></p><p>We are an activity-based hub in the heart of Chester-le-Street which aims to meet the needs and interests of the residents of the town…</p>',
+			content: '<h3><strong>YOUR LOCAL COMMUNITY CENTRE</strong></h3><p>We are an activity-based hub in the heart of Chester-le-Street which aims to meet the needs and interests of the residents of the town…</p>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549225335_slide-2.jpg',
-			content: '<p><strong>ENVIRONMENTS TO ENHANCE LEARNING EXPERIENCES</strong></p><p>With a vast amount of variety, Park View Community Centre can provide a room to suit your requirements…</p>',
+			content: '<h3><strong>ENVIRONMENTS TO ENHANCE LEARNING EXPERIENCES</strong></h3><p>With a vast amount of variety, Park View Community Centre can provide a room to suit your requirements…</p>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549225400_slide-3.jpg',
-			content: '<p><strong>TRADITIONAL THEATRE</strong></p><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
+			content: '<h3><strong>TRADITIONAL THEATRE</strong></h3><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549225405_slide-4.jpg',
-			content: '<p><strong>QUALITY SPORTS FACILITIES FOR ALL</strong></p>',
+			content: '<h3><strong>QUALITY SPORTS FACILITIES FOR ALL</strong></h3>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549225432_slide-5.jpg',
-			content: '<p><strong>BOOK YOUR CHILD’S BIRTHDAY PARTY</strong></p>',
+			content: '<h3><strong>BOOK YOUR CHILD’S BIRTHDAY PARTY</strong></h3>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		}
 	],
 	bannertext: 'WELCOME TO PARK VIEW COMMUNITY CENTRE, IN THE HEART OF CHESTER-LE-STREET',
 	first_header: 'WHAT\'S ON',
-	text_under_first_header: '',
+	text_under_first_header: '<p><br></p><p><br></p>',
 	$text_under_first_header_type: 'quill',
 	$text_under_first_header_control_path: '/brick/enduro_quill/quill_control',
 	$whats_on_boxes_templatitator: '@@global.whatsonboxes',
@@ -70,7 +70,7 @@
 		}
 	],
 	second_header: 'OUR FACILITIES',
-	text_under_second_header: '<p><span style="background-color: rgb(255, 255, 255); color: rgb(102, 102, 102);">All of our facilities are available for hire. We have facilities to suit all activities, events or occasions raging from sports opportunities to meetings and parties. Hiring agreements can range from one off facility hire to fully catered with licensed bar events. Please make an enquiry should you wish to discuss booking options further.</span></p>',
+	text_under_second_header: '<p><br></p><p><span style="background-color: rgb(255, 255, 255); color: rgb(102, 102, 102);">All of our facilities are available for hire. We have facilities to suit all activities, events or occasions raging from sports opportunities to meetings and parties. Hiring agreements can range from one off facility hire to fully catered with licensed bar events. Please make an enquiry should you wish to discuss booking options further.</span></p>',
 	$text_under_second_header_type: 'quill',
 	$text_under_second_header_control_path: '/brick/enduro_quill/quill_control',
 	$facility_boxes_templatitator: '@@global.facilityboxes',
@@ -190,5 +190,40 @@
 			$step_text_control_path: '/brick/enduro_quill/quill_control'
 		}
 	],
-	charity_youtube_link: 'https://www.youtube.com/embed/FdLjsJCwmJU?rel=0'
+	charity_youtube_link: 'https://www.youtube.com/embed/FdLjsJCwmJU?rel=0',
+	featured_in_title: 'AS FEATURED IN',
+	$featured_in_image_templatitator: '@@global.featuredinimage',
+	featured_in_image: [
+		{
+			$Image_type: 'image',
+			Image: '/remote/direct_uploads/1549385696_the_guardian.png'
+		},
+		{
+			$Image_type: 'image',
+			Image: '/remote/direct_uploads/1549385709_the_independent.png'
+		},
+		{
+			$Image_type: 'image',
+			Image: '/remote/direct_uploads/1549385712_london_evening_standard.png'
+		},
+		{
+			$Image_type: 'image',
+			Image: '/remote/direct_uploads/1549385721_sunday_times.png'
+		},
+		{
+			$Image_type: 'image',
+			Image: '/remote/direct_uploads/1549385724_daily_mail.png'
+		}
+	],
+	money_raised_amount: '<p>£14,733,440.09</p>',
+	$money_raised_amount_type: 'quill',
+	$money_raised_amount_control_path: '/brick/enduro_quill/quill_control',
+	money_raised_text: '<p>donated to good causes in the UK</p>',
+	$money_raised_text_type: 'quill',
+	$money_raised_text_control_path: '/brick/enduro_quill/quill_control',
+	charity_button_2_title: 'Ready to join?',
+	charity_button_2_text: 'Support us now',
+	charity_button_2_link: 'https://www.easyfundraising.org.uk/causes/parkviewcom/',
+	powered_by_image: '/remote/direct_uploads/1549388414_powered_by_ef.png',
+	$powered_by_image_type: 'image'
 })

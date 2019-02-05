@@ -31,9 +31,9 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-md-8 offset-md-1">
-    <h1>{{first_header}}</h1>
-    <p>{{text_under_first_header}}</p>
+  <div class="col-md-6 offset-md-2" id="maincontainer">
+    <h1 class="home-header"><span>{{{first_header}}}</span></h1>
+    <p>{{{text_under_first_header}}}</p>
     <div class="row">
       {{#each whats_on_boxes}}
       <div class="col-md-4 d-flex align-self-stretch">
@@ -48,13 +48,11 @@
       </div>
       {{/each}}
     </div>
-    <a href="/whats-on"><button type="button">View All</button></a>
-    <br>
-    <br>
-    <br>
-    <h1>{{second_header}}</h1>
-    <p>{{text_under_second_header}}</p>
-    <div class="row">
+    <a href="/whats-on"><button type="button" id="whatsonbutton">View All</button></a>
+    <br><br><br><br>
+    <h1 class="home-header"><span>{{{second_header}}}</span></h1>
+    <p>{{{text_under_second_header}}}</p>
+    <div class="row" style="border-bottom: 4px solid #4682B4;">
       {{#each facility_boxes}}
       <div class="col-md-4 d-flex align-self-stretch">
         <a href="{{this.link}}">
@@ -68,8 +66,6 @@
       </div>
       {{/each}}
     </div>
-    <br>
-    <br>
     <br>
     <div class="charity-wrapper" style="text-align: center;">
       <div class="container" style="display: inline-block;">
@@ -95,7 +91,7 @@
             <div class="col-md-3">
               <img src="{{this.Image}}" width="163" height="105">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
               <div class="instructions" style="text-align:left;">
                 <h6>{{{this.step_title}}}</h6>
                 <p>{{{this.step_text}}}</p>
@@ -104,13 +100,52 @@
           </div>
           {{/each}}
           <div class="video">
-            <div class="fluid-width-video-wrapper"><iframe src="{{charity_youtube_link}}" frameborder="0" allowfullscreen></iframe></div>
+            <div class="fluid-width-video-wrapper"><iframe src="{{charity_youtube_link}}" width="700" height="400" frameborder="0" allowfullscreen></iframe></div>
+          </div>
+          <div id="featuredin">
+            <h6>{{featured_in_title}}</h6>
+            <div class="row">
+              {{#each featured_in_image}}
+              <div class="col-md-3">
+                <img src="{{this.Image}}">
+              </div>
+              {{/each}}
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <br><br>
+    <div class="charity-wrapper" style="text-align: center;">
+      <div class="container" style="display: inline-block;">
+        <div class="col-md-10 offset-md-2">
+          <div id="moneyraised">
+            <div class="row">
+              <div class="col-md-6">
+                <h1>{{{money_raised_amount}}}</h1>
+                <p>{{{money_raised_text}}}</p>
+              </div>
+              <div class="col-md-6">
+                <h2>{{{charity_button_2_title}}}</h2>
+                <a class="button" target="_blank" href="{{charity_button_2_link}}">
+                  <button type="button">{{charity_button_2_text}}</button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br>
+    <div class="charity-wrapper" style="text-align: center;">
+      <div class="container" style="display: inline-block;">
+        <div class="col-md-10 offset-md-2" id="powered_by_section">
+          <img src="{{powered_by_image}}">
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-4">
     {{>facebook}}
   </div>
 </div>
