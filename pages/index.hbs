@@ -79,10 +79,26 @@
             <img src="{{charity_logo}}" alt="easyfundraising.org.uk">
           </a>
         </div>
-        <p>{{{charity_content_1}}}</p>
-        <a class="button" target="_blank" href="{{charity_button_1_link}}">
-          <button type="button">{{charity_button_1_text}}</button>
-        </a>
+        <div id="firstcharitysection">
+          <p>{{{charity_content_1}}}</p>
+          <a class="button" target="_blank" href="{{charity_button_1_link}}">
+            <button type="button">{{charity_button_1_text}}</button>
+          </a>
+        </div>
+        <br>
+        <br>
+        <div id=charityhowitworks>
+          <h3>{{charity_instructions_title}}</h3>
+          {{#each charity_steps}}
+          <div class="step">
+            <img src="{{this.Image}}" width="163" height="105">
+            <div class="instructions">
+              <h6>{{{this.step_title}}}</h6>
+              <p>{{{this.step_text}}}</p>
+            </div>
+          </div>
+          {{/each}}
+        </div>
       </div>
     </div>
   </div>

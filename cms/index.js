@@ -18,7 +18,7 @@
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549225400_slide-3.jpg',
-			content: '<p><strong>TRADITIONAL THEATRE</strong></p><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
+			content: '<p><strong>TRADITIONAL THEATRE</strong></p><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
@@ -155,5 +155,8 @@
 	$charity_content_1_type: 'quill',
 	$charity_content_1_control_path: '/brick/enduro_quill/quill_control',
 	charity_button_1_link: 'http://www.easyfundraising.org.uk/causes/parkviewcom/',
-	charity_button_1_text: 'Support us now'
+	charity_button_1_text: 'Support us now',
+	charity_instructions_title: 'Here\'s how it works',
+	$charity_steps_templatitator: '@@global.charitysteps',
+	charity_steps: []
 })
