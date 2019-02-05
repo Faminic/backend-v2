@@ -1,6 +1,7 @@
 var venues = [];
 var currentVenue = {};
 var currentProduct = {};
+var submitted = false;
 
 
 function fillVenues(){
@@ -122,6 +123,8 @@ $(document).ready(function(){
 
   $("#formBookNow").submit( function(event){
     event.preventDefault();
+    if (window.submitted) return;
+    window.submitted = true;
     const startDate = $("#selectTimeStart option:selected").val();
     let endDate = moment(startDate);
     endDate.add($("#selectTime").val(), "hours");

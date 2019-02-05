@@ -139,6 +139,27 @@ reservationSchema.statics.find_payment = function(payment) {
 };
 
 
+reservationSchema.methods.ensure_unique = function() {
+    // Makes sure that a reservation is unique, i.e. there are no
+    // two reservations for overlapping times.
+    return Reservation.findOne({
+        _id:   { $ne:  this._id },
+        start: { $gte: this.start },
+        end:   { $lte: this.end },
+        $and:  [
+            { $or: this.rooms.map(room => ({ 'rooms.id': room.id })) },
+            { $or: [
+                { confirmed: true },
+                { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
+            ]},
+        ],
+    }).then(reservation => {
+        if (!reservation) return true;
+        throw ({ IntegrityError: true });
+    });
+};
+
+
 reservationSchema.statics.cancel_payment = function(token) {
     // Cancels a payment with the given token.
     //      token: String

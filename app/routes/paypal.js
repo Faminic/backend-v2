@@ -34,25 +34,42 @@ router.get('/ok', (req, res) => {
         return;
     }
 
-    Reservation.find_payment({'payment.id': paymentId, 'payment.token': token}).then(reservation => {
-        // make sure that the reservation still exists
-        if (!reservation) throw new utils.StatusError(400);
-        return new Promise((resolve, reject) => {
-            paypal.execute_payment(paymentId, PayerID, (err, payment) => {
+    let reservation = null;
+    Reservation.find_payment({'payment.id': paymentId, 'payment.token': token}).
+        then(_reservation => {
+            if (!_reservation) throw new utils.StatusError(400);
+            reservation = _reservation;
+        }).
+        // ensure that the reservation is unique; if it's not unique then there
+        // is potentially two people paying at once.
+        then(() => reservation.ensure_unique()).
+        then(() => new Promise((resolve, reject) => paypal.execute_payment(paymentId, PayerID, (err, payment) => {
                 if (err) return reject(err);
-                console.log(payment);
-                reservation.confirmed = true;
-                reservation.save((err) => {
-                    if (err) return reject(err);
-                    write_reservation_to_calendar(reservation);
-                    res.write("Payment approved.");
-                    res.end();
-                    resolve();
-                });
-            });
+                resolve(payment);
+            }))).
+        then(() => {
+            reservation.confirmed = true;
+            return reservation.save();
+        }).
+        then(() => {
+            write_reservation_to_calendar(reservation);
+            res.cookie('reservation', JSON.stringify({
+                venue:     reservation.venue,
+                rooms:     reservation.rooms.map(x => x.name).join(', '),
+                start:     reservation.start,
+                end:       reservation.end,
+                customer:  reservation.customer,
+                paypal_id: reservation.payment.id,
+            }));
+            res.redirect('/payment-confirmed');
+        }).
+        catch(err => {
+            if (err.IntegrityError) {
+                res.redirect('/payment-retry');
+                return;
+            }
+            utils.catch_errors(res)(err);
         });
-    })
-    .catch(utils.catch_errors(res));
 });
 
 
@@ -66,10 +83,7 @@ router.get('/cancel', (req, res) => {
     }
     // find + delete reservation
     Reservation.cancel_payment(token).
-        then(() => {
-            res.write("Payment cancelled");
-            res.end();
-        }).
+        then(() => res.redirect('/payment-cancelled')).
         catch(utils.catch_errors(res));
 });
 
