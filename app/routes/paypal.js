@@ -65,6 +65,7 @@ router.get('/ok', (req, res) => {
         }).
         catch(err => {
             if (err.IntegrityError) {
+                reservation.remove(() => {});
                 res.redirect('/payment-retry');
                 return;
             }
