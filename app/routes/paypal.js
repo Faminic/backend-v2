@@ -36,11 +36,7 @@ router.get('/ok', (req, res) => {
 
     Reservation.find_payment({'payment.id': paymentId, 'payment.token': token}).then(reservation => {
         // make sure that the reservation still exists
-        if (!reservation) {
-            res.status(400);
-            res.end();
-            return;
-        }
+        if (!reservation) throw new utils.StatusError(400);
         return new Promise((resolve, reject) => {
             paypal.execute_payment(paymentId, PayerID, (err, payment) => {
                 if (err) return reject(err);
@@ -56,11 +52,7 @@ router.get('/ok', (req, res) => {
             });
         });
     })
-    .catch(err => {
-        console.error(err);
-        res.status(500);
-        res.end();
-    });
+    .catch(utils.catch_errors(res));
 });
 
 
@@ -78,11 +70,7 @@ router.get('/cancel', (req, res) => {
             res.write("Payment cancelled");
             res.end();
         }).
-        catch(err => {
-            console.error(err);
-            res.status(500);
-            res.end();
-        });
+        catch(utils.catch_errors(res));
 });
 
 

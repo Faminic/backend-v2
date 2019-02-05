@@ -23,7 +23,29 @@ function roundToHalfHour(m) {
 }
 
 
+function StatusError(status) {
+    this.status = status;
+    this.StatusError = true;
+}
+
+
+function catch_errors(res) {
+    return (err) => {
+        if (err.StatusError) {
+            res.status(err.status);
+            res.end();
+            return;
+        }
+        console.error(err);
+        res.status(500);
+        res.end();
+    };
+}
+
+
 module.exports = {
     momentToCalendarDate,
     clientDateToMoment,
+    catch_errors,
+    StatusError,
 };

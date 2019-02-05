@@ -133,7 +133,7 @@ $(document).ready(function(){
       "phone_number":$("#inputPhone").val()
     }, function(data){
       console.log(data);
+      window.open(data.redirect);
     });
-
-  })
+  });
 });
