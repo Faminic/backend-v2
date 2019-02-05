@@ -78,6 +78,14 @@ router.get('/venue/:id', (req, res) => {
 });
 
 
+router.delete('/venue/:id', (req, res) => {
+    // Deletes venue
+    Venue.findByIdAndDelete(req.params.id)
+         .then(() => res.json({}))
+         .catch(log_500(res));
+});
+
+
 router.get('/venue/:id/:product_id/reservations', (req, res) => {
     // Gets a list of reservations which have not expired for
     // a given venue and product
