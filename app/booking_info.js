@@ -7,7 +7,7 @@ function get_price(product, hours) {
         case "hour":     price = product.price_per_hour * hours;
     }
     return {
-        price: price.toPrecision(2),
+        price: price.toFixed(2),
         rate,
     };
 }

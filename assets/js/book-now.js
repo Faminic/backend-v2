@@ -41,7 +41,28 @@ function getStartTimes(date, length){
   return out;
 }
 
-function getAvailableTimes(venueID, productID, length){
+function bestRate(product, hours) {
+  var full_price = product.price_per_hour * hours;
+  if (3 < hours && hours <= 7 && product.price_full_day && product.price_full_day < full_price) {
+    return "full_day";
+  }
+  if (1 < hours && hours <= 3 && product.price_half_day && product.price_half_day < full_price) {
+    return "half_day";
+  }
+  return "hour";
+}
+
+function calculatePrice() {
+  var duration = +$("#selectTime").val();
+  var price = currentProduct.price_per_hour * duration;
+  switch (bestRate(currentProduct, duration)) {
+    case "full_day": price = currentProduct.price_full_day; break;
+    case "half_day": price = currentProduct.price_half_day; break;
+  }
+  return price;
+}
+
+function getAvailableTimes(venueID, productID, length) {
   $.get("/api/booking/taken/" + venueID + "/" + productID, {}, function(data){
     $("#selectTimeStart").empty();
     let dates = data;
@@ -69,9 +90,7 @@ $(document).ready(function(){
   $("#selectDate").val(moment().format("YYYY-MM-DD"));
   $("#selectTime").val(1);
 
-
   $("#selectType").change( function(){
-    $("#priceTag").hide();
     $("#groupVenue").hide();
     $("#groupActivity").hide();
     $("#groupEvent").hide();
@@ -94,6 +113,7 @@ $(document).ready(function(){
 
   $("#selectTime").change( function(){
     getAvailableTimes(currentVenue._id, currentProduct.id, $("#selectTime").val());
+    $("#priceTag").text("£" + calculatePrice().toFixed(2));
   });
 
   $("#selectDate").change( function(){
