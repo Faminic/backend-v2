@@ -18,7 +18,7 @@
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549225400_slide-3.jpg',
-			content: '<p><strong>TRADITIONAL THEATRE</strong></p><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
+			content: '<p><strong>TRADITIONAL THEATRE</strong></p><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
@@ -151,12 +151,44 @@
 	charity_logo_link: 'http://www.easyfundraising.org.uk/',
 	$charity_logo_type: 'image',
 	charity_logo: '/remote/direct_uploads/1549325314_ef_logo.png',
-	charity_content_1: '<h2>Help us raise funds for free when you shop online</h2><p><strong>easyfundraising </strong>is a brilliant way to raise money for <strong>Park View Community Centre</strong>.</p><p>Shop online from <strong>over 2,700 retailers</strong> and they\'ll give a donation every time you buy something, at no extra cost.</p>',
+	charity_content_1: '<h2>Help us raise funds for free when you shop online</h2><p><strong>easyfundraising </strong>is a brilliant way to raise money for <strong>Park View Community Centre</strong>.</p><p>Shop online from <strong>over 2,700 retailers</strong> and they\'ll give a donation every time you buy something, at no extra cost.</p>',
 	$charity_content_1_type: 'quill',
 	$charity_content_1_control_path: '/brick/enduro_quill/quill_control',
 	charity_button_1_link: 'http://www.easyfundraising.org.uk/causes/parkviewcom/',
 	charity_button_1_text: 'Support us now',
 	charity_instructions_title: 'Here\'s how it works',
 	$charity_steps_templatitator: '@@global.charitysteps',
-	charity_steps: []
+	charity_steps: [
+		{
+			$Image_type: 'image',
+			Image: '/remote/direct_uploads/1549328346_step_1.png',
+			step_title: '<p><strong>1. Start at easyfundraising.org.uk</strong></p>',
+			$step_title_type: 'quill',
+			step_text: '<p>Let’s say you want to buy a pair of shoes from John Lewis. Instead of going to johnlewis.com, you go to easyfundraising.org.uk first – or you can use the easyfundraising toolbar.</p>',
+			$step_text_type: 'quill',
+			$step_title_control_path: '/brick/enduro_quill/quill_control',
+			$step_text_control_path: '/brick/enduro_quill/quill_control'
+		},
+		{
+			$Image_type: 'image',
+			Image: '/remote/direct_uploads/1549328381_step_2.png',
+			step_title: '<p><strong>2. Make a purchase</strong></p>',
+			$step_title_type: 'quill',
+			step_text: '<p>You click from the easyfundraising website through to John Lewis to make your purchase. The price of the shoes is exactly the same as if you’d visited John Lewis directly.</p>',
+			$step_text_type: 'quill',
+			$step_title_control_path: '/brick/enduro_quill/quill_control',
+			$step_text_control_path: '/brick/enduro_quill/quill_control'
+		},
+		{
+			$Image_type: 'image',
+			Image: '/remote/direct_uploads/1549328407_step_3.png',
+			step_title: '<p><strong>3. Get a donation</strong></p>',
+			$step_title_type: 'quill',
+			step_text: '<p>After you have bought your shoes, John Lewis will make a donation to our cause as a thank you for shopping with them. easyfundraising collect these donations for us, and it costs nothing!</p>',
+			$step_text_type: 'quill',
+			$step_title_control_path: '/brick/enduro_quill/quill_control',
+			$step_text_control_path: '/brick/enduro_quill/quill_control'
+		}
+	],
+	charity_youtube_link: 'https://www.youtube.com/embed/FdLjsJCwmJU?rel=0'
 })

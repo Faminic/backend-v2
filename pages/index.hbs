@@ -87,17 +87,25 @@
         </div>
         <br>
         <br>
-        <div id=charityhowitworks>
-          <h3>{{charity_instructions_title}}</h3>
+        <div class="col-md-10 offset-md-2" id=charityhowitworks>
+          <h3 style="text-align:left;">{{charity_instructions_title}}</h3>
+          <br>
           {{#each charity_steps}}
-          <div class="step">
-            <img src="{{this.Image}}" width="163" height="105">
-            <div class="instructions">
-              <h6>{{{this.step_title}}}</h6>
-              <p>{{{this.step_text}}}</p>
+          <div class="row">
+            <div class="col-md-3">
+              <img src="{{this.Image}}" width="163" height="105">
+            </div>
+            <div class="col-md-6">
+              <div class="instructions" style="text-align:left;">
+                <h6>{{{this.step_title}}}</h6>
+                <p>{{{this.step_text}}}</p>
+              </div>
             </div>
           </div>
           {{/each}}
+          <div class="video">
+            <div class="fluid-width-video-wrapper"><iframe src="{{charity_youtube_link}}" frameborder="0" allowfullscreen></iframe></div>
+          </div>
         </div>
       </div>
     </div>
