@@ -18,7 +18,7 @@
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549225400_slide-3.jpg',
-			content: '<h3><strong>TRADITIONAL THEATRE</strong></h3><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
+			content: '<h3><strong>TRADITIONAL THEATRE</strong></h3><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
@@ -80,7 +80,7 @@
 			Image: '/remote/direct_uploads/1549240705_banner7-495x400.jpg',
 			content: '<p>ASTRO TURF</p>',
 			$content_type: 'quill',
-			link: '/facilities/astro-turf',
+			link: '/facility/astro-turf',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
@@ -88,7 +88,7 @@
 			Image: '/remote/direct_uploads/1549240700_1-495x400.jpg',
 			content: '<p>SPORTS HALL</p>',
 			$content_type: 'quill',
-			link: '/facilities/sports-hall',
+			link: '/facility/sports-hall',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
@@ -96,7 +96,7 @@
 			Image: '/remote/direct_uploads/1549240693_banner8-495x400.jpg',
 			content: '<p>SPORTS FIELD</p>',
 			$content_type: 'quill',
-			link: '/facilities/sports-field',
+			link: '/facility/sports-field',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
@@ -104,7 +104,7 @@
 			Image: '/remote/direct_uploads/1549240755_12.12.15.Park_View_Community_Centre-1013-495x400.jpg',
 			content: '<p>CLASSROOMS</p>',
 			$content_type: 'quill',
-			link: '/facilities/classrooms',
+			link: '/facility/classrooms',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
@@ -112,7 +112,7 @@
 			Image: '/remote/direct_uploads/1549240773_12.12.15.Park_View_Community_Centre-0844-495x400.jpg',
 			content: '<p>THEATRE</p>',
 			$content_type: 'quill',
-			link: '/facilities/theatre',
+			link: '/facility/theatre',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
@@ -120,7 +120,7 @@
 			Image: '/remote/direct_uploads/1549240810_banner6-495x400.jpg',
 			content: '<p>THE GYMNASIUM</p>',
 			$content_type: 'quill',
-			link: '/facilities/gymnasium',
+			link: '/facility/gymnasium',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
@@ -128,7 +128,7 @@
 			Image: '/remote/direct_uploads/1549240843_thumbnail.jpg',
 			content: '<p>PERFORMING ARTS</p>',
 			$content_type: 'quill',
-			link: '/facilities/performing-arts',
+			link: '/facility/performing-arts',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
@@ -136,7 +136,7 @@
 			Image: '/remote/direct_uploads/1549240871_thumbnail.jpg',
 			content: '<p>THE GREEN ROOM</p>',
 			$content_type: 'quill',
-			link: '/facilities/green-room',
+			link: '/facility/green-room',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
 		{
@@ -144,7 +144,7 @@
 			Image: '/remote/direct_uploads/1549240899_thumbnail.jpg',
 			content: '<p>DINING HALL</p>',
 			$content_type: 'quill',
-			link: '/facilities/dining-hall',
+			link: '/facility/dining-hall',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		}
 	],
