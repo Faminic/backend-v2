@@ -7,7 +7,7 @@ const {Venue, Reservation} = require('../models');
 
 
 router.get('/', (req, res) => {
-    Venue.find({}).select('-rooms -opening_hours -products.rooms').exec((err, docs) => {
+    Venue.find({}).select('-rooms -products.rooms').exec((err, docs) => {
         if (err) {
             console.error(err);
             res.status(500).end();
@@ -60,7 +60,6 @@ router.post('/:venue_id/:product_id', (req, res) => {
         name:  req.body.name,
         phone_number: req.body.phone_number,
     };
-
     // sanity checks
     const now = moment();
     if (!start.isAfter(now)
@@ -72,7 +71,6 @@ router.post('/:venue_id/:product_id', (req, res) => {
         res.status(400).end();
         return;
     }
-
     Venue.findById(venue_id, (err, venue) => {
         if (!venue) return res.status(404).end();
         // Check that we can book the product
