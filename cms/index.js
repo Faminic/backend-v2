@@ -18,7 +18,7 @@
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549225400_slide-3.jpg',
-			content: '<p><strong>TRADITIONAL THEATRE</strong></p><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
+			content: '<p><strong>TRADITIONAL THEATRE</strong></p><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
@@ -40,6 +40,8 @@
 	bannertext: 'WELCOME TO PARK VIEW COMMUNITY CENTRE, IN THE HEART OF CHESTER-LE-STREET',
 	first_header: 'WHAT\'S ON',
 	text_under_first_header: '',
+	$text_under_first_header_type: 'quill',
+	$text_under_first_header_control_path: '/brick/enduro_quill/quill_control',
 	$whats_on_boxes_templatitator: '@@global.whatsonboxes',
 	whats_on_boxes: [
 		{
@@ -68,7 +70,9 @@
 		}
 	],
 	second_header: 'OUR FACILITIES',
-	text_under_second_header: 'All of our facilities are available for hire. We have facilities to suit all activities, events or occasions raging from sports opportunities to meetings and parties. Hiring agreements can range from one off facility hire to fully catered with licensed bar events. Please make an enquiry should you wish to discuss booking options further.',
+	text_under_second_header: '<p><span style="background-color: rgb(255, 255, 255); color: rgb(102, 102, 102);">All of our facilities are available for hire. We have facilities to suit all activities, events or occasions raging from sports opportunities to meetings and parties. Hiring agreements can range from one off facility hire to fully catered with licensed bar events. Please make an enquiry should you wish to discuss booking options further.</span></p>',
+	$text_under_second_header_type: 'quill',
+	$text_under_second_header_control_path: '/brick/enduro_quill/quill_control',
 	$facility_boxes_templatitator: '@@global.facilityboxes',
 	facility_boxes: [
 		{
@@ -144,7 +148,12 @@
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		}
 	],
-	charity_link: 'https://www.easyfundraising.org.uk/causes/parkviewcom/',
-	$charity_image_type: 'image',
-	charity_image: '/remote/direct_uploads/1549241796_ef-banner-large.png'
+	charity_logo_link: 'http://www.easyfundraising.org.uk/',
+	$charity_logo_type: 'image',
+	charity_logo: '/remote/direct_uploads/1549325314_ef_logo.png',
+	charity_content_1: '<h2>Help us raise funds for free when you shop online</h2><p><strong>easyfundraising </strong>is a brilliant way to raise money for <strong>Park View Community Centre</strong>.</p><p>Shop online from <strong>over 2,700 retailers</strong> and they\'ll give a donation every time you buy something, at no extra cost.</p>',
+	$charity_content_1_type: 'quill',
+	$charity_content_1_control_path: '/brick/enduro_quill/quill_control',
+	charity_button_1_link: 'http://www.easyfundraising.org.uk/causes/parkviewcom/',
+	charity_button_1_text: 'Support us now'
 })

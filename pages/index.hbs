@@ -49,14 +49,9 @@
       {{/each}}
     </div>
     <a href="/whats-on"><button type="button">View All</button></a>
-  </div>
-  <div class="col-md-3">
-    {{>facebook}}
-  </div>
-  <br>
-  <br>
-  <br>
-  <div class="col-md-8 offset-md-1">
+    <br>
+    <br>
+    <br>
     <h1>{{second_header}}</h1>
     <p>{{text_under_second_header}}</p>
     <div class="row">
@@ -73,15 +68,27 @@
       </div>
       {{/each}}
     </div>
+    <br>
+    <br>
+    <br>
+    <div class="charity-wrapper" style="text-align: center;">
+      <div class="container" style="display: inline-block;">
+        <!--place all charity code in here-->
+        <div id="charitylogo">
+          <a target="_blank" href="{{charity_logo_link}}">
+            <img src="{{charity_logo}}" alt="easyfundraising.org.uk">
+          </a>
+        </div>
+        <p>{{{charity_content_1}}}</p>
+        <a class="button" target="_blank" href="{{charity_button_1_link}}">
+          <button type="button">{{charity_button_1_text}}</button>
+        </a>
+      </div>
+    </div>
   </div>
-</div>
-<br>
-<br>
-<br>
-<div class="col-md-6 offset-md-3">
-  <a href="{{charity_link}}">
-    <img src="{{charity_image}}" class="img-fluid">
-  </a>
+  <div class="col-md-3">
+    {{>facebook}}
+  </div>
 </div>
 
 
