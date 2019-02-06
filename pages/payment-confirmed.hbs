@@ -39,6 +39,7 @@ $("#payment-phone-number").text(reservation.customer.phone_number);
 $("#payment-paypal-id").text(reservation.paypal_id);
 $("#wtf").hide();
 $("#payment-confirmed").show();
+document.cookie = "reservation=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 </script>
 
 {{/layout}}
