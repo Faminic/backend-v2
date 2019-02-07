@@ -105,7 +105,7 @@ router.post('/venue/:id/:product_id/reservations', (req, res) => {
 
 router.delete('/reservation/:id', (req, res) => {
     // Delete a reservation by id
-    Reservations.findByIdAndDelete(req.params.id).
+    Reservation.findByIdAndDelete(req.params.id).
         then(() => res.json({})).
         catch(log_500(res));
 });

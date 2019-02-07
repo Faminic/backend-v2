@@ -55,6 +55,67 @@ function bindChange($input, obj, attr, is_price) {
 }
 
 
+
+function setup_reservations(reservations, venue_id, product_id) {
+    var obsReservations = trkl([]);
+    var $reservations = $("#reservations");
+
+    obsReservations.subscribe(function(reservations) {
+        $reservations.html("");
+        reservations.forEach(function(reservation) {
+            $reservations.append(render_reservation(reservation, obsReservations));
+        });
+    });
+
+
+    function render_reservation(reservation, obsReservations) {
+        var $reservation = $(Mustache.render($("#reservation").html(), reservation));
+
+        $reservation.find(".delete-reservation").click(function() {
+            var reservations = obsReservations();
+            reservations.splice(reservations.indexOf(reservation), 1);
+            obsReservations(reservations);
+            $reservation.remove();
+
+            $.ajax("/reservation/" + reservation._id, {
+                method: "DELETE",
+                success: function() {
+                    window.alert("Reservation deleted");
+                },
+                error: function(e) {
+                    window.alert("Reservation could not be deleted");
+                }
+            });
+        });
+        return $reservation;
+    }
+
+    $('#add-reservation-form').submit(function() {
+        $.ajax("/venue/" + venue_id + "/" + product_id + "/reservations", {
+            method: "POST",
+            data: JSON.stringify({
+                customer: {name: $("#inputName").val(), phone_number: $("#inputPhone").val()},
+                start: $("#selectDate").val() + "T" + $("#selectTimeStart").val(), 
+                end: $("#selectDate").val() + "T" + $("#selectTimeEnd").val(), 
+                confirmed: true
+
+            }),
+            success: function(r) {
+                window.alert("Reservation added");
+                reservations.push(r);
+                obsReservations(reservations);
+            },
+            error: function(e) {
+                window.alert("Reservation could not be added");
+            }
+        });
+        return false;
+    });
+
+    obsReservations(reservations);
+}
+
+
 function render_room(room, obsProducts, obsRooms) {
     var $room = $(Mustache.render($("#ms-room").html(), room));
 
@@ -152,7 +213,6 @@ function setup_venue(venue) {
     var $rooms = $('#rooms');
     var $products = $('#products');
 
-
     obsRooms.subscribe(function(rooms) {
         venue.rooms = rooms;
         $rooms.html('');
@@ -195,7 +255,7 @@ $(document).hashroute('/venue/:id', function(e) {
     $.ajax('/venue/' + venue_id, {
         success: function(venue) {
             render_venue(venue);
-        },
+        }
     });
 
     function render_venue(venue) {
@@ -224,4 +284,18 @@ $(document).hashroute('/venue/:id', function(e) {
             });
         });
     }
+});
+
+$(document).hashroute('/venue/:venueid/:productid/reservations', function(e) {
+    var venue_id = e.params.venueid;
+    var product_id = e.params.productid;
+
+    $.ajax('/venue/' + venue_id + '/' + product_id + '/reservations', {
+        success: function(reservations) {
+            console.log(reservations);
+            $('#content').html(Mustache.render($("#ms-reservations").html()));
+            setup_reservations(reservations, venue_id, product_id);
+        }
+    });
+
 });
