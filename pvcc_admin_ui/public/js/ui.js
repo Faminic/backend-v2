@@ -237,6 +237,7 @@ function setup_venue(venue) {
         obsProducts(venue.products.concat([{ id: uuidv4(), name: "", rooms: [], price_per_hour: 0, price_half_day: 0, price_full_day: 0 }]));
     });
 
+    bindChange($('#venue-name'), venue, 'name');
     DAYS.forEach(function(day) {
         OPEN_CLOSE.forEach(function(type) {
             bindChange($('input[name="' + day + '.' + type + '"]'), venue.opening_hours[day], type);

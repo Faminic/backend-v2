@@ -1,0 +1,45 @@
+{{#> layout}}
+
+<div class="container">
+  <div id="payment-confirmed">
+    <h2><i class="icon-ok" style="color: green"></i> Payment confirmed.</h2>
+    <p>
+      Here are your booking details:
+      <table>
+        <tr><th>Venue</th><td id="payment-venue"></td></tr>
+        <tr><th>Rooms</th><td id="payment-rooms"></td></tr>
+        <tr><th>Start</th><td id="payment-start"></td></tr>
+        <tr><th>End</th><td id="payment-end"></td></tr>
+        <tr><th>Name</th><td id="payment-name"></td></tr>
+        <tr><th>Phone Number</th><td id="payment-phone-number"></td></tr>
+        <tr><th>Payment ID</th><td><code id="payment-paypal-id"></code></td></tr>
+      </table>
+    </p>
+    <p>
+      Please arrive on time!
+    </p>
+  </div>
+  <div id="wtf">
+    Click <a href="/">here</a> to go back.
+  </div>
+</div>
+
+<script>
+$("#wtf").show();
+$("#payment-confirmed").hide();
+var reservation = document.cookie.match(/reservation=([^;]+)/)[1];
+reservation = decodeURIComponent(reservation);
+reservation = JSON.parse(reservation);
+$("#payment-venue").text(reservation.venue);
+$("#payment-rooms").text(reservation.rooms);
+$("#payment-start").text(reservation.start);
+$("#payment-end").text(reservation.end);
+$("#payment-name").text(reservation.customer.name);
+$("#payment-phone-number").text(reservation.customer.phone_number);
+$("#payment-paypal-id").text(reservation.paypal_id);
+$("#wtf").hide();
+$("#payment-confirmed").show();
+document.cookie = "reservation=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+</script>
+
+{{/layout}}

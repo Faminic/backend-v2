@@ -7,7 +7,7 @@ const {Venue, Reservation} = require('../models');
 
 
 router.get('/', (req, res) => {
-    Venue.find({}).select('-rooms -opening_hours -products.rooms').exec((err, docs) => {
+    Venue.find({}).select('-rooms -products.rooms').exec((err, docs) => {
         if (err) {
             console.error(err);
             res.status(500).end();
@@ -26,28 +26,27 @@ router.get('/taken/:venue_id/:product_id', (req, res) => {
         res.status(400).end();
         return;
     }
-    Venue.findById(venue_id, (err, venue) => {
-        if (err)    return res.status(500).end();
-        if (!venue) return res.status(404).end();
-        const product = venue.get_product(product_id);
-        if (!product) return res.status(404).end();
-        Reservation.find({
-            start: { $gte: new Date() },
-            $and:  [
-                { $or: product.rooms.map(room_id => ({ rooms: room_id })) },
-                { $or: [
-                    { confirmed: true },
-                    { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
-                ]},
-            ],
-        }, (err, reservations) => {
-            if (err) return res.status(500).end();
-            res.json(reservations.map(x => [
+    Venue.findById(venue_id).
+        then(venue => {
+            if (!venue) throw new utils.StatusError(404);
+            const product = venue.get_product(product_id);
+            if (!product) throw new utils.StatusError(404);
+            return Reservation.find({
+                start: { $gte: new Date() },
+                $and:  [
+                    { $or: product.rooms.map(room_id => ({ 'rooms.id': room_id })) },
+                    { $or: [
+                        { confirmed: true },
+                        { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
+                    ]},
+                ],
+            });
+        }).
+        then(reservations => res.json(reservations.map(x => [
                 utils.momentToCalendarDate(moment(x.start)),
                 utils.momentToCalendarDate(moment(x.end)),
-            ]));
-        });
-    });
+        ]))).
+        catch(utils.catch_errors(res));
 });
 
 
@@ -60,7 +59,6 @@ router.post('/:venue_id/:product_id', (req, res) => {
         name:  req.body.name,
         phone_number: req.body.phone_number,
     };
-
     // sanity checks
     const now = moment();
     if (!start.isAfter(now)
@@ -72,7 +70,6 @@ router.post('/:venue_id/:product_id', (req, res) => {
         res.status(400).end();
         return;
     }
-
     Venue.findById(venue_id, (err, venue) => {
         if (!venue) return res.status(404).end();
         // Check that we can book the product
@@ -96,7 +93,7 @@ router.post('/:venue_id/:product_id', (req, res) => {
                             id:    payment.id,
                         }
                     }).
-                        then(_ => resolve(res.redirect(info.redirect))).
+                        then(_ => resolve(res.json({redirect: info.redirect}))).
                         catch(reject);
                 });
             });

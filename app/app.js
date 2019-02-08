@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
 const local_app = function () {}
@@ -18,6 +19,7 @@ local_app.prototype.init = function (app) {
     app.use(morgan('dev'));
     router.use(express.json());
     router.use(express.urlencoded({extended: false}));
+    router.use(cookieParser());
 
     // routes
     router.use('/contact-us', require('./routes/contact-us'));

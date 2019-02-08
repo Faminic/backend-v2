@@ -40,8 +40,7 @@ const venueSchema = new mongoose.Schema({
 const reservationSchema = new mongoose.Schema({
     // Reservations can span multiple rooms
     venue:      String, // venue name
-    rooms:      [{ id:   String, name: String }],
-    rate:       { type: String, match: /hour|half_day|full_day/ },
+    rooms:      [{ id: String, name: String }],
     start:      Date,
     end:        Date,
     created:    Date,
@@ -136,6 +135,27 @@ reservationSchema.statics.find_payment = function(payment) {
         ...payment,
         confirmed: false,
         created:   { $gte: moment().subtract(15, 'minutes').toDate() },
+    });
+};
+
+
+reservationSchema.methods.ensure_unique = function() {
+    // Makes sure that a reservation is unique, i.e. there are no
+    // two reservations for overlapping times.
+    return Reservation.findOne({
+        _id:   { $ne:  this._id },
+        start: { $gte: this.start },
+        end:   { $lte: this.end },
+        $and:  [
+            { $or: this.rooms.map(room => ({ 'rooms.id': room.id })) },
+            { $or: [
+                { confirmed: true },
+                { confirmed: false, created: { $gte: moment().subtract(15, 'minutes').toDate() } },
+            ]},
+        ],
+    }).then(reservation => {
+        if (!reservation) return true;
+        throw ({ IntegrityError: true });
     });
 };
 
