@@ -56,7 +56,7 @@ input {
 #footer     { padding-top: 0.5em; }
 #venue-name { font-size: 2em; }
 
-.product {
+.product ,.reservation{
   border: 1px solid #666;
   margin:  0 0 0.5em 0;
   padding: 0.5em;
@@ -116,6 +116,7 @@ option { font: inherit; }
         <tr><td>Half Day:</td> <td><input type="number" name="price_half_day" value='{{ price_half_day }}'/></td></tr>
         <tr><td>Full Day:</td> <td><input type="number" name="price_full_day" value='{{ price_full_day }}'/></td></tr>
       </table>
+      <button onclick="window.location.href += '/{{ id }}/reservations';">View Reservations</button>  
     </div>
   </script>
 
@@ -181,6 +182,63 @@ option { font: inherit; }
     </div>
   </script>
 
+  <script id="ms-reservations" type="x-tmpl-mustache">
+    <h3>Reservations:</h3>
+    <div id="reservations"></div>
+    <form id="add-reservation-form">
+        <input type="text" class="form-control" id="inputName" placeholder="Name" required></input>
+        <input type="text" class="form-control" id="inputPhone" placeholder="Phone" required></input>
+        <label form="type">Date</label>
+        <input class="input-group date" id="selectDate" type="date" required/>
+        <label>Start time</label>
+        <input type="time" id="selectTimeStart" required></select>
+        <label>End time </label>
+        <input type="time" id="selectTimeEnd" required></select>
+        <input type="submit" value="Add"/>
+    </form>
+
+  </script>
+
+  <script id="reservation" type="x-tmpl-mustache">
+    <div class="reservation">
+    <table>
+      <tr>
+        <td>Name</td>
+        <td>{{customer.name}}</td>
+      </tr>  
+      <tr>  
+        <td>Phone</td>
+        <td>{{customer.phone_number}}</td>
+      </tr>
+      <tr>
+        <td>Start</td>
+        <td>{{start}}</td>
+      </tr>
+      <tr>
+        <td>End</td>
+        <td>{{end}}</td>
+      </tr>
+      <tr>
+        <td>Rooms</td>
+        <td>
+          <table>
+            {{#rooms}}<tr>{{room}}</tr>{{/rooms}}
+          </table>
+        </td>
+      </tr>  
+      <tr>
+        <td>Confirmed</td>
+        <td>{{confirmed}}</td>
+      </tr>
+      <tr>
+        <td><button class="delete-reservation">Delete</button></td>
+      </tr>
+    </table>
+    </div>
+  </script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="/js/jquery.hashroute.js"></script>
   <script src="/js/mustache.min.js"></script>

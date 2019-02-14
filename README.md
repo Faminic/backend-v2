@@ -1,6 +1,6 @@
 # backend-v2
 
-PVCC website with a shitty CMS.
+PVCC website with a ~shitty~ satisfactory CMS.
 
 ## Run
 
