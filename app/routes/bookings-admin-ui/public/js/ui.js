@@ -10,7 +10,7 @@ $.ajaxSetup({
 
 
 function reload_venues() {
-    $.ajax('/venues', {
+    $.ajax('/booking-admin/venues', {
         method: 'GET',
         success: function(venues) {
             $('#sidebar').html(Mustache.render(
@@ -77,7 +77,7 @@ function setup_reservations(reservations, venue_id, product_id) {
             obsReservations(reservations);
             $reservation.remove();
 
-            $.ajax("/reservation/" + reservation._id, {
+            $.ajax("/booking-admin/reservation/" + reservation._id, {
                 method: "DELETE",
                 success: function() {
                     window.alert("Reservation deleted");
@@ -91,7 +91,7 @@ function setup_reservations(reservations, venue_id, product_id) {
     }
 
     $('#add-reservation-form').submit(function() {
-        $.ajax("/venue/" + venue_id + "/" + product_id + "/reservations", {
+        $.ajax("/booking-admin/venue/" + venue_id + "/" + product_id + "/reservations", {
             method: "POST",
             data: JSON.stringify({
                 customer: {name: $("#inputName").val(), phone_number: $("#inputPhone").val()},
@@ -253,7 +253,7 @@ function setup_venue(venue) {
 $(document).hashroute('/venue/:id', function(e) {
     var venue_id = e.params.id;
     $('#sidebar li').removeClass('selected');
-    $.ajax('/venue/' + venue_id, {
+    $.ajax('/booking-admin/venue/' + venue_id, {
         success: function(venue) {
             render_venue(venue);
         }
@@ -272,7 +272,7 @@ $(document).hashroute('/venue/:id', function(e) {
         window.venue = venue;
 
         $('#save').click(function() {
-            $.ajax('/venue/' + venue_id, {
+            $.ajax('/booking-admin/venue/' + venue_id, {
                 method: 'POST',
                 data:   JSON.stringify(venue),
                 success: function() {
@@ -291,7 +291,7 @@ $(document).hashroute('/venue/:venueid/:productid/reservations', function(e) {
     var venue_id = e.params.venueid;
     var product_id = e.params.productid;
 
-    $.ajax('/venue/' + venue_id + '/' + product_id + '/reservations', {
+    $.ajax('/booking-admin/venue/' + venue_id + '/' + product_id + '/reservations', {
         success: function(reservations) {
             console.log(reservations);
             $('#content').html(Mustache.render($("#ms-reservations").html()));

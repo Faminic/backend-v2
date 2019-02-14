@@ -105,7 +105,7 @@ router.post('/venue/:id/:product_id/reservations', (req, res) => {
     // See app/models.js for schema
     const start = clientDateToMoment(req.body.start);
     const end   = clientDateToMoment(req.body.end);
-    const venue = null;
+    let venue = null;
     Venue.findById(req.params.id).
         then(_venue => {
             if (!_venue) throw new StatusError(404);
