@@ -26,6 +26,7 @@ local_app.prototype.init = function (app) {
     router.use('/paypal',     require('./routes/paypal'));
     router.use('/booking',    require('./routes/booking'));
     app.use('/api', router);
+    app.use('/booking-admin', require('./routes/bookings-admin-ui'));
 }
 
 module.exports = new local_app()

@@ -2,8 +2,8 @@ const moment = require('moment');
 const express = require('express');
 const morgan = require('morgan');
 const router = express.Router();
-const {Venue, Reservation} = require('../app/models');
-const {clientDateToMoment, StatusError, catch_errors} = require('../app/utils');
+const {Venue, Reservation} = require('../../models');
+const {clientDateToMoment, StatusError, catch_errors} = require('../../utils');
 
 
 const default_opening_hours = {
@@ -19,7 +19,7 @@ const default_opening_hours = {
 
 router.use(morgan('dev'));
 router.use(express.json());
-router.use(express.static('pvcc_admin_ui/public'));
+router.use(express.static(__dirname + '/public'));
 
 
 router.post('/venues', (req, res) => {
@@ -136,8 +136,3 @@ router.delete('/reservation/:id', (req, res) => {
 
 
 module.exports = router;
-if (require.main === module) {
-    const app = express();
-    app.use('/', router);
-    app.listen(8080, () => {});
-}
