@@ -13,7 +13,7 @@ will be able to select a facility, duration and date, and a list of available ti
 automatically be generated for them.
 
 The user can then select a time and pay for their booking via Paypal. When the payment has been confirmed, 
-they receive a payment summary, and a reservation will be created in the PVCC database.
+they receive a payment summary, and a reservation will be created in the PVCC database. PVCC receives an email with the booking details, including name, phone number and the Paypal payment ID.
 
 # Administrator Perspective
 ## Editing Static Content
@@ -30,13 +30,23 @@ of the booking-admin page.
 To log in, navigate to [site name]/booking-admin, and enter the admin login details.
 
 #### Venues
-'Venues' is the name given to facilities.
+'Venues' is the name given to facilities. A venue contains rooms and products.
+
+The admin can choose whether to make a venue bookable online or not. For instance, if booking for the theatre should
+only be done by emailing or calling PVCC, the 'theatre' venue would not need to be bookable online, and its 'bookable' property should be left unchecked.
 
 #### Rooms
-Each venue can be divided into rooms.
+'Rooms' are the sections into which a venue can be divided. They can be added and deleted by the administrator.
 
 #### Products
-Products can contain multiple rooms.
+Products can contain multiple rooms. They make it possible for a user to book portions of a venue (e.g. two courts of the Sports Hall).
 
-#### Reservations (bookings)
-Each venue's product has an associated list of reservations, which can be viewed and changed.
+#### Reservations
+Each product has an associated list of reservations. Reservations are bookings for a product which have been made online, and can be viewed and changed.
+
+# FAQ
+**How do I issue a refund to a customer?**
+
+Payments can be refunded on the Paypal website. To refund a payment, the payment ID is required. 
+
+You can find this from the booking-admin page. Select the venue, view the list of reservations for the product booked, and look for the reservation you need to refund, which contains the payment ID. Once the refund has been made, delete the reservation.
