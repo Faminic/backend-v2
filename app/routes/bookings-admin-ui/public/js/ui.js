@@ -17,6 +17,22 @@ function reload_venues() {
                 $('#ms-sidebar').html(),
                 {venues: venues}
             ));
+            $("#add-venue").click(function() {
+                var name = window.prompt("New Venue Name");
+                $.ajax('/booking-admin/venues/', {
+                    method: 'POST',
+                    data: JSON.stringify({name: name}),
+                    success: function(venue) {
+                        window.alert("Created venue!");
+                        console.log(venue);
+                        window.location.hash = "#" + venue._id;
+                        reload_venues();
+                    },
+                    error: function() {
+                        window.alert("Unable to create venue.");
+                    },
+                });
+            });
         },
     });
 }
@@ -237,6 +253,10 @@ function setup_venue(venue) {
         obsProducts(venue.products.concat([{ id: uuidv4(), name: "", rooms: [], price_per_hour: 0, price_half_day: 0, price_full_day: 0 }]));
     });
 
+    $('#bookable').change(function() {
+        venue.bookable = $(this).prop('checked');
+    });
+
     bindChange($('#venue-name'), venue, 'name');
     DAYS.forEach(function(day) {
         OPEN_CLOSE.forEach(function(type) {
@@ -298,5 +318,4 @@ $(document).hashroute('/venue/:venueid/:productid/reservations', function(e) {
             setup_reservations(reservations, venue_id, product_id);
         }
     });
-
 });
