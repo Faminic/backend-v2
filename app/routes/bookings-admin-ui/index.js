@@ -103,15 +103,22 @@ router.get('/venue/:id/:product_id/reservations', (req, res) => {
 router.post('/venue/:id/:product_id/reservations', (req, res) => {
     // Creates a reservation for a given venue and product
     // See app/models.js for schema
+    const force = 'force' in req.query;
     const start = clientDateToMoment(req.body.start);
     const end   = clientDateToMoment(req.body.end);
+    if (!start.isAfter(end)) {
+        res.status(404);
+        res.end();
+        return;
+    }
     let venue = null;
     Venue.findById(req.params.id).
         then(_venue => {
             if (!_venue) throw new StatusError(404);
             venue = _venue;
         }).
-        then(() => venue.check_product(req.params.product_id, start, end)).
+        // force => don't need to check
+        then(() => (force || venue.check_product(req.params.product_id, start, end))).
         then(can_book => {
             if (!can_book) throw new StatusError(400);
             return venue.book_product(req.params.product_id, {
