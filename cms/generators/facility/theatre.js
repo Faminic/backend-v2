@@ -1,7 +1,7 @@
 ({
 	Name: 'Theatre',
 	$Description_type: 'quill',
-	Description: '<p><span style="background-color: rgb(255, 255, 255); color: rgb(102, 102, 102);">The recently re-decorated, 250 seated theatre has a traditional proscenium arch and stage and thus is a professional setting for performances or presentations of any type. Because the seating folds back, the space is sufficiently flexible to accommodate theatre in the round, more intimate musical events or fitness-related and dance activities. It is heated and well lit, with disabled access catered for – a beautiful setting for any event.</span></p><p><br></p><p><span style="background-color: rgb(255, 255, 255); color: rgb(102, 102, 102);">Click here to see a 4D virtual tour of our theatre.</span></p>',
+	Description: '<p><span style="background-color: rgb(255, 255, 255); color: rgb(102, 102, 102);">The recently re-decorated, 250 seated theatre has a traditional proscenium arch and stage and thus is a professional setting for performances or presentations of any type. Because the seating folds back, the space is sufficiently flexible to accommodate theatre in the round, more intimate musical events or fitness-related and dance activities. It is heated and well lit, with disabled access catered for – a beautiful setting for any event.</span></p><p><br></p><p><a href="https://www.4dtours.co.uk/4d/the-pictures/fullscreen/" target="_blank">Click here to see a 4D virtual tour of our theatre.</a></p>',
 	Banner: '/remote/direct_uploads/1548507485_image.png',
 	$Banner_type: 'image',
 	Thumbnail: '/remote/direct_uploads/1548507486_image.png',

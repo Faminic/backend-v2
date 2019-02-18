@@ -14,10 +14,11 @@ const opening_hours = {
 };
 
 
-function single_room(name, prices) {
+function single_room(name, prices, bookable) {
     const room_id = uuidv4();
     return {
         name,
+        bookable: bookable === undefined ? true : bookable,
         rooms: [{
             id: room_id,
             name,
@@ -39,7 +40,7 @@ const sports_hall_2 = uuidv4();
 
 Venue.deleteMany({})
      .then(() => Venue.insertMany([
-         single_room("Theatre",                { price_per_hour: 40, price_half_day: 100, price_full_day: 170 }),
+         single_room("Theatre",                { price_per_hour: 40, price_half_day: 100, price_full_day: 170 }, false),
          single_room("Dining Hall",            { price_per_hour: 20, price_half_day:  50, price_full_day:  90 }),
          single_room("Performing Arts Room",   { price_per_hour: 15, price_half_day:  40, price_full_day:  70 }),
          single_room("Green Room",             { price_per_hour: 12, price_half_day:  30, price_full_day:  50 }),
@@ -50,6 +51,7 @@ Venue.deleteMany({})
          single_room("Junior Football Pitch",  { price_per_hour: 20 }),
          {
              name: "Sports Hall",
+             bookable: true,
              rooms: [
                 { id: sports_hall_1, name: "Hall 1" },
                 { id: sports_hall_2, name: "Hall 2" },

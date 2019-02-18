@@ -88,6 +88,7 @@ option { font: inherit; }
       <li data-id='{{ _id }}'><a href="#/venue/{{ _id }}">{{ name }}</a></li>
       {{/venues}}
     </ul>
+    <button id="add-venue">Add Venue</button>
   </script>
 
   <script id="ms-welcome" type="x-tmpl-mustache">
@@ -129,6 +130,8 @@ option { font: inherit; }
 
   <script id="ms-venue-form" type="x-tmpl-mustache">
     <input id='venue-name' name='name' type='text' value='{{ name }}' />
+    <br/>
+    <input id="bookable" type="checkbox" {{ #bookable }}checked{{ /bookable }}></input> <b>Venue is Bookable</b> - customers can book this venue using the online form.
     <h3>Opening Times:</h3>
     <table>
       <tr>
@@ -222,7 +225,7 @@ option { font: inherit; }
         <td>Rooms</td>
         <td>
           <table>
-            {{#rooms}}<tr>{{room}}</tr>{{/rooms}}
+            {{#rooms}}<tr>{{name}}</tr>{{/rooms}}
           </table>
         </td>
       </tr>  
@@ -240,10 +243,10 @@ option { font: inherit; }
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="/js/jquery.hashroute.js"></script>
-  <script src="/js/mustache.min.js"></script>
-  <script src="/js/uuid.js"></script>
-  <script src="/js/trkl-min.js"></script>
-  <script src="/js/ui.js"></script>
+  <script src="/booking-admin/js/jquery.hashroute.js"></script>
+  <script src="/booking-admin/js/mustache.min.js"></script>
+  <script src="/booking-admin/js/uuid.js"></script>
+  <script src="/booking-admin/js/trkl-min.js"></script>
+  <script src="/booking-admin/js/ui.js"></script>
 </body>
 </html>

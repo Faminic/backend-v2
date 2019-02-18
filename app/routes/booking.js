@@ -7,7 +7,7 @@ const {Venue, Reservation} = require('../models');
 
 
 router.get('/', (req, res) => {
-    Venue.find({}).select('-rooms -products.rooms').exec((err, docs) => {
+    Venue.find({ bookable: true }).select('-rooms -bookable -products.rooms').exec((err, docs) => {
         if (err) {
             console.error(err);
             res.status(500).end();
@@ -72,6 +72,7 @@ router.post('/:venue_id/:product_id', (req, res) => {
     }
     Venue.findById(venue_id, (err, venue) => {
         if (!venue) return res.status(404).end();
+        if (!venue.bookable) return res.status(404).end();
         // Check that we can book the product
         venue.check_product(product_id, start, end).then(can_book => {
             if (!can_book) return res.status(400).end();

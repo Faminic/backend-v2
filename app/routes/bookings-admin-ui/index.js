@@ -2,8 +2,8 @@ const moment = require('moment');
 const express = require('express');
 const morgan = require('morgan');
 const router = express.Router();
-const {Venue, Reservation} = require('../app/models');
-const {clientDateToMoment, StatusError, catch_errors} = require('../app/utils');
+const {Venue, Reservation} = require('../../models');
+const {clientDateToMoment, StatusError, catch_errors} = require('../../utils');
 
 
 const default_opening_hours = {
@@ -19,7 +19,7 @@ const default_opening_hours = {
 
 router.use(morgan('dev'));
 router.use(express.json());
-router.use(express.static('pvcc_admin_ui/public'));
+router.use(express.static(__dirname + '/public'));
 
 
 router.post('/venues', (req, res) => {
@@ -65,14 +65,6 @@ router.get('/venue/:id', (req, res) => {
 });
 
 
-router.delete('/venue/:id', (req, res) => {
-    // Deletes venue
-    Venue.findByIdAndDelete(req.params.id)
-         .then(() => res.json({}))
-         .catch(catch_errors(res));
-});
-
-
 router.get('/venue/:id/:product_id/reservations', (req, res) => {
     // Gets a list of reservations which have not expired for
     // a given venue and product
@@ -103,15 +95,22 @@ router.get('/venue/:id/:product_id/reservations', (req, res) => {
 router.post('/venue/:id/:product_id/reservations', (req, res) => {
     // Creates a reservation for a given venue and product
     // See app/models.js for schema
+    const force = 'force' in req.query;
     const start = clientDateToMoment(req.body.start);
     const end   = clientDateToMoment(req.body.end);
-    const venue = null;
+    if (!start.isAfter(end)) {
+        res.status(404);
+        res.end();
+        return;
+    }
+    let venue = null;
     Venue.findById(req.params.id).
         then(_venue => {
             if (!_venue) throw new StatusError(404);
             venue = _venue;
         }).
-        then(() => venue.check_product(req.params.product_id, start, end)).
+        // force => don't need to check
+        then(() => (force || venue.check_product(req.params.product_id, start, end))).
         then(can_book => {
             if (!can_book) throw new StatusError(400);
             return venue.book_product(req.params.product_id, {
@@ -136,8 +135,3 @@ router.delete('/reservation/:id', (req, res) => {
 
 
 module.exports = router;
-if (require.main === module) {
-    const app = express();
-    app.use('/', router);
-    app.listen(8080, () => {});
-}

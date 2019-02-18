@@ -9,6 +9,7 @@ const timeString = { type: String, match: /[0-9][0-9]:[0-9][0-9]/ };
 
 const venueSchema = new mongoose.Schema({
     name: String,
+    bookable: Boolean,
     opening_hours: {
         // times should look like HH:MM
         monday:    {open: timeString, close: timeString},
