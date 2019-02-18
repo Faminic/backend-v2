@@ -6,7 +6,6 @@ To make an enquiry about an activity, a user can email PVCC via the
 Contact-Us page.
 
 ## Facilities
-#### User bookings
 Most facilities are bookable online. When a user navigates to the PVCC booking form, they
 will be able to select a facility, duration and date, and a list of available times will 
 automatically be generated for them.
@@ -15,18 +14,16 @@ The user can then select a time and pay for their booking via Paypal. When the p
 they receive a payment summary, and a reservation will be created in the PVCC database. PVCC receives an email with the booking details, including name, phone number and the Paypal payment ID.
 
 # Administrator
-## Editing Static Content
-Static content can be edited via the **main admin page**.
+## Editing Basic Content
+Basic (static) content can be edited via the **main admin page**.
 
-To log in, navigate to [site name]/admin, and enter the admin login details.
-
-This page is designed to be intuitive and easy-to-use.
+To log in, navigate to **[site name]/admin**, and enter the admin login details.
 
 ## More Complex Editing
 Adding, editing and deleting venues involves making changes to the site's database. As such, these tasks require the use
 of the **booking-admin page**.
 
-To log in, navigate to [site name]/booking-admin, and enter the admin login details.
+To log in, navigate to **[site name]/booking-admin**, and enter the admin login details.
 
 #### Venues
 'Venues' is the name given to facilities. A venue contains rooms and products.
@@ -38,7 +35,7 @@ only be done by emailing or calling PVCC, the 'theatre' venue would not need to 
 'Rooms' are the sections into which a venue can be divided. They can be added and deleted by the administrator.
 
 #### Products
-Products are the things that users can book and pay for. They can contain multiple rooms, and make it possible for a user to book portions of a venue (e.g. two courts of the Sports Hall). A product also has hourly, half-day and day prices.
+Products are the things that users can book and pay for. They can contain multiple rooms, and make it possible for a user to book portions of a venue (e.g. two courts of the Sports Hall). A product also has hourly, half-day and day prices (shown in pounds).
 
 Products can be added, deleted, and edited.
 
