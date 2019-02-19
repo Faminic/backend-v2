@@ -8,4 +8,6 @@ $("#contact-us-form").on("submit", function(e) {
   $.post("/api/contact-us", {name: name, email: email, telephone: phone, query: query}, function(data) {
 
   })
+  $("#submission-alert").delay(100).fadeIn(100);
+  $("#sendbutton").fadeOut();
 })

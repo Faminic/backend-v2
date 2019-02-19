@@ -138,5 +138,7 @@ $(document).ready(function(){
       console.log(data);
       window.open(data.redirect);
     });
+    $("#submission-alert").delay(100).fadeIn(100);
+    $("#submitBooking").fadeOut();
   });
 });
