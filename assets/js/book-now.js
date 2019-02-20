@@ -135,8 +135,7 @@ $(document).ready(function(){
       "name":$("#inputName").val(),
       "phone_number":$("#inputPhone").val()
     }, function(data){
-      console.log(data);
-      window.open(data.redirect);
+      window.location.assign(data.redirect);
     });
     $("#submission-alert").delay(100).fadeIn(100);
     $("#submitBooking").fadeOut();
