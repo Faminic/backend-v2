@@ -9,7 +9,7 @@
     {{#each Banner_Images}}
     <div class="carousel-item {{#unless @index}}active{{/unless}}">
       <img class="d-block w-100" src="{{ this.Image }}"/>
-      <div class="carousel-caption">
+      <div class="carousel-caption" style="padding-left: 15px;">
         {{{this.content}}}
       </div>
     </div>
@@ -30,6 +30,7 @@
     {{{bannertext}}}
   </div>
 </div>
+<br><br>
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-6 offset-md-2" id="maincontainer">
@@ -141,7 +142,9 @@
       <div class="charity-wrapper" style="text-align: center;">
         <div class="container" style="display: inline-block;">
           <div class="col-md-10 offset-md-1" id="powered_by_section">
-            <img src="{{powered_by_image}}">
+            <a target="_blank" href="{{powered_by_link}}">
+              <img src="{{powered_by_image}}" alt="Powered By easyfundraising.org.uk">
+            </a>
           </div>
         </div>
       </div>
