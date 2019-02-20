@@ -1,12 +1,14 @@
 {{#> layout}}
 <div class="jumbotron jumbotron-fluid" style="background-size: cover; background-position: center; padding: 10em; background-image: url({{banner}})"></div>
-<div class="row">
-  <div class="col-md-6 offset-md-2" id="maincontainer">
-    <h1 class="home-header"><span>{{{title}}}</span></h1>
-    {{{content}}}
-  </div>
-  <div class="col-md-4">
-    {{>facebook}}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 offset-md-2" id="maincontainer">
+      <h1 class="home-header"><span>{{{title}}}</span></h1>
+      {{{content}}}
+    </div>
+    <div class="col-md-4">
+      {{>facebook}}
+    </div>
   </div>
 </div>
 <link rel="stylesheet" href="/assets/css/about-us.css">
