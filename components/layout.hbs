@@ -13,24 +13,41 @@
   <link rel="stylesheet" href="/assets/css/main.css">
 </head>
 <body>
-  <nav class="navbar navbar-fixed-top navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: #FFFFFF">
     <div class="container">
-      <a class="navbar-brand" href="/"><img src="/assets/img/logo.png" width="200px"/></a>
+      <a class="navbar-brand" href="/"><img src="/assets/img/logo.png" style="max-width: 12.5em;"/></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/about-us">About Us</a></li>
-          <li class="nav-item"><a class="nav-link" href="/whats-on">What's On</a></li>
-          <li class="nav-item"><a class="nav-link" href="/facilities">Facilities</a></li>
-          <li class="nav-item"><a class="nav-link" href="/contact-us">Contact Us</a></li>
-          <li class="nav-item"><a class="nav-link" href='/book-now'><button id="book-now-button">Book Now</button></a></li>
+          <li class="nav-item"><a class="nav-link" href="/" style="padding-top: 60px; padding-bottom: 0px;"><button id="button1">Home</button></a></li>
+          <li class="nav-item"><a class="nav-link" href="/about-us" style="padding-top: 60px; padding-bottom: 0px;"><button id="button2">About Us</button></a></li>
+          <li class="nav-item"><a class="nav-link" href="/whats-on" style="padding-top: 60px; padding-bottom: 0px;"><button id="button3">What's On</button></a></li>
+          <li class="nav-item"><a class="nav-link" href="/facilities" style="padding-top: 30px; padding-bottom: 0px;" id="original">
+            <div class="dropdown">
+              <button id="button4" class="dropbtn">Facilities</button>
+              <div class="dropdown-content">
+                <a href="/facility/astro-turf">Astro Turf</a>
+                <a href="/facility/sports-field">Sports Field</a>
+                <a href="/facility/theatre">Theatre</a>
+                <a href="/facility/sports-hall">Sports Hall</a>
+                <a href="/facility/dining-hall">Dining Hall</a>
+                <a href="/facility/classrooms">Classrooms</a>
+                <a href="/facility/gymnasium">The Gymnasium</a>
+                <a href="/facility/performing-arts">Performing Arts Room</a>
+                <a href="/facility/green-room">The Green Room</a>
+                <a href="/facility/it-suite">IT Suite</a>
+              </div>
+            </div>
+          </a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact-us" style="padding-top: 60px; padding-bottom: 0px;"><button id="button5">Contact Us</button></a></li>
+          <li class="nav-item"><a class="nav-link" href='/book-now' style="padding-top: 60px; padding-bottom: 0px;"><button id="book-now-button">Book Now</button></a></li>
         </ul>
       </div>
     </div>
   </nav>
+  <link rel="stylesheet" href="/assets/css/layout.css">
   {{> @partial-block }}
   {{>footer}}
 </body>
