@@ -1,59 +1,61 @@
 {{#> layout}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
-<div class="row">
- <div class="col-sm-6 mx-auto">
-  <h1>Book Now</h1>
-  <form id="formBookNow" method="POST">
-   <div class="form-group">
-    <label form="type">Full Name</label>
-    <input type="text" class="form-control" id="inputName" required></input>
-   </div>
-   <div class="form-group">
-    <label form="type">Phone Number</label>
-    <input type="text" class="form-control" id="inputPhone" required></input>
-   </div>
-   <div class="form-group">
-    <label form="type">Booking Type</label>
-    <select class="form-control" id="selectType" required><option value="" disabled="" selected="">Please Select</option><option>Venue</option><option>Activity</option><option>Event</option></select>
-   </div>
-   <div class="form-group" id="groupVenue" style="display: none;">
-    <label form="type">Venue</label>
-    <select class="form-control" id="selectVenue" required><option value="" disabled="" selected="">Please Select</option></select>
-    <label form="type">Rooms</label>
-    <select class="form-control" id="selectProduct"></select>
-   </div>
-   <div class="form-group" id="groupActivity" style="display: none;">
-    <a form="type" href="/contact-us">For booking activities contact us here.</a>
-   </div>
-   <div class="form-groupEvent" id="groupEvent" style="display: none;">
-    <a form="type" href="/contact-us">For booking events contact us here.</a>
-   </div>
-   <div class="form-group" id="timeType">
-    <label form="type">Duration (<span id="priceTag">£0</span>)</label>
-    <div class="input-group mb-3">
-      <input type="number" class="input-group form-control number" min=1 max=12 id="selectTime" required>
-      <div class="input-group-append">
-        <span class="input-group-text" id="basic-addon2">Hours</span>
+<div class="container-fluid" style="padding-top: 30px">
+  <div class="row">
+   <div class="col-sm-6 mx-auto">
+    <h1>Book Now</h1>
+    <form id="formBookNow" method="POST">
+     <div class="form-group">
+      <label form="type">Full Name</label>
+      <input type="text" class="form-control" id="inputName" required></input>
+     </div>
+     <div class="form-group">
+      <label form="type">Phone Number</label>
+      <input type="text" class="form-control" id="inputPhone" required></input>
+     </div>
+     <div class="form-group">
+      <label form="type">Booking Type</label>
+      <select class="form-control" id="selectType" required><option value="" disabled="" selected="">Please Select</option><option>Venue</option><option>Activity</option><option>Event</option></select>
+     </div>
+     <div class="form-group" id="groupVenue" style="display: none;">
+      <label form="type">Venue</label>
+      <select class="form-control" id="selectVenue" required><option value="" disabled="" selected="">Please Select</option></select>
+      <label form="type">Rooms</label>
+      <select class="form-control" id="selectProduct"></select>
+     </div>
+     <div class="form-group" id="groupActivity" style="display: none;">
+      <a form="type" href="/contact-us">For booking activities contact us here.</a>
+     </div>
+     <div class="form-groupEvent" id="groupEvent" style="display: none;">
+      <a form="type" href="/contact-us">For booking events contact us here.</a>
+     </div>
+     <div class="form-group" id="timeType">
+      <label form="type">Duration (<span id="priceTag">£0</span>)</label>
+      <div class="input-group mb-3">
+        <input type="number" class="input-group form-control number" min=1 max=12 id="selectTime" required>
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">Hours</span>
+        </div>
       </div>
-    </div>
+     </div>
+     <div class="form-group" id="datePicker">
+      <label form="type">Date</label>
+      <input class="input-group date" id="selectDate" type="date" required/>
+     </div>
+     <div class="form-group" id="timeBegin">
+      <label form="type">Start time </label>
+      <select class="form-control" id="selectTimeStart" required></select>
+     </div>
+     <div id="button">
+      <input class="btn btn-primary" id="submitBooking" type="submit" value="Submit"/ style="display: block;">
+     </div>
+     <div class="btn btn-success" id="submission-alert" style="display: none;">
+       <span class="closebtn" id="submission-alert-close" onclick="this.parentElement.style.display='none'">&times;</span>
+       Your submission has been received
+     </div>
+    </form>
    </div>
-   <div class="form-group" id="datePicker">
-    <label form="type">Date</label>
-    <input class="input-group date" id="selectDate" type="date" required/>
-   </div>
-   <div class="form-group" id="timeBegin">
-    <label form="type">Start time </label>
-    <select class="form-control" id="selectTimeStart" required></select>
-   </div>
-   <div id="button">
-    <input class="btn btn-primary" id="submitBooking" type="submit" value="Submit"/ style="display: block;">
-   </div>
-   <div class="btn btn-success" id="submission-alert" style="display: none;">
-     <span class="closebtn" id="submission-alert-close" onclick="this.parentElement.style.display='none'">&times;</span>
-     Your submission has been received
-   </div>
-  </form>
- </div>
+  </div>
 </div>
 <script src="/assets/js/book-now.js"></script>
 <link rel="stylesheet" href="/assets/css/book-now.css">
