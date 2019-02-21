@@ -59,7 +59,7 @@ function bindChange($input, obj, attr, is_price) {
         if (val.length > 0 || is_price) {
             if (is_price) {
                 if (val.length > 0) {
-                    val = parseInt(val);
+                    val = parseFloat(val);
                     if (isNaN(val)) return;
                 } else {
                     val = undefined;

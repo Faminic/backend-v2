@@ -113,9 +113,9 @@ option { font: inherit; }
       <br/>
       <b>Prices:</b>
       <table>
-        <tr><td>Per Hour:</td> <td><input type="number" name="price_per_hour" value='{{ price_per_hour }}'/></td></tr>
-        <tr><td>Half Day:</td> <td><input type="number" name="price_half_day" value='{{ price_half_day }}'/></td></tr>
-        <tr><td>Full Day:</td> <td><input type="number" name="price_full_day" value='{{ price_full_day }}'/></td></tr>
+        <tr><td>Per Hour:</td> <td><input type="number" step="0.01" name="price_per_hour" value='{{ price_per_hour }}'/></td></tr>
+        <tr><td>Half Day:</td> <td><input type="number" step="0.01" name="price_half_day" value='{{ price_half_day }}'/></td></tr>
+        <tr><td>Full Day:</td> <td><input type="number" step="0.01" name="price_full_day" value='{{ price_full_day }}'/></td></tr>
       </table>
       <button onclick="window.location.href += '/{{ id }}/reservations';">View Reservations</button>  
     </div>
