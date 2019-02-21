@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const router = express.Router();
 const {Venue, Reservation} = require('../../models');
 const {clientDateToMoment, StatusError, catch_errors} = require('../../utils');
+const {addReservationEvent, deleteEvent, createCalendar} = require('../../calendarAPI');
 
 
 const default_opening_hours = {
@@ -27,9 +28,11 @@ router.post('/venues', (req, res) => {
     let venue = new Venue();
     venue.name = req.body.name;
     venue.opening_hours = default_opening_hours;
-    venue.save()
-        .then(() => res.json(venue))
-        .catch(catch_errors(res));
+    createCalendar(venue.name).
+        then(calendarId => { venue.calendarId = calendarId }).
+        then(_ => venue.save()).
+        then(_ => res.json(venue)).
+        catch(catch_errors(res));
 });
 
 
@@ -98,7 +101,7 @@ router.post('/venue/:id/:product_id/reservations', (req, res) => {
     const force = 'force' in req.query;
     const start = clientDateToMoment(req.body.start);
     const end   = clientDateToMoment(req.body.end);
-    if (!start.isAfter(end)) {
+    if (start.isAfter(end)) {
         res.status(404);
         res.end();
         return;
@@ -121,14 +124,23 @@ router.post('/venue/:id/:product_id/reservations', (req, res) => {
                 confirmed: true,
             });
         }).
-        then(reservation => res.json(reservation)).
+        then(reservation => {
+            addReservationEvent(reservation);
+            res.json(reservation);
+        }).
         catch(catch_errors(res));
 });
 
 
 router.delete('/reservation/:id', (req, res) => {
     // Delete a reservation by id
-    Reservation.findByIdAndDelete(req.params.id).
+    Reservation.findById(req.params.id).
+        then(reservation => {
+            if (!reservation) throw new StatusError(404);
+            deleteEvent(reservation.calendarId, reservation.eventId).
+                catch(() => {});
+            return reservation.delete();
+        }).
         then(() => res.json({})).
         catch(catch_errors(res));
 });

@@ -257,6 +257,7 @@ function setup_venue(venue) {
         venue.bookable = $(this).prop('checked');
     });
 
+    bindChange($('#calendar-id'), venue, 'calendarId');
     bindChange($('#venue-name'), venue, 'name');
     DAYS.forEach(function(day) {
         OPEN_CLOSE.forEach(function(type) {

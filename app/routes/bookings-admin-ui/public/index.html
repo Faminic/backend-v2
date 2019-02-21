@@ -131,7 +131,8 @@ option { font: inherit; }
   <script id="ms-venue-form" type="x-tmpl-mustache">
     <input id='venue-name' name='name' type='text' value='{{ name }}' />
     <br/>
-    <input id="bookable" type="checkbox" {{ #bookable }}checked{{ /bookable }}></input> <b>Venue is Bookable</b> - customers can book this venue using the online form.
+    <input id="bookable" type="checkbox" {{ #bookable }}checked{{ /bookable }}></input> <b>Venue is Bookable</b> - customers can book this venue using the online form.<br/>
+    <b>Calendar ID:</b> <input id="calendar-id" type="text" value="{{ calendarId }}"></input>
     <h3>Opening Times:</h3>
     <table>
       <tr>
