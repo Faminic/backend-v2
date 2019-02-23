@@ -56,6 +56,8 @@ input {
 #footer     { padding-top: 0.5em; }
 #venue-name { font-size: 2em; }
 
+#errors { color: red; }
+
 .product ,.reservation{
   border: 1px solid #666;
   margin:  0 0 0.5em 0;
@@ -80,6 +82,15 @@ option { font: inherit; }
     <div id="sidebar"></div>
     <div id="content">Hello</div>
   </div>
+
+  <script id="ms-login" type="x-tmpl-mustache">
+    <div id="errors"></div>
+    <form id="login">
+      <b>Username:</b><input id="username" type="text"/><br/>
+      <b>Password:</b><input id="password" type="password"/><br/>
+      <input type="submit" value="Log In"/>
+    </form>
+  </script>
 
   <script id="ms-sidebar" type="x-tmpl-mustache">
     <h3>Venues</h3>
