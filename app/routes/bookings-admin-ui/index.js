@@ -1,10 +1,15 @@
 const moment = require('moment');
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const morgan = require('morgan');
 const router = express.Router();
+const basicAuth = require('express-basic-auth');
 const {Venue, Reservation} = require('../../models');
 const {clientDateToMoment, StatusError, catch_errors} = require('../../utils');
 const {addReservationEvent, deleteEvent, createCalendar} = require('../../calendarAPI');
+
+
+const HASH = '$2a$10$qgKVcgqHEIuxaVvVR/4eeebQMZWyRoUbcPJqDHZ8soHN4JlJYkjPy';
 
 
 const default_opening_hours = {
@@ -21,6 +26,13 @@ const default_opening_hours = {
 router.use(morgan('dev'));
 router.use(express.json());
 router.use(express.static(__dirname + '/public'));
+router.use(basicAuth({
+    challenge: true,
+    realm: 'pvcc',
+    authorizer: (username, password) => {
+        return username === 'admin' && bcrypt.compare(password, HASH);
+    },
+}));
 
 
 router.post('/venues', (req, res) => {
