@@ -44,10 +44,7 @@ router.get('/ok', (req, res) => {
         // ensure that the reservation is unique; if it's not unique then there
         // is potentially two people paying at once.
         then(() => reservation.ensure_unique()).
-        then(() => new Promise((resolve, reject) => paypal.execute_payment(paymentId, PayerID, (err, payment) => {
-                if (err) return reject(err);
-                resolve(payment);
-            }))).
+        then(() => paypal.execute_payment(paymentId, PayerID)).
         then(() => {
             reservation.confirmed = true;
             return reservation.save();

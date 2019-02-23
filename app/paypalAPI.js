@@ -13,44 +13,54 @@ function get_payment_details(payment) {
 }
 
 
-function create_payment(name, price, callback) {
+function create_payment(name, price) {
     if (typeof price !== "string") {
         // VERY important that price is a string, otherwise we may
         // have rounding issues
         throw new Error("price needs to be a string!");
     }
-    return paypal.payment.create({
-        intent: 'sale',
-        payer: {payment_method: 'paypal'},
-        redirect_urls: {
-            return_url: 'http://localhost:5000/api/paypal/ok',
-            cancel_url: 'http://localhost:5000/api/paypal/cancel',
-        },
-        transactions: [{
-            description: `PVCC: ${name}`,
-            item_list: {
-                items: [{
-                    name: name,
-                    sku:  name,
-                    price: price,
+    return new Promise((resolve, reject) => {
+        paypal.payment.create({
+            intent: 'sale',
+            payer: {payment_method: 'paypal'},
+            redirect_urls: {
+                return_url: 'http://localhost:5000/api/paypal/ok',
+                cancel_url: 'http://localhost:5000/api/paypal/cancel',
+            },
+            transactions: [{
+                description: `PVCC: ${name}`,
+                item_list: {
+                    items: [{
+                        name: name,
+                        sku:  name,
+                        price: price,
+                        currency: "GBP",
+                        quantity: 1,
+                    }]
+                },
+                amount: {
                     currency: "GBP",
-                    quantity: 1,
-                }]
-            },
-            amount: {
-                currency: "GBP",
-                total: price,
-            },
-        }]
-    }, (err, payment) => {
-        if (err) return callback(err);
-        callback(err, payment, get_payment_details(payment));
+                    total: price,
+                },
+            }]
+        }, (err, payment) => {
+            if (err) return reject(err);
+            resolve({
+                payment,
+                info: get_payment_details(payment)
+            });
+        });
     });
 }
 
 
-function execute_payment(paymentId, payerId, callback) {
-    return paypal.payment.execute(paymentId, {payer_id: payerId}, callback);
+function execute_payment(paymentId, payerId) {
+    return new Promise((resolve, reject) => {
+        paypal.payment.execute(paymentId, {payer_id: payerId}, (err, payment) => {
+            if (err) return reject(err);
+            resolve(payment);
+        });
+    });
 }
 
 

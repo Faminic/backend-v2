@@ -70,39 +70,37 @@ router.post('/:venue_id/:product_id', (req, res) => {
         res.status(400).end();
         return;
     }
-    Venue.findById(venue_id, (err, venue) => {
-        if (!venue) return res.status(404).end();
-        if (!venue.bookable) return res.status(404).end();
+    let redirect_link = null;
+    let venue = null;
+    Venue.findById(venue_id).
+        then(_venue => {
+            venue = _venue;
+            if (!venue || !venue.bookable) throw new utils.StatusError(404);
+        }).
         // Check that we can book the product
-        venue.check_product(product_id, start, end).then(can_book => {
-            if (!can_book) return res.status(400).end();
-            // calculate prices
-            const duration = end.diff(start, 'minutes') / 60;
-            const { price, rate } = booking_info.get_price(
-                venue.get_product(product_id),
-                duration
-            );
-            return new Promise((resolve, reject) => {
-                // can book so we create payment and then make reservation
-                paypal.create_payment(`${venue.name} (${duration} hours)`, price, (err, payment, info) => {
-                    if (err) return reject(err);
-                    venue.book_product(product_id, {
-                        start, end, customer, rate,
-                        confirmed: false,
-                        payment: {
-                            token: info.token,
-                            id:    payment.id,
-                        }
-                    }).
-                        then(_ => resolve(res.json({redirect: info.redirect}))).
-                        catch(reject);
-                });
+        then(() => venue.check_product(product_id, start, end)).
+        then(can_book => {
+            if (!can_book) throw new utils.StatusError(400);
+            // can book => calculate prices
+            const duration  = end.diff(start, 'minutes') / 60;
+            const product   = venue.get_product(product_id);
+            const { price } = booking_info.get_price(product, duration);
+            return paypal.create_payment(`${venue.name} (${duration} hours)`, price);
+        }).
+        // Make reservation
+        then(({payment, info}) => {
+            redirect_link = info.redirect;
+            return venue.book_product(product_id, {
+                start, end, customer,
+                confirmed: false,
+                payment: {
+                    token: info.token,
+                    id:    payment.id,
+                }
             });
-        }).catch(err => {
-            console.error(err);
-            res.status(500).end();
-        });
-    });
+        }).
+        then(() => res.json({redirect: redirect_link})).
+        catch(utils.catch_errors(res));
 });
 
 
