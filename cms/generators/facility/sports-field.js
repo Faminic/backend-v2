@@ -1,5 +1,5 @@
 ({
-	Name: '',
+	Name: 'Sports field',
 	$Description_type: 'quill',
 	Description: '<p>With a long-jump pit and two football pitches of varying size, this is an ideal venue to book for any outdoor event or field sports. It is spacious, well looked after and sheltered, as well as enjoying easy access to community facilities.</p>',
 	Banner: '/remote/direct_uploads/1548507122_image.png',

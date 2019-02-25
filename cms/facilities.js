@@ -3,7 +3,9 @@
 	$Banner_type: 'image',
 	Header: 'Our Facilities',
 	Description: 'All of our facilities are available for hire. We have facilities to suit all activities, events or occasions raging from sports opportunities to meetings and parties. Hiring agreements can range from one off facility hire to fully catered with licensed bar events. Please make an enquiry should you wish to discuss booking options further.',
-	$Facilities_templatitator: '@@global.facility_card',
+	
+})
+/*$Facilities_templatitator: '@@global.facility_card',
 	Facilities: [
 		{
 			Relative_Link: '/facility/astro-turf',
@@ -65,5 +67,4 @@
 			$Image_type: 'image',
 			Facility_Name: 'IT Suite'
 		}
-	]
-})
+	]*/
