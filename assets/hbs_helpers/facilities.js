@@ -33,7 +33,7 @@ enduro.templating_engine.registerHelper('facilities', function(options) {
         })
         .then(() => {
             // pass blog entries as context for the template
-			console.log(facilities);
+			//console.log(facilities);
             return options.fn(facilities)
         })
 })

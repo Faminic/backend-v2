@@ -28,16 +28,11 @@
             <div class="dropdown">
               <button id="button4" class="dropbtn">Facilities</button>
               <div class="dropdown-content">
-                <a href="/facility/astro-turf">Astro Turf</a>
-                <a href="/facility/sports-field">Sports Field</a>
-                <a href="/facility/theatre">Theatre</a>
-                <a href="/facility/sports-hall">Sports Hall</a>
-                <a href="/facility/dining-hall">Dining Hall</a>
-                <a href="/facility/classrooms">Classrooms</a>
-                <a href="/facility/gymnasium">The Gymnasium</a>
-                <a href="/facility/performing-arts">Performing Arts Room</a>
-                <a href="/facility/green-room">The Green Room</a>
-                <a href="/facility/it-suite">IT Suite</a>
+				{{#facilities}}
+					{{#each this}}
+						<a href="/facility/{{page_slug}}">{{facility.Name}}</a>
+					{{/each}}
+				{{/facilities}}
               </div>
             </div>
           </a></li>
