@@ -28,7 +28,7 @@ function authenticate(username, password) {
     // Constant time authentication function
     let valid = true;
     valid = valid && crypto.timingSafeEqual(Buffer.from(username, 'utf-8'), Buffer.from('admin', 'utf-8'));
-    valid = valid && bcrypt.compare(password, HASH);
+    valid = valid && bcrypt.compareSync(password, HASH);
     return valid;
 }
 
