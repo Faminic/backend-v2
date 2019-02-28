@@ -62,9 +62,9 @@ const reservationSchema = new mongoose.Schema({
 
 
 venueSchema.methods.get_room = function(room_id) {
-    // Finds the product with the given product_id
-    //   product_id: String
-    return this.rooms.find(p => p.id === room_id);
+    // Finds the room with the given room_id
+    //   room_id: String
+    return this.rooms.find(r => r.id === room_id);
 };
 
 
