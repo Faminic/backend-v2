@@ -310,12 +310,24 @@ $(document).hashroute('/venue/:id', function(e) {
 $(document).hashroute('/venue/:venueid/:productid/reservations', function(e) {
     var venue_id = e.params.venueid;
     var product_id = e.params.productid;
-
-    $.ajax('/booking-admin/venue/' + venue_id + '/' + product_id + '/reservations', {
+    var url = '/booking-admin/venue/' + venue_id + '/' + product_id + '/reservations';
+    $.ajax(url, {
         success: function(reservations) {
             console.log(reservations);
             $('#content').html(Mustache.render($("#ms-reservations").html()));
             setup_reservations(reservations, venue_id, product_id);
         }
+    });
+    $(document).on("change", "#orderBy", function() {
+        console.log('changed');
+        var selection = $("#orderBy").val()
+        $.ajax(url + '?order_by=' + selection, {
+            success: function(reservations) {
+                console.log(reservations);
+                $('#content').html(Mustache.render($("#ms-reservations").html()));
+                $("#orderBy").val(selection);
+                setup_reservations(reservations, venue_id, product_id);
+            }
+        });
     });
 });

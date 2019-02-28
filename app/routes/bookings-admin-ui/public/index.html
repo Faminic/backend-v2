@@ -187,6 +187,10 @@ option { font: inherit; }
 
   <script id="ms-reservations" type="x-tmpl-mustache">
     <h3>Reservations:</h3>
+    <select id="orderBy">
+        <option value="created">Date created (descending)</option>
+        <option value="start">Start date (descending)</option>
+    </select>
     <div id="reservations"></div>
     <form id="add-reservation-form">
         <input type="text" class="form-control" id="inputName" placeholder="Name" required></input>

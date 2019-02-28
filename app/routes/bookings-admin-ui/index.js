@@ -70,22 +70,19 @@ router.get('/venue/:id/:product_id/reservations', (req, res) => {
     // a given venue and product
     // add ?page=n for the n-th page (starts from 1)
     const page = (req.query.page ? parseInt(req.query.page) : 1) - 1;
+    const order_by = (req.query.order_by ? req.query.order_by : 'created')
     Venue.findById(req.params.id).
         then(venue => {
-            const timeout = moment().subtract(15, 'minutes').toDate();
-            const prod = venue.get_product(req.params.product_id);
-            if (!prod) throw new StatusError(404);
+            const product = venue.get_product(req.params.product_id);
+            if (!product) throw new StatusError(404);
             return Reservation.find({
                     $and: [
-                        { $or: prod.rooms.map(room_id => ({ 'rooms.id': room_id })) },
-                        { $or: [
-                            { confirmed: true },
-                            { confirmed: false, created: { $gte: timeout } },
-                        ]},
+                        { $or: product.rooms.map(room_id => ({ 'rooms.id': room_id })) },
+                        { confirmed: true },
                     ],
                 },
                 null,
-                { skip: 25 * page, sort: { created: -1 }, limit: 25 });
+                { skip: 25 * page, sort: { [order_by]: -1 }, limit: 25 });
         }).
         then(docs => res.json(docs)).
         catch(catch_errors(res));
@@ -98,8 +95,8 @@ router.post('/venue/:id/:product_id/reservations', (req, res) => {
     const force = 'force' in req.query;
     const start = clientDateToMoment(req.body.start);
     const end   = clientDateToMoment(req.body.end);
-    if (!start.isAfter(end)) {
-        res.status(404);
+    if (start.isAfter(end)) {
+        res.status(400);
         res.end();
         return;
     }
