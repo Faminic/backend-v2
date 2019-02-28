@@ -9,19 +9,23 @@
 			<p>{{Description}}</p>
 			<br>
 			<div class= "row">
-			{{#each Facilities}}
-				<div class="col-md-4 d-flex align-self-stretch">
-					<a href="{{this.Relative_Link}}">
-						<div class="card mb-4 shadow-sm d-flex align-self-stretch" >
+			{{#facilities}}
+				{{#each this}}
+					{{#if facility.primaryimage.Image}}
+						<div class="col-md-4 d-flex align-self-stretch">
+							<a href="/facility/{{page_slug}}">
+								<div class="card mb-4 shadow-sm d-flex align-self-stretch" >
 
-							<img class="card-img-top" src="{{this.Image}}">
-							<div class="card-body">
-								<p class="card-text">{{this.Facility_Name}}</p>
-							</div>
+									<img class="card-img-top" src="{{facility.primaryimage.Image}}">
+									<div class="card-body">
+										<p class="card-text">{{facility.Name}}</p>
+									</div>
+								</div>
+							</a>
 						</div>
-					</a>
-				</div>
-			{{/each}}
+					{{/if}}
+				{{/each}}
+			{{/facilities}}
 			</div>
 		</div>
 		<div class="col-md-3">
