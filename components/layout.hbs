@@ -30,7 +30,9 @@
               <div class="dropdown-content">
 				{{#facilities}}
 					{{#each this}}
-						<a href="/facility/{{page_slug}}">{{facility.Name}}</a>
+            {{#if facility.Name}}
+              <a href="/facility/{{page_slug}}">{{facility.Name}}</a>
+            {{/if}}
 					{{/each}}
 				{{/facilities}}
               </div>
