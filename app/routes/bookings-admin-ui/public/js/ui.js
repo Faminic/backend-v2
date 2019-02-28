@@ -72,15 +72,22 @@ function bindChange($input, obj, attr, is_price) {
 
 
 
-function setup_reservations(reservations, venue_id, product_id) {
+function setup_reservations(reservations, venue_id, product_id, page) {
     var obsReservations = trkl([]);
     var $reservations = $("#reservations");
+    var page;
 
-    obsReservations.subscribe(function(reservations) {
+    function create_page(reservations, page) {
+        if (!page) page = 1;
         $reservations.html("");
-        reservations.forEach(function(reservation) {
+        reservations.slice((page-1) * 5, page * 5).forEach(function(reservation) {
             $reservations.append(render_reservation(reservation, obsReservations));
         });
+        return page;
+    };
+
+    obsReservations.subscribe(function(reservations) {
+        page = create_page(reservations, page);
     });
 
 
@@ -126,6 +133,18 @@ function setup_reservations(reservations, venue_id, product_id) {
             }
         });
         return false;
+    });
+
+    $('#next-page').click(function() {
+        if (reservations.length > page * 5) {
+            page = create_page(reservations, page + 1);
+        }
+    });
+
+    $('#prev-page').click(function() {
+        if (page > 1) {
+            page = create_page(reservations, page - 1);
+        }
     });
 
     obsReservations(reservations);
