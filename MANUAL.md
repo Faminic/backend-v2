@@ -55,6 +55,6 @@ You can find this from the booking-admin page. Select the venue, view the list o
 - Add the page name, and below this a description of the new facility.
 - Add a banner image, thumbnail and any extra images. You can do this via a simple 'drag and drop' method, or by copy-pasting them.
 - Add opening times for the facility, then click 'Publish' to publish them to the website, or 'Temp' to preview.
-- Add a link to the new facility on the 'index' and 'facilities' pages, and on the 'whats-on' page if necessary.
+- Add a link to the new facility on the 'whats-on' page if necessary.
 
 The new facility will now have its own page on the website, and the site's users will be able to book and pay for it online.
