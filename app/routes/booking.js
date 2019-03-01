@@ -1,9 +1,13 @@
+const process = require('process');
 const moment = require('moment');
 const router = require('express').Router();
 const utils = require('../utils');
 const paypal = require('../paypalAPI');
 const booking_info = require('../booking_info');
 const {Venue, Reservation} = require('../models');
+
+
+const IS_DEBUG = process.env.EUGENE_DEBUG.length > 0;
 
 
 router.get('/', (req, res) => {
@@ -81,6 +85,18 @@ router.post('/:venue_id/:product_id', (req, res) => {
         then(() => venue.check_product(product_id, start, end)).
         then(can_book => {
             if (!can_book) throw new utils.StatusError(400);
+            // debug => fast track to 200
+            if (IS_DEBUG)  {
+                venue.book_product(product_id, {
+                    start, end, customer,
+                    confirmed: false,
+                    payment: {
+                        token: 'abc',
+                        id:    'def',
+                    }
+                });
+                throw new utils.StatusError(200);
+            }
             // can book => calculate prices
             const duration  = end.diff(start, 'minutes') / 60;
             const product   = venue.get_product(product_id);

@@ -75,6 +75,30 @@ venueSchema.methods.get_product = function(product_id) {
 };
 
 
+function make_conflict_query(s_, e_) {
+    // Given existing reservation (s,e) and new reservation (s', e')
+    //
+    //     |-------------|
+    //     s             e
+    //        |-----|
+    //        s'    e'
+    //  |----|       |-------|
+    //  s'   e'     s'       e'
+    //
+    // 3 cases to handle:
+    //   (1) overlap     s <= s' and e' <= e
+    //   (2) clip left   s' < s < e'
+    //   (3) clip right  s' < e < e'
+    return {
+        $or: [
+            /* (1) */ { start: { $lte: s_ }, end: { $gte: e_ }, },
+            /* (2) */ { start: { $gt: s_, $lt: e_ } },
+            /* (3) */ { end:   { $gt: s_, $lt: e_ } },
+        ]
+    };
+}
+
+
 venueSchema.methods.check_product = function(product_id, start, end) {
     // Check if the product_id is available for booking between start and end.
     //   product_id: String
@@ -84,8 +108,7 @@ venueSchema.methods.check_product = function(product_id, start, end) {
     if (!prod || !within_opening_hours(this, start) || !within_opening_hours(this, end))
         return Promise.resolve(false);
     return Reservation.findOne({
-            start: { $gte: start.toDate() },
-            end:   { $lte: end.toDate() },
+            ...make_conflict_query(start.toDate(), end.toDate()),
             $and:  [
                 { $or: prod.rooms.map(room_id => ({ 'rooms.id': room_id })) },
                 { $or: [
@@ -149,10 +172,9 @@ reservationSchema.methods.ensure_unique = function() {
     // Makes sure that a reservation is unique, i.e. there are no
     // two reservations for overlapping times.
     return Reservation.findOne({
-        _id:   { $ne:  this._id },
-        start: { $gte: this.start },
-        end:   { $lte: this.end },
-        $and:  [
+        ...make_conflict_query(this.start, this.end),
+        _id:  { $ne:  this._id },
+        $and: [
             { $or: this.rooms.map(room => ({ 'rooms.id': room.id })) },
             { $or: [
                 { confirmed: true },
