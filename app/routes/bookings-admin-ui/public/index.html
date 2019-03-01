@@ -2,7 +2,6 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <title>PVCC Bookings Admin</title>
   <style>
 body {
   font-size: 16px;
@@ -198,8 +197,16 @@ option { font: inherit; }
   </script>
 
   <script id="ms-reservations" type="x-tmpl-mustache">
-    <h3>Reservations:</h3>
+    <h3>Reservations</h3>
+    <br>
+    <label>Sort by:</label>
+    <select id="orderBy">
+        <option value="created">Date created (descending)</option>
+        <option value="start">Start date (descending)</option>
+    </select>
     <div id="reservations"></div>
+    <button id="prev-page">Previous</button>
+    <button id="next-page">Next</button>
     <form id="add-reservation-form">
         <input type="text" class="form-control" id="inputName" placeholder="Name" required></input>
         <input type="text" class="form-control" id="inputPhone" placeholder="Phone" required></input>
@@ -255,6 +262,8 @@ option { font: inherit; }
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="/booking-admin/js/jquery.hashroute.js"></script>
   <script src="/booking-admin/js/mustache.min.js"></script>
   <script src="/booking-admin/js/uuid.js"></script>

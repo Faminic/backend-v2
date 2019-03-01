@@ -108,15 +108,22 @@ function bindChange($input, obj, attr, is_price) {
 
 
 
-function setup_reservations(reservations, venue_id, product_id) {
+function setup_reservations(reservations, venue_id, product_id, page) {
     var obsReservations = trkl([]);
     var $reservations = $("#reservations");
+    var page;
 
-    obsReservations.subscribe(function(reservations) {
+    function create_page(reservations, page) {
+        if (!page) page = 1;
         $reservations.html("");
-        reservations.forEach(function(reservation) {
+        reservations.slice((page-1) * 5, page * 5).forEach(function(reservation) {
             $reservations.append(render_reservation(reservation, obsReservations));
         });
+        return page;
+    };
+
+    obsReservations.subscribe(function(reservations) {
+        page = create_page(reservations, page);
     });
 
 
@@ -162,6 +169,18 @@ function setup_reservations(reservations, venue_id, product_id) {
             })
         });
         return false;
+    });
+
+    $('#next-page').click(function() {
+        if (reservations.length > page * 5) {
+            page = create_page(reservations, page + 1);
+        }
+    });
+
+    $('#prev-page').click(function() {
+        if (page > 1) {
+            page = create_page(reservations, page - 1);
+        }
     });
 
     obsReservations(reservations);
@@ -347,12 +366,24 @@ $(document).hashroute('/venue/:id', function(e) {
 $(document).hashroute('/venue/:venueid/:productid/reservations', function(e) {
     var venue_id = e.params.venueid;
     var product_id = e.params.productid;
-
-    $.ajax('/booking-admin/venue/' + venue_id + '/' + product_id + '/reservations', {
+    var url = '/booking-admin/venue/' + venue_id + '/' + product_id + '/reservations';
+    $.ajax(url, {
         success: function(reservations) {
             console.log(reservations);
             $('#content').html(Mustache.render($("#ms-reservations").html()));
             setup_reservations(reservations, venue_id, product_id);
         }
+    });
+    $(document).on("change", "#orderBy", function() {
+        console.log('changed');
+        var selection = $("#orderBy").val()
+        $.ajax(url + '?order_by=' + selection, {
+            success: function(reservations) {
+                console.log(reservations);
+                $('#content').html(Mustache.render($("#ms-reservations").html()));
+                $("#orderBy").val(selection);
+                setup_reservations(reservations, venue_id, product_id);
+            }
+        });
     });
 });
