@@ -18,7 +18,7 @@
 		{
 			$Image_type: 'image',
 			Image: '/remote/direct_uploads/1549225400_slide-3.jpg',
-			content: '<h3><strong>TRADITIONAL THEATRE</strong></h3><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
+			content: '<h3><strong>TRADITIONAL THEATRE</strong></h3><p><span class="ql-cursor">﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿</span>A unique place for performing with the best seats in the house!</p>',
 			$content_type: 'quill',
 			$content_control_path: '/brick/enduro_quill/quill_control'
 		},
@@ -215,15 +215,12 @@
 			Image: '/remote/direct_uploads/1549385724_daily_mail.png'
 		}
 	],
-	money_raised_amount: '<p>£14,733,440.09</p>',
-	$money_raised_amount_type: 'quill',
-	$money_raised_amount_control_path: '/brick/enduro_quill/quill_control',
-	money_raised_text: '<p>donated to good causes in the UK</p>',
-	$money_raised_text_type: 'quill',
-	$money_raised_text_control_path: '/brick/enduro_quill/quill_control',
+	money_raised_amount: '£14,733,440.09',
+	money_raised_text: 'donated to good causes in the UK',
 	charity_button_2_title: 'Ready to join?',
 	charity_button_2_text: 'Support us now',
 	charity_button_2_link: 'https://www.easyfundraising.org.uk/causes/parkviewcom/',
 	powered_by_image: '/remote/direct_uploads/1549388414_powered_by_ef.png',
+	powered_by_link: 'https://www.easyfundraising.org.uk/',
 	$powered_by_image_type: 'image'
 })

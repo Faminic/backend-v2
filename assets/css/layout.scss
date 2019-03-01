@@ -1,0 +1,56 @@
+#book-now-button {
+  border: 0;
+  background-color: #FFCC27;
+  color: #424949;
+  font-weight: bold;
+  padding: 10px 15px;
+  font-size: 18px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+#button1, #button2, #button3, #button4, #button5 {
+  border: 0;
+  background-color: white;
+  color: #424949;
+  font-weight: bold;
+  padding: 10px 15px;
+  font-size: 18px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+#button1:hover, #button2:hover, #button3:hover, #button4:hover, #button5:hover, {
+  background-color: #FFCC27;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #FFFFFF;
+  min-width: 160px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: #424949;
+  padding: 12px 16px;
+  display: block;
+}
+
+.dropdown-content #original {
+  display: none;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}

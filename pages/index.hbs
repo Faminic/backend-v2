@@ -9,7 +9,7 @@
     {{#each Banner_Images}}
     <div class="carousel-item {{#unless @index}}active{{/unless}}">
       <img class="d-block w-100" src="{{ this.Image }}"/>
-      <div class="carousel-caption">
+      <div class="carousel-caption" style="padding-left: 15px;">
         {{{this.content}}}
       </div>
     </div>
@@ -30,123 +30,128 @@
     {{{bannertext}}}
   </div>
 </div>
-<div class="row">
-  <div class="col-md-6 offset-md-2" id="maincontainer">
-    <h1 class="home-header"><span>{{{first_header}}}</span></h1>
-    <p>{{{text_under_first_header}}}</p>
-    <div class="row">
-      {{#each whats_on_boxes}}
-      <div class="col-md-4 d-flex align-self-stretch">
-        <a href="{{this.link}}">
-          <div class="card mb-4 shadow-sm d-flex align-self-stretch" >
-            <img class="card-img-top" src="{{this.Image}}">
-            <div class="card-body">
-              <p class="card-text">{{{this.content}}}</p>
+<br><br>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-7 offset-md-1" id="maincontainer">
+      <h1 class="home-header"><span>{{{first_header}}}</span></h1>
+      <p>{{{text_under_first_header}}}</p>
+      <div class="row">
+        {{#each whats_on_boxes}}
+        <div class="col-md-4 d-flex align-self-stretch">
+          <a href="{{this.link}}">
+            <div class="card mb-4 shadow-sm d-flex align-self-stretch" >
+              <img class="card-img-top" src="{{this.Image}}">
+              <div class="card-body">
+                <p class="card-text">{{{this.content}}}</p>
+              </div>
             </div>
-          </div>
-        </a>
-      </div>
-      {{/each}}
-    </div>
-    <a href="/whats-on"><button type="button" id="whatsonbutton">View All</button></a>
-    <br><br><br><br>
-    <h1 class="home-header"><span>{{{second_header}}}</span></h1>
-    <p>{{{text_under_second_header}}}</p>
-    <div class="row" style="border-bottom: 4px solid #4682B4;">
-      {{#each facility_boxes}}
-      <div class="col-md-4 d-flex align-self-stretch">
-        <a href="{{this.link}}">
-          <div class="card mb-4 shadow-sm d-flex align-self-stretch" >
-            <img class="card-img-top" src="{{this.Image}}">
-            <div class="card-body">
-              <p class="card-text">{{{this.content}}}</p>
-            </div>
-          </div>
-        </a>
-      </div>
-      {{/each}}
-    </div>
-    <br>
-    <div class="charity-wrapper" style="text-align: center;">
-      <div class="container" style="display: inline-block;">
-        <!--place all charity code in here-->
-        <div id="charitylogo">
-          <a target="_blank" href="{{charity_logo_link}}">
-            <img src="{{charity_logo}}" alt="easyfundraising.org.uk">
           </a>
         </div>
-        <div id="firstcharitysection">
-          <p>{{{charity_content_1}}}</p>
-          <a class="button" target="_blank" href="{{charity_button_1_link}}">
-            <button type="button">{{charity_button_1_text}}</button>
+        {{/each}}
+      </div>
+      <a href="/whats-on"><button type="button" id="whatsonbutton">View All</button></a>
+      <br><br><br><br>
+      <h1 class="home-header"><span>{{{second_header}}}</span></h1>
+      <p>{{{text_under_second_header}}}</p>
+      <div class="row" style="border-bottom: 4px solid #4682B4;">
+        {{#each facility_boxes}}
+        <div class="col-md-4 d-flex align-self-stretch">
+          <a href="{{this.link}}">
+            <div class="card mb-4 shadow-sm d-flex align-self-stretch" >
+              <img class="card-img-top" src="{{this.Image}}">
+              <div class="card-body">
+                <p class="card-text">{{{this.content}}}</p>
+              </div>
+            </div>
           </a>
         </div>
-        <br>
-        <br>
-        <div class="col-md-10 offset-md-1" id=charityhowitworks>
-          <h3 style="text-align:left;">{{charity_instructions_title}}</h3>
+        {{/each}}
+      </div>
+      <br>
+      <div class="charity-wrapper" style="text-align: center;">
+        <div class="container" style="display: inline-block;">
+          <!--place all charity code in here-->
+          <div id="charitylogo">
+            <a target="_blank" href="{{charity_logo_link}}">
+              <img src="{{charity_logo}}" alt="easyfundraising.org.uk">
+            </a>
+          </div>
+          <div id="firstcharitysection">
+            <p>{{{charity_content_1}}}</p>
+            <a class="button" target="_blank" href="{{charity_button_1_link}}">
+              <button type="button">{{charity_button_1_text}}</button>
+            </a>
+          </div>
           <br>
-          {{#each charity_steps}}
-          <div class="row">
-            <div class="col-md-3">
-              <img src="{{this.Image}}" width="100%">
-            </div>
-            <div class="col-md-8">
-              <div class="instructions" style="text-align:left;">
-                <h6>{{{this.step_title}}}</h6>
-                <p>{{{this.step_text}}}</p>
-              </div>
-            </div>
-          </div>
-          {{/each}}
-          <div class="video" style="position:relative;padding-top:56.25%;">
-            <div class="fluid-width-video-wrapper"><iframe src="{{charity_youtube_link}}" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe></div>
-          </div>
-          <div id="featuredin">
-            <h6>{{featured_in_title}}</h6>
+          <br>
+          <div class="col-md-10 offset-md-1" id=charityhowitworks>
+            <h3 style="text-align:left;">{{charity_instructions_title}}</h3>
+            <br>
+            {{#each charity_steps}}
             <div class="row">
-              {{#each featured_in_image}}
               <div class="col-md-3">
-                <img src="{{this.Image}}">
+                <img src="{{this.Image}}" width="100%">
               </div>
-              {{/each}}
+              <div class="col-md-8">
+                <div class="instructions" style="text-align:left;">
+                  <h6>{{{this.step_title}}}</h6>
+                  <p>{{{this.step_text}}}</p>
+                </div>
+              </div>
+            </div>
+            {{/each}}
+            <div class="video" style="position:relative;padding-top:56.25%;">
+              <div class="fluid-width-video-wrapper"><iframe src="{{charity_youtube_link}}" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe></div>
+            </div>
+            <div id="featuredin">
+              <h6>{{featured_in_title}}</h6>
+              <div class="row">
+                {{#each featured_in_image}}
+                <div class="col-md-3">
+                  <img src="{{this.Image}}">
+                </div>
+                {{/each}}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <br><br>
-    <div class="charity-wrapper" style="text-align: center;">
-      <div class="container" style="display: inline-block;">
-        <div class="col-md-10 offset-md-1">
-          <div id="moneyraised">
-            <div class="row">
-              <div class="col-md-6">
-                <h1>{{{money_raised_amount}}}</h1>
-                <p>{{{money_raised_text}}}</p>
-              </div>
-              <div class="col-md-6">
-                <h2>{{{charity_button_2_title}}}</h2>
-                <a class="button" target="_blank" href="{{charity_button_2_link}}">
-                  <button type="button">{{charity_button_2_text}}</button>
-                </a>
+      <br><br>
+      <div class="charity-wrapper" style="text-align: center;">
+        <div class="container" style="display: inline-block;">
+          <div class="col-md-10 offset-md-1">
+            <div id="moneyraised">
+              <div class="row">
+                <div class="col-md-6">
+                  <h1>{{{money_raised_amount}}}</h1>
+                  <p>{{{money_raised_text}}}</p>
+                </div>
+                <div class="col-md-6">
+                  <h2>{{{charity_button_2_title}}}</h2>
+                  <a class="button" target="_blank" href="{{charity_button_2_link}}">
+                    <button type="button">{{charity_button_2_text}}</button>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <br><br>
-    <div class="charity-wrapper" style="text-align: center;">
-      <div class="container" style="display: inline-block;">
-        <div class="col-md-10 offset-md-1" id="powered_by_section">
-          <img src="{{powered_by_image}}">
+      <br><br>
+      <div class="charity-wrapper" style="text-align: center;">
+        <div class="container" style="display: inline-block;">
+          <div class="col-md-10 offset-md-1" id="powered_by_section">
+            <a target="_blank" href="{{powered_by_link}}">
+              <img src="{{powered_by_image}}" alt="Powered By easyfundraising.org.uk">
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-md-4">
-    {{>facebook}}
+    <div class="col-md-3">
+      {{>facebook}}
+    </div>
   </div>
 </div>
 

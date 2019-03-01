@@ -10,6 +10,8 @@ const timeString = { type: String, match: /[0-9][0-9]:[0-9][0-9]/ };
 const venueSchema = new mongoose.Schema({
     name: String,
     bookable: Boolean,
+    // specific google calendar associated with this venue
+    calendarId: String,
     opening_hours: {
         // times should look like HH:MM
         monday:    {open: timeString, close: timeString},
@@ -41,6 +43,8 @@ const venueSchema = new mongoose.Schema({
 const reservationSchema = new mongoose.Schema({
     // Reservations can span multiple rooms
     venue:      String, // venue name
+    calendarId: String, // calendarId
+    eventId:    String, // eventId
     rooms:      [{ id: String, name: String }],
     start:      Date,
     end:        Date,
@@ -58,9 +62,9 @@ const reservationSchema = new mongoose.Schema({
 
 
 venueSchema.methods.get_room = function(room_id) {
-    // Finds the product with the given product_id
-    //   product_id: String
-    return this.rooms.find(p => p.id === room_id);
+    // Finds the room with the given room_id
+    //   room_id: String
+    return this.rooms.find(r => r.id === room_id);
 };
 
 
@@ -114,6 +118,7 @@ venueSchema.methods.book_product = function(product_id, {customer, payment, star
         return Promise.reject();
     return Reservation.create({
         venue: this.name,
+        calendarId: this.calendarId,
         rooms: prod.rooms.map(room_id => this.get_room(room_id)),
         customer,
         payment,

@@ -3,9 +3,23 @@ window.setup = false;
 DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 OPEN_CLOSE = ['open', 'close'];
 
+
+function check_authorized_then(f) {
+    // meant to used as error callback in $.ajax({ ... })
+    return function(r) {
+        if (r.status === 401) {
+            window.location.hash = "#" + "/login";
+        } else {
+            f(r);
+        }
+    };
+}
+
+
 $.ajaxSetup({
     contentType: "application/json; charset=utf-8",
     dataType: "json",
+    error: check_authorized_then(function() {}),
 });
 
 
@@ -28,9 +42,9 @@ function reload_venues() {
                         window.location.hash = "#" + venue._id;
                         reload_venues();
                     },
-                    error: function() {
+                    error: check_authorized_then(function() {
                         window.alert("Unable to create venue.");
-                    },
+                    }),
                 });
             });
         },
@@ -45,6 +59,28 @@ $(document).hashroute('middleware', function() {
         window.setup = true;
     }
     this.next();
+});
+
+
+$(document).hashroute('/login', function() {
+    $('#content').html($('#ms-login').html());
+    $('#login').submit(function(ev) {
+        ev.preventDefault();
+        $.ajax('/booking-admin/auth', {
+            method: 'POST',
+            data: JSON.stringify({
+                username: $('#username').val(),
+                password: $('#password').val(),
+            }),
+            success: function() {
+                window.setup = false;
+                window.location.hash = "#/";
+            },
+            error: function() {
+                $('#errors').text("Invalid login.");
+            }
+        });
+    });
 });
 
 
@@ -105,9 +141,9 @@ function setup_reservations(reservations, venue_id, product_id, page) {
                 success: function() {
                     window.alert("Reservation deleted");
                 },
-                error: function(e) {
+                error: check_authorized_then(function(e) {
                     window.alert("Reservation could not be deleted");
-                }
+                }),
             });
         });
         return $reservation;
@@ -128,9 +164,9 @@ function setup_reservations(reservations, venue_id, product_id, page) {
                 reservations.push(r);
                 obsReservations(reservations);
             },
-            error: function(e) {
+            error: check_authorized_then(function(e) {
                 window.alert("Reservation could not be added");
-            }
+            })
         });
         return false;
     });
@@ -276,6 +312,7 @@ function setup_venue(venue) {
         venue.bookable = $(this).prop('checked');
     });
 
+    bindChange($('#calendar-id'), venue, 'calendarId');
     bindChange($('#venue-name'), venue, 'name');
     DAYS.forEach(function(day) {
         OPEN_CLOSE.forEach(function(type) {
@@ -318,9 +355,9 @@ $(document).hashroute('/venue/:id', function(e) {
                     window.alert("Successfully saved changes!");
                     render_venue(venue);
                 },
-                error: function() {
+                error: check_authorized_then(function() {
                     window.alert("Cannot save changes.");
-                }
+                }),
             });
         });
     }

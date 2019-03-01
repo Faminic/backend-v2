@@ -91,16 +91,20 @@ $(document).ready(function(){
   $("#selectDate").val(moment().format("YYYY-MM-DD"));
   $("#selectTime").val(1);
 
-  $("#selectType").change( function(){
+  function changeType() {
     $("#groupVenue").hide();
     $("#groupActivity").hide();
     $("#groupEvent").hide();
     $("#group" + $("#selectType").val()).show();
-  });
+  }
+
+  $("#selectType").change(changeType);
+  changeType();
 
   $("#selectVenue").change( function(){
     updateWithVenue($("#selectVenue option:selected").val());
     $("#selectProduct").trigger("change");
+    $("#priceTag").text("£" + calculatePrice().toFixed(2));
   })
 
   $("#selectProduct").change( function(){
@@ -110,6 +114,7 @@ $(document).ready(function(){
       }
     }
     getAvailableTimes(currentVenue._id, currentProduct.id, $("#selectTime").val());
+    $("#priceTag").text("£" + calculatePrice().toFixed(2));
   });
 
   $("#selectTime").change( function(){
@@ -135,8 +140,9 @@ $(document).ready(function(){
       "name":$("#inputName").val(),
       "phone_number":$("#inputPhone").val()
     }, function(data){
-      console.log(data);
-      window.open(data.redirect);
+      window.location.assign(data.redirect);
     });
+    $("#submission-alert").delay(100).fadeIn(100);
+    $("#submitBooking").fadeOut();
   });
 });

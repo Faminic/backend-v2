@@ -1,27 +1,37 @@
 {{#> layout}}
 <div class="jumbotron jumbotron-fluid" style="background-size: cover; background-position: center; padding: 10em; background-image: url({{Banner}})"></div>
-<div class="container">
+<div class="container-fluid">
 	<div class="row">
-		<div class="col">
-			<h1>{{Header}}</h1>
+		<div class="col-md-7 offset-md-1" id="maincontainer">
+			<br>
+			<h1 class="home-header"><span>{{Header}}</span></h1>
+			<br>
 			<p>{{Description}}</p>
-		</div>
-	</div>
-	<div class= "row">
-	{{#each Facilities}}
-		<div class="col-md-4 d-flex align-self-stretch">
-			<a href="{{this.Relative_Link}}">
-				<div class="card mb-4 shadow-sm d-flex align-self-stretch" >
+			<br>
+			<div class= "row">
+			{{#facilities}}
+				{{#each this}}
+					{{#if facility.primaryimage.Image}}
+						<div class="col-md-4 d-flex align-self-stretch">
+							<a href="/facility/{{page_slug}}">
+								<div class="card mb-4 shadow-sm d-flex align-self-stretch" >
 
-					<img class="card-img-top" src="{{this.Image}}">
-					<div class="card-body">
-						<p class="card-text">{{this.Facility_Name}}</p>
-					</div>
-				</div>
-			</a>
+									<img class="card-img-top" src="{{facility.primaryimage.Image}}">
+									<div class="card-body">
+										<p class="card-text">{{facility.Name}}</p>
+									</div>
+								</div>
+							</a>
+						</div>
+					{{/if}}
+				{{/each}}
+			{{/facilities}}
+			</div>
 		</div>
-	{{/each}}
+		<div class="col-md-3">
+			{{>facebook}}
+		</div>
 	</div>
-  
 </div>
+<link rel="stylesheet" href="/assets/css/facilities.css">
 {{/layout}}

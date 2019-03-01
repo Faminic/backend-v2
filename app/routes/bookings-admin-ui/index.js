@@ -1,9 +1,15 @@
 const moment = require('moment');
 const express = require('express');
-const morgan = require('morgan');
+const slowDown = require('express-slow-down');
 const router = express.Router();
+const cookieParser = require('cookie-parser');
 const {Venue, Reservation} = require('../../models');
 const {clientDateToMoment, StatusError, catch_errors} = require('../../utils');
+const {addReservationEvent, deleteEvent, createCalendar} = require('../../calendarAPI');
+const {needs_auth, authenticate, save_token} = require('./auth');
+
+
+const HASH = '$2a$10$qgKVcgqHEIuxaVvVR/4eeebQMZWyRoUbcPJqDHZ8soHN4JlJYkjPy';
 
 
 const default_opening_hours = {
@@ -17,23 +23,48 @@ const default_opening_hours = {
 };
 
 
-router.use(morgan('dev'));
 router.use(express.json());
+router.use(cookieParser());
 router.use(express.static(__dirname + '/public'));
 
 
-router.post('/venues', (req, res) => {
+const speedLimiter = slowDown({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    delayAfter: 100, // allow 100 requests per 15 minutes, then...
+    delayMs: 500 // begin adding 500ms of delay per request above 100
+});
+
+
+router.post('/auth', speedLimiter, (req, res) => {
+    if (!authenticate(req.body.username, req.body.password)) {
+        res.status(401);
+        res.end();
+        return;
+    }
+    save_token(res);
+    res.json({});
+    res.end();
+});
+
+
+const protected = express.Router();
+protected.use(needs_auth);
+
+
+protected.post('/venues', (req, res) => {
     // Creates a venue, need to specify req.body.name
     let venue = new Venue();
     venue.name = req.body.name;
     venue.opening_hours = default_opening_hours;
-    venue.save()
-        .then(() => res.json(venue))
-        .catch(catch_errors(res));
+    createCalendar(venue.name).
+        then(calendarId => { venue.calendarId = calendarId }).
+        then(_ => venue.save()).
+        then(_ => res.json(venue)).
+        catch(catch_errors(res));
 });
 
 
-router.get('/venues', (req, res) => {
+protected.get('/venues', (req, res) => {
     // Gets a list of venues
     Venue.find({}, ['name', '_id'])
         .then(docs => res.json(docs))
@@ -41,7 +72,7 @@ router.get('/venues', (req, res) => {
 });
 
 
-router.post('/venue/:id', (req, res) => {
+protected.post('/venue/:id', (req, res) => {
     // Modifies a venue.
     // req.body should be JSON, refer to app/models.js for
     // venue schema.
@@ -57,7 +88,7 @@ router.post('/venue/:id', (req, res) => {
 });
 
 
-router.get('/venue/:id', (req, res) => {
+protected.get('/venue/:id', (req, res) => {
     // Gets detail for a venue
     Venue.findById(req.params.id)
          .then(result => res.json(result))
@@ -65,7 +96,7 @@ router.get('/venue/:id', (req, res) => {
 });
 
 
-router.get('/venue/:id/:product_id/reservations', (req, res) => {
+protected.get('/venue/:id/:product_id/reservations', (req, res) => {
     // Gets a list of reservations which have not expired for
     // a given venue and product
     // add ?page=n for the n-th page (starts from 1)
@@ -89,7 +120,7 @@ router.get('/venue/:id/:product_id/reservations', (req, res) => {
 });
 
 
-router.post('/venue/:id/:product_id/reservations', (req, res) => {
+protected.post('/venue/:id/:product_id/reservations', (req, res) => {
     // Creates a reservation for a given venue and product
     // See app/models.js for schema
     const force = 'force' in req.query;
@@ -118,17 +149,27 @@ router.post('/venue/:id/:product_id/reservations', (req, res) => {
                 confirmed: true,
             });
         }).
-        then(reservation => res.json(reservation)).
+        then(reservation => {
+            addReservationEvent(reservation);
+            res.json(reservation);
+        }).
         catch(catch_errors(res));
 });
 
 
-router.delete('/reservation/:id', (req, res) => {
+protected.delete('/reservation/:id', (req, res) => {
     // Delete a reservation by id
-    Reservation.findByIdAndDelete(req.params.id).
+    Reservation.findById(req.params.id).
+        then(reservation => {
+            if (!reservation) throw new StatusError(404);
+            deleteEvent(reservation.calendarId, reservation.eventId).
+                catch(() => {});
+            return reservation.delete();
+        }).
         then(() => res.json({})).
         catch(catch_errors(res));
 });
 
 
+router.use(protected);
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const helmet = require('helmet');
 
 const local_app = function () {}
 
@@ -16,6 +17,7 @@ local_app.prototype.init = function (app) {
     // our router, otherwise we may interfere with the admin interface.
     const router = new express.Router();
     // middleware
+    app.use(helmet());
     app.use(morgan('dev'));
     router.use(express.json());
     router.use(express.urlencoded({extended: false}));

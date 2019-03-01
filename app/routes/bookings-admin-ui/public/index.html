@@ -55,6 +55,8 @@ input {
 #footer     { padding-top: 0.5em; }
 #venue-name { font-size: 2em; }
 
+#errors { color: red; }
+
 .product ,.reservation{
   border: 1px solid #666;
   margin:  0 0 0.5em 0;
@@ -79,6 +81,15 @@ option { font: inherit; }
     <div id="sidebar"></div>
     <div id="content">Hello</div>
   </div>
+
+  <script id="ms-login" type="x-tmpl-mustache">
+    <div id="errors"></div>
+    <form id="login">
+      <b>Username:</b><input id="username" type="text"/><br/>
+      <b>Password:</b><input id="password" type="password"/><br/>
+      <input type="submit" value="Log In"/>
+    </form>
+  </script>
 
   <script id="ms-sidebar" type="x-tmpl-mustache">
     <h3>Venues</h3>
@@ -130,7 +141,8 @@ option { font: inherit; }
   <script id="ms-venue-form" type="x-tmpl-mustache">
     <input id='venue-name' name='name' type='text' value='{{ name }}' />
     <br/>
-    <input id="bookable" type="checkbox" {{ #bookable }}checked{{ /bookable }}></input> <b>Venue is Bookable</b> - customers can book this venue using the online form.
+    <input id="bookable" type="checkbox" {{ #bookable }}checked{{ /bookable }}></input> <b>Venue is Bookable</b> - customers can book this venue using the online form.<br/>
+    <b>Calendar ID:</b> <input id="calendar-id" type="text" value="{{ calendarId }}"></input>
     <h3>Opening Times:</h3>
     <table>
       <tr>
