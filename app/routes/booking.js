@@ -7,7 +7,7 @@ const booking_info = require('../booking_info');
 const {Venue, Reservation} = require('../models');
 
 
-const IS_DEBUG = process.env.EUGENE_DEBUG.length > 0;
+const IS_DEBUG = !!process.env.EUGENE_DEBUG;
 
 
 router.get('/', (req, res) => {

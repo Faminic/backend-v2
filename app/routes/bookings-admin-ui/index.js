@@ -4,7 +4,7 @@ const slowDown = require('express-slow-down');
 const router = express.Router();
 const cookieParser = require('cookie-parser');
 const {Venue, Reservation} = require('../../models');
-const {clientDateToMoment, StatusError, catch_errors} = require('../../utils');
+const {clientDateToMoment, StatusError, catch_errors, today} = require('../../utils');
 const {addReservationEvent, deleteEvent, createCalendar} = require('../../calendarAPI');
 const {needs_auth, authenticate, save_token} = require('./auth');
 
@@ -99,22 +99,19 @@ protected.get('/venue/:id', (req, res) => {
 protected.get('/venue/:id/:product_id/reservations', (req, res) => {
     // Gets a list of reservations which have not expired for
     // a given venue and product
-    // add ?page=n for the n-th page (starts from 1)
-    const page = (req.query.page ? parseInt(req.query.page) : 1) - 1;
     const order_by = (req.query.order_by ? req.query.order_by : 'created')
     Venue.findById(req.params.id).
         then(venue => {
             const product = venue.get_product(req.params.product_id);
             if (!product) throw new StatusError(404);
             return Reservation.find({
-                    $and: [
-                        { $or: product.rooms.map(room_id => ({ 'rooms.id': room_id })) },
-                        { confirmed: true },
-                    ],
+                    confirmed: true,
+                    start: { $gte: today() },
+                    $or: product.rooms.map(room_id => ({ 'rooms.id': room_id })),
                 },
                 null,
-                { skip: 25 * page, sort: { [order_by]: -1 }, limit: 25 });
-        }).
+                { sort: { [order_by]: -1 } });
+            }).
         then(docs => res.json(docs)).
         catch(catch_errors(res));
 });

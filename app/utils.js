@@ -23,6 +23,16 @@ function roundToHalfHour(m) {
 }
 
 
+function today() {
+    var d = new Date();
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    return d;
+}
+
+
 function StatusError(status) {
     this.status = status;
     this.StatusError = true;
@@ -48,4 +58,5 @@ module.exports = {
     clientDateToMoment,
     catch_errors,
     StatusError,
+    today,
 };
