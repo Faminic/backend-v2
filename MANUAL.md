@@ -42,6 +42,8 @@ Products can be added, deleted, and edited.
 #### Reservations
 Each product has an associated list of reservations. Reservations are bookings for a product which have been made online, and can be viewed, added and deleted.
 
+When adding a reservation, it is possible that the time you select for it clashes with an existing reservation, or is outside normal opening hours. To ignore any clashes, and force the booking through anyway, check the 'Ignore clashes' checkbox.
+
 # FAQ
 **How do I issue a refund to a customer?**
 

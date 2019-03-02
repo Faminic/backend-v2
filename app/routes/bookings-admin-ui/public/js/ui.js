@@ -173,7 +173,9 @@ function setup_reservations(reservations, venue_id, product_id, page) {
     }
 
     $('#add-reservation-form').submit(function() {
-        $.ajax("/booking-admin/venue/" + venue_id + "/" + product_id + "/reservations", {
+        url = "/booking-admin/venue/" + venue_id + "/" + product_id + "/reservations"
+        if ($("#force-booking").is(":checked")) url += "?force"
+        $.ajax(url, {
             method: "POST",
             data: JSON.stringify({
                 customer: {name: $("#inputName").val(), phone_number: $("#inputPhone").val()},
