@@ -107,6 +107,22 @@ function bindChange($input, obj, attr, is_price) {
 }
 
 
+function formatDate(date) {
+    date = new Date(date);
+    var year = date.getFullYear(),
+        month = date.getMonth() + 1, // months are zero indexed
+        day = date.getDate(),
+        hour = date.getHours(),
+        minute = date.getMinutes(),
+        second = date.getSeconds(),
+        hourFormatted = hour % 12 || 12, // hour returned in 24 hour format
+        minuteFormatted = minute < 10 ? "0" + minute : minute,
+        morning = hour < 12 ? "am" : "pm";
+
+    return month + "/" + day + "/" + year + " " + hourFormatted + ":" +
+            minuteFormatted + morning;
+}
+
 
 function setup_reservations(reservations, venue_id, product_id, page) {
     var obsReservations = trkl([]);
@@ -128,7 +144,14 @@ function setup_reservations(reservations, venue_id, product_id, page) {
 
 
     function render_reservation(reservation, obsReservations) {
-        var $reservation = $(Mustache.render($("#reservation").html(), reservation));
+        console.log(reservation);
+        var $reservation = $(Mustache.render($("#reservation").html(), {
+            customer: reservation.customer,
+            rooms:    reservation.rooms,
+            payment:  reservation.payment,
+            start:    formatDate(reservation.start),
+            end:      formatDate(reservation.end),
+        }));
 
         $reservation.find(".delete-reservation").click(function() {
             var reservations = obsReservations();
@@ -161,7 +184,7 @@ function setup_reservations(reservations, venue_id, product_id, page) {
             }),
             success: function(r) {
                 window.alert("Reservation added");
-                reservations.push(r);
+                reservations.unshift(r);
                 obsReservations(reservations);
             },
             error: check_authorized_then(function(e) {
@@ -386,4 +409,15 @@ $(document).hashroute('/venue/:venueid/:productid/reservations', function(e) {
             }
         });
     });
+});
+
+$(document).on("click", "#reservations .payment-id", function() {
+    var input = this;
+    input.select();
+    document.execCommand("copy");
+    var $input = $(input);
+    $input.css({ 'border-color' : 'orange' });
+    setTimeout(function() {
+        $input.css({ 'border-color' : '#000' });
+    }, 800);
 });
