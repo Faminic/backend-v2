@@ -127,6 +127,7 @@ venueSchema.methods.book_product = function(product_id, {customer, payment, star
     //   config: {
     //       start: moment
     //       end: moment
+    //       confirmed: Boolean
     //       customer: {
     //          name: String
     //          phone_number: String

@@ -5,7 +5,7 @@
 	"main": "assets/vendor/enduro/index.js",
 	"scripts": {
 		"start": "node_modules/.bin/enduro start",
-		"test":  "mocha"
+		"test":  "mocha --exit"
 	},
 	"author": "author goes here",
 	"license": "MIT",
