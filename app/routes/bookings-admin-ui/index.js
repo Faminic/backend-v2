@@ -72,6 +72,14 @@ protected.get('/venues', (req, res) => {
 });
 
 
+protected.delete('/venue/:id', (req, res) => {
+    // Deletes a venue
+    Venue.findByIdAndDelete(req.params.id)
+        .then(res.json({}))
+        .catch(catch_errors(res));
+});
+
+
 protected.post('/venue/:id', (req, res) => {
     // Modifies a venue.
     // req.body should be JSON, refer to app/models.js for

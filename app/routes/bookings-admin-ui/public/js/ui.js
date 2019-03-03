@@ -372,6 +372,22 @@ $(document).hashroute('/venue/:id', function(e) {
         setup_venue(venue);
         window.venue = venue;
 
+        $('#delete-venue').click(function() {
+            if (!window.confirm("Confirm delete?"))
+                return;
+            $.ajax('/booking-admin/venue/' + venue_id, {
+                method: 'DELETE',
+                success: function() {
+                    window.alert("Successfully deleted venue!");
+                    window.location.hash = "#/";
+                    reload_venues();
+                },
+                error: check_authorized_then(function() {
+                    window.alert("Cannot delete.");
+                }),
+            });
+        });
+
         $('#save').click(function() {
             $.ajax('/booking-admin/venue/' + venue_id, {
                 method: 'POST',
