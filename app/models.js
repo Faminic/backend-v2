@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const {within_opening_hours} = require('./booking_info');
 
-if (mongoose.connections.length === 0)
+if (mongoose.connection.readyState === 0)
     mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
 
 

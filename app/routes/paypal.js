@@ -1,9 +1,13 @@
+const process = require('process');
 const router = require('express').Router();
 const paypal = require('../paypalAPI');
 const {addReservationEvent} = require('../calendarAPI');
 const utils = require('../utils');
 const email = require('../email');
 const {Reservation, Venue} = require('../models');
+
+
+const IS_DEBUG = process.env.NODE_ENV === 'test';
 
 
 function sendReservationEmail(reservation) {
@@ -44,14 +48,14 @@ router.get('/ok', (req, res) => {
         // ensure that the reservation is unique; if it's not unique then there
         // is potentially two people paying at once.
         then(() => reservation.ensure_unique()).
-        then(() => paypal.execute_payment(paymentId, PayerID)).
+        then(() => (IS_DEBUG ? null : paypal.execute_payment(paymentId, PayerID))).
         then(() => {
             reservation.confirmed = true;
             return reservation.save();
         }).
         then(() => {
-            sendReservationEmail(reservation);
-            addReservationEvent(reservation);
+            if (!IS_DEBUG) sendReservationEmail(reservation);
+            if (!IS_DEBUG) addReservationEvent(reservation);
             res.cookie('reservation', JSON.stringify({
                 venue:     reservation.venue,
                 rooms:     reservation.rooms.map(x => x.name).join(', '),

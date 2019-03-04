@@ -7,7 +7,7 @@ const booking_info = require('../booking_info');
 const {Venue, Reservation} = require('../models');
 
 
-const IS_DEBUG = !!process.env.EUGENE_DEBUG;
+const IS_DEBUG = process.env.NODE_ENV === 'test';
 
 
 router.get('/', (req, res) => {
@@ -25,11 +25,6 @@ router.get('/', (req, res) => {
 router.get('/taken/:venue_id/:product_id', (req, res) => {
     const venue_id   = req.params.venue_id;
     const product_id = req.params.product_id;
-    // sanity check
-    if (!venue_id || !product_id) {
-        res.status(400).end();
-        return;
-    }
     Venue.findById(venue_id).
         then(venue => {
             if (!venue) throw new utils.StatusError(404);
