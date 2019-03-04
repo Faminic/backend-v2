@@ -68,6 +68,13 @@ before(async function() {
 });
 
 
+after(async function() {
+    // nuke DB
+    await Venue.deleteMany({});
+    await Reservation.deleteMany({});
+});
+
+
 describe('Venue', function() {
     before(async function() {
         await venue.save();
@@ -188,14 +195,14 @@ describe('Reservation', function() {
         r4 = await venue.book_product("product-2", c4);
     });
 
-    describe('#find_payment', function() {
+    describe('#find_payment()', function() {
         it('correctly finds the reseravtion object', async function() {
             const r = await Reservation.find_payment({'payment.token': 'token-1', 'payment.id': 'id-1'});
             assert(r._id.equals(r1._id));
         });
     });
 
-    describe('#ensure_unique', function() {
+    describe('#ensure_unique()', function() {
         it('throws an error if there are conflicting reservations', async function() {
             assertThrowsAsync(async () => await r1.ensure_unique());
             assertThrowsAsync(async () => await r2.ensure_unique());
@@ -203,6 +210,17 @@ describe('Reservation', function() {
         });
         it('returns true if there are no conflicting reservations', async function() {
             assert( await r4.ensure_unique() );
+        });
+    });
+
+    describe('#cancel_payment()', function() {
+        it('deletes an unconfirmed payment with the given token', async function() {
+            await Reservation.cancel_payment("token-1");
+            await Reservation.cancel_payment("token-2");
+            // r3 shouldn't have any conflicts now
+            assert(await r3.ensure_unique());
+            assert(await Reservation.find_payment({'payment.token': 'token-1'}) === null);
+            assert(await Reservation.find_payment({'payment.token': 'token-2'}) === null);
         });
     });
 });
