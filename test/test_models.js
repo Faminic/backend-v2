@@ -5,6 +5,18 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/testing-db', {useNewUrlParser: true});
 
 
+async function assertThrowsAsync(fn, x) {
+  let f = () => {};
+  try {
+    await fn();
+  } catch(e) {
+    f = () => {throw e};
+  } finally {
+    assert.throws(f, x);
+  }
+}
+
+
 const venue = new Venue({
     name: "Sports Hall",
     bookable: true,
@@ -153,6 +165,7 @@ describe('Reservation', function() {
     let r1 = null;
     let r2 = null;
     let r3 = null;
+    let r4 = null;
 
     before(async function() {
         const config = {
@@ -164,13 +177,32 @@ describe('Reservation', function() {
                 phone_number: '123',
             },
         };
-        r1 = await venue.book_product("room-1", Object.assign({payment: { id: 'id-1', token: 'token-1' }}, config));
-        r2 = await venue.book_product("room-1", Object.assign({payment: { id: 'id-2', token: 'token-2' }}, config));
-        r3 = await venue.book_product("room-1", Object.assign({payment: { id: 'id-3', token: 'token-3' }}, config));
+        // conflicts
+        r1 = await venue.book_product("product-1", Object.assign({payment: { id: 'id-1', token: 'token-1' }}, config));
+        r2 = await venue.book_product("product-1", Object.assign({payment: { id: 'id-2', token: 'token-2' }}, config));
+        r3 = await venue.book_product("product-2", Object.assign({payment: { id: 'id-3', token: 'token-3' }}, config));
+        // no conflict
+        const c4 = Object.assign({payment: { id: 'id-4', token: 'token-4' }}, config);
+        c4.start = clientDateToMoment("2019-03-07T19:00");
+        c4.end   = clientDateToMoment("2019-03-07T20:00");
+        r4 = await venue.book_product("product-2", c4);
     });
 
     describe('#find_payment', function() {
         it('correctly finds the reseravtion object', async function() {
+            const r = await Reservation.find_payment({'payment.token': 'token-1', 'payment.id': 'id-1'});
+            assert(r._id.equals(r1._id));
+        });
+    });
+
+    describe('#ensure_unique', function() {
+        it('throws an error if there are conflicting reservations', async function() {
+            assertThrowsAsync(async () => await r1.ensure_unique());
+            assertThrowsAsync(async () => await r2.ensure_unique());
+            assertThrowsAsync(async () => await r3.ensure_unique());
+        });
+        it('returns true if there are no conflicting reservations', async function() {
+            assert( await r4.ensure_unique() );
         });
     });
 });
