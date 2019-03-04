@@ -226,3 +226,108 @@ describe('GET /api/paypal/cancel', function() {
             .then(x => assert(x));
     });
 });
+
+
+describe('Booking workflow', function() {
+    const start = tomorrow2.clone().hours(20);
+    const end   = tomorrow2.clone().hours(21).minutes(30);
+
+    describe('Successful booking', function() {
+        let r_id = null;
+        it('POST /api/booking/:venue/:product 200', function() {
+            return request(app)
+                .post(`/api/booking/${venue._id.toString()}/product-1`)
+                .send({
+                    name: 'Anikan',
+                    phone_number: '123',
+                    start: momentToCalendarDate(start),
+                    end:   momentToCalendarDate(end),
+                })
+                .expect(200);
+        });
+        it('Unconfirmed reservation should be created', async function() {
+            const r = await Reservation.findOne({
+                confirmed: false,
+                'payment.id': 'def',
+                'payment.token': 'abc',
+            });
+            r_id = r._id;
+            assert(!r.confirmed);
+            assert.equal(r.customer.name, 'Anikan');
+            assert.equal(r.customer.phone_number, '123');
+            assert(moment(r.start).isSame(start));
+            assert(moment(r.end).isSame(end));
+        });
+        it('GET /api/paypal/ok 302', function() {
+            return request(app)
+                .get(`/api/paypal/ok?paymentId=def&token=abc&PayerID=foo`)
+                .expect(302)
+                .then(r => assert(r.header.location === '/payment-confirmed'));
+        });
+        it('Reservation should be confirmed', async function() {
+            const r = await Reservation.findById(r_id);
+            assert(r.confirmed);
+        });
+    });
+
+    describe('Cancelled booking', function() {
+        const tomorrow3 = moment(today()).add(+3, 'days');
+        const start = tomorrow3.clone().hours(20);
+        const end   = tomorrow3.clone().hours(21).minutes(30);
+
+        it('POST /api/booking/:venue/:product 200', function() {
+            return request(app)
+                .post(`/api/booking/${venue._id.toString()}/product-1`)
+                .send({
+                    name: 'Anikan',
+                    phone_number: '123',
+                    start: momentToCalendarDate(start),
+                    end:   momentToCalendarDate(end),
+                })
+                .expect(200);
+        });
+        it('GET /api/paypal/cancel 302', function() {
+            return request(app)
+                .get(`/api/paypal/cancel?token=abc`)
+                .expect(302)
+                .then(r => assert(r.header.location === '/payment-cancelled'));
+        });
+        it('Reservation should be deleted', async function() {
+            const r = await Reservation.findOne({
+                confirmed: false,
+                'payment.id': 'def',
+                'payment.token': 'abc',
+            });
+            assert( !r );
+        });
+    });
+
+    describe('Unsuccessful booking', function() {
+        it('POST /api/booking/:venue/:product with conflicting times', function() {
+            return request(app)
+                .post(`/api/booking/${venue._id.toString()}/product-1`)
+                .send({
+                    name: 'Anikan',
+                    phone_number: '123',
+                    start: momentToCalendarDate(start),
+                    end:   momentToCalendarDate(end),
+                })
+                .expect(400);
+        });
+
+        it('POST /api/booking/:venue/:product with invalid data', async function() {
+            const invalid = [
+                [ 500, {name: 'Anikan'} ],
+                [ 500, {name: 'Anikan', phone_number: '12312'} ],
+                [ 400, {name: 'Anikan', phone_number: '12312', start: momentToCalendarDate(start), end: momentToCalendarDate(start) } ],
+                [ 400, {name: 'Anikan', phone_number: '12312', start: momentToCalendarDate(end), end: momentToCalendarDate(start) } ],
+            ];
+            for (var i = 0; i < invalid.length; i++) {
+                await request(app)
+                    .post(`/api/booking/${venue._id.toString()}/product-1`)
+                    .send(invalid[i][1])
+                    .expect(invalid[i][0]);
+            }
+        });
+    });
+});
