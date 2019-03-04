@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const {within_opening_hours} = require('./booking_info');
-mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
+
+if (mongoose.connections.length === 0)
+    mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
 
 
 const timeString = { type: String, match: /[0-9][0-9]:[0-9][0-9]/ };

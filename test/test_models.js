@@ -1,8 +1,6 @@
 const assert = require('assert');
 const { clientDateToMoment } = require('../app/utils');
-const { Reservation, Venue } = require('../app/models');
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/testing-db', {useNewUrlParser: true});
+const { Venue, Reservation, nukeDB } = require('./db');
 
 
 async function assertThrowsAsync(fn, x) {
@@ -61,22 +59,9 @@ const venue = new Venue({
 });
 
 
-before(async function() {
-    // nuke DB
-    await Venue.deleteMany({});
-    await Reservation.deleteMany({});
-});
-
-
-after(async function() {
-    // nuke DB
-    await Venue.deleteMany({});
-    await Reservation.deleteMany({});
-});
-
-
 describe('Venue', function() {
     before(async function() {
+        await nukeDB();
         await venue.save();
     });
 
@@ -175,6 +160,8 @@ describe('Reservation', function() {
     let r4 = null;
 
     before(async function() {
+        await nukeDB();
+        await venue.save();
         const config = {
             start: clientDateToMoment("2019-03-06T19:00"),
             end:   clientDateToMoment("2019-03-06T20:00"),
