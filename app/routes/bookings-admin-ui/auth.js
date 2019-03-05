@@ -1,10 +1,14 @@
+const process = require('process');
 const uuidv4 = require('uuid/v4');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const NodeCache = require('node-cache');
 
-const HASH = '$2a$10$qgKVcgqHEIuxaVvVR/4eeebQMZWyRoUbcPJqDHZ8soHN4JlJYkjPy';
 const tokens = new NodeCache({ stdTTL: 60*60 });
+const IS_DEBUG = process.env.NODE_ENV === 'test';
+const HASH = IS_DEBUG
+    ? '$2a$04$HhSgVBdJWxoi/sP3rxQeruxihNsIiX2UbT4mcoeywbYzlikJeqiAa'
+    : '$2a$10$qgKVcgqHEIuxaVvVR/4eeebQMZWyRoUbcPJqDHZ8soHN4JlJYkjPy';
 
 function needs_auth(req, res, next) {
     const token = req.cookies.token;

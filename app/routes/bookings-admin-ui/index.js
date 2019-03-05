@@ -1,4 +1,5 @@
 const moment = require('moment');
+const process = require('process');
 const express = require('express');
 const slowDown = require('express-slow-down');
 const router = express.Router();
@@ -9,9 +10,7 @@ const {addReservationEvent, deleteEvent, createCalendar} = require('../../calend
 const {needs_auth, authenticate, save_token} = require('./auth');
 
 
-const HASH = '$2a$10$qgKVcgqHEIuxaVvVR/4eeebQMZWyRoUbcPJqDHZ8soHN4JlJYkjPy';
-
-
+const IS_DEBUG = process.env.NODE_ENV === 'test';
 const default_opening_hours = {
     monday:    {open: "18:00", close: "21:30"},
     tuesday:   {open: "18:00", close: "21:30"},
@@ -36,7 +35,9 @@ const speedLimiter = slowDown({
 
 
 router.post('/auth', speedLimiter, (req, res) => {
-    if (!authenticate(req.body.username, req.body.password)) {
+    if (!req.body.username
+        || !req.body.password
+        || !authenticate(req.body.username, req.body.password)) {
         res.status(401);
         res.end();
         return;
@@ -56,6 +57,10 @@ protected.post('/venues', (req, res) => {
     let venue = new Venue();
     venue.name = req.body.name;
     venue.opening_hours = default_opening_hours;
+    if (IS_DEBUG) {
+        venue.save().then(_ => res.json(venue));
+        return;
+    }
     createCalendar(venue.name).
         then(calendarId => { venue.calendarId = calendarId }).
         then(_ => venue.save()).
