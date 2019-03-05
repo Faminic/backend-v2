@@ -80,8 +80,12 @@ router.post('/:venue_id/:product_id', (req, res) => {
         then(() => venue.check_product(product_id, start, end)).
         then(can_book => {
             if (!can_book) throw new utils.StatusError(400);
+            // can book => calculate prices
+            const duration  = end.diff(start, 'minutes') / 60;
+            const product   = venue.get_product(product_id);
+            const { price } = booking_info.get_price(product, duration);
             // debug => fast track to 200
-            if (IS_DEBUG)  {
+            if (IS_DEBUG) {
                 venue.book_product(product_id, {
                     start, end, customer,
                     confirmed: false,
@@ -90,12 +94,9 @@ router.post('/:venue_id/:product_id', (req, res) => {
                         id:    'def',
                     }
                 });
+                res.json({ price });
                 throw new utils.StatusError(200);
             }
-            // can book => calculate prices
-            const duration  = end.diff(start, 'minutes') / 60;
-            const product   = venue.get_product(product_id);
-            const { price } = booking_info.get_price(product, duration);
             return paypal.create_payment(`${venue.name} (${duration} hours)`, price);
         }).
         // Make reservation

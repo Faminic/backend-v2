@@ -163,6 +163,7 @@ describe('Booking workflow', function() {
     const end   = tomorrow2.clone().hours(21).minutes(30);
 
     describe('Successful booking', function() {
+        let body = null;
         let r_id = null;
         it('POST /api/booking/:venue/:product 200', function() {
             return request(app)
@@ -173,7 +174,11 @@ describe('Booking workflow', function() {
                     start: momentToCalendarDate(start),
                     end:   momentToCalendarDate(end),
                 })
-                .expect(200);
+                .expect(200)
+                .then(r => { body = r.body; });
+        });
+        it('Price should be correct', function() {
+            assert.equal(body.price, "15.00");
         });
         it('Unconfirmed reservation should be created', async function() {
             const r = await Reservation.findOne({
@@ -187,6 +192,9 @@ describe('Booking workflow', function() {
             assert.equal(r.customer.phone_number, '123');
             assert(moment(r.start).isSame(start));
             assert(moment(r.end).isSame(end));
+            // check that rooms are equal
+            assert.deepEqual(r.rooms.length, 1);
+            assert.equal(r.rooms[0].id, 'room-1');
         });
         it('GET /api/paypal/ok 302', function() {
             return request(app)
