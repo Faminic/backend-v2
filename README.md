@@ -32,6 +32,22 @@ that needs to speak to the backend, because otherwise some endpoints will
 not be available from `localhost:3000` since the `/api/...` endpoints are
 only registered on `localhost:5000`.
 
+## Testing
+
+All tests take place in a testing db, that does not affect the 'production'
+dataset.
+
+```sh
+$ npm test
+```
+
+If you want to only run tests for a specific file, e.g. you want to only
+run tests for the API:
+
+```sh
+$ npm test --file test/test_api.js
+```
+
 ### How to make bookings
 
 First make a request to get the booking informations
