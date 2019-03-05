@@ -1,6 +1,5 @@
 const process = require('process');
 const uuidv4 = require('uuid/v4');
-const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const NodeCache = require('node-cache');
 
@@ -31,7 +30,7 @@ function save_token(res) {
 function authenticate(username, password) {
     // Constant time authentication function
     let valid = true;
-    valid = valid && crypto.timingSafeEqual(Buffer.from(username, 'utf-8'), Buffer.from('admin', 'utf-8'));
+    valid = valid && username === 'admin';
     valid = valid && bcrypt.compareSync(password, HASH);
     return valid;
 }
