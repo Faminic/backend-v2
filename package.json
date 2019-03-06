@@ -30,6 +30,7 @@
 		"uuid": "^3.3.2"
 	},
 	"devDependencies": {
+		"chai": "^4.2.0",
 		"mocha": "^6.0.2",
 		"supertest": "^3.4.2",
 		"supertest-session": "^3.3.0"
