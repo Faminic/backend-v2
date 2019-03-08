@@ -199,7 +199,7 @@
 			price: '£3.00'
 		}
 	],
-	last_sentence: '<p>To book any of the events, activities and facilities on this site please feel free to use the <a href="/book-now" target="_blank">booking form</a> provided or call us on 0191 388 10 43.</p>',
+	last_sentence: '<p>To book any of the events, activities and facilities on this site please feel free to use the <a href="/book-now" target="_blank">booking form</a> provided or call us on <strong>0191 388 10 43</strong> during centre opening hours.</p>',
 	$last_sentence_type: 'quill',
 	$last_sentence_control_path: '/brick/enduro_quill/quill_control'
 })
