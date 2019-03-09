@@ -91,7 +91,6 @@ $(document).ready(function(){
   $("#selectDate").val(moment().format("YYYY-MM-DD"));
   $("#selectDate").attr("min", moment().format("YYYY-MM-DD"));
   $("#selectDate").attr("max", moment().add(31, "days").format("YYYY-MM-DD"));
-  $("#selectTime").val("01:00");
 
   function changeType() {
     $("#groupVenue").hide();
