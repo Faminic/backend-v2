@@ -64,7 +64,7 @@ function calculatePrice() {
 }
 
 function getAvailableTimes(venueID, productID, length) {
-  $.get("/api/booking/taken/" + venueID + "/" + productID, {}, function(data){
+  $.get("/api/booking/taken/" + venueID + "/" + productID, {}, function(data,){
     $("#selectTimeStart").empty();
     let dates = data;
     for(let startTime of getStartTimes($("#selectDate").val(), length)){
@@ -89,7 +89,8 @@ $(document).ready(function(){
   });
 
   $("#selectDate").val(moment().format("YYYY-MM-DD"));
-  $("#selectTime").val(1);
+  $("#selectDate").attr("min", moment().format("YYYY-MM-DD"));
+  $("#selectDate").attr("max", moment().add(31, "days").format("YYYY-MM-DD"));
 
   function changeType() {
     $("#groupVenue").hide();
@@ -97,6 +98,7 @@ $(document).ready(function(){
     $("#groupEvent").hide();
     $("#group" + $("#selectType").val()).show();
   }
+
 
   $("#selectType").change(changeType);
   changeType();
@@ -118,8 +120,12 @@ $(document).ready(function(){
   });
 
   $("#selectTime").change( function(){
-    getAvailableTimes(currentVenue._id, currentProduct.id, $("#selectTime").val());
-    $("#priceTag").text("£" + calculatePrice().toFixed(2));
+    if ($("#selectTime").val() > 7) {
+      $("#selectTime").val("07:00");
+    } else {
+      getAvailableTimes(currentVenue._id, currentProduct.id, $("#selectTime").val());
+      $("#priceTag").text("£" + calculatePrice().toFixed(2));
+    };
   });
 
   $("#selectDate").change( function(){
@@ -128,8 +134,6 @@ $(document).ready(function(){
 
   $("#formBookNow").submit( function(event){
     event.preventDefault();
-    if (window.submitted) return;
-    window.submitted = true;
     const startDate = $("#selectTimeStart option:selected").val();
     let endDate = moment(startDate);
     endDate.add($("#selectTime").val(), "hours");
@@ -142,8 +146,14 @@ $(document).ready(function(){
       "email":$("#inputEmail").val(),
     }, function(data){
       window.location.assign(data.redirect);
+    })
+    .done(function() {
+      $("#submission-alert-fail").fadeOut();
+      $("#submission-alert").delay(100).fadeIn(100);
+      $("#submitBooking").fadeOut();
+    })
+    .fail( function() {
+      $("#submission-alert-fail").delay(100).fadeIn(100);
     });
-    $("#submission-alert").delay(100).fadeIn(100);
-    $("#submitBooking").fadeOut();
   });
 });
