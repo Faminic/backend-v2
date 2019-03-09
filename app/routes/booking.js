@@ -64,7 +64,7 @@ router.post('/:venue_id/:product_id', (req, res) => {
     if (!start.isAfter(now)
         || !end.isAfter(start)
         || end.diff(start, 'days') > 0
-        || start.diff(now, 'days') > 31
+        || start.diff(now, 'days') > 32
         || !customer.name
         || !customer.phone_number
         || !customer.email) {
