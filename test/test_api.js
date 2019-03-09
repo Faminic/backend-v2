@@ -162,6 +162,27 @@ describe('Booking workflow', function() {
     const start = tomorrow2.clone().hours(20);
     const end   = tomorrow2.clone().hours(21).minutes(30);
 
+    // Regression: booking 31 days from now
+    describe('31 days in advance', function() {
+        const s = moment(today()).add(+31, 'days').hours(20);
+        const e = moment(today()).add(+31, 'days').hours(21).minutes(30);
+        it('POST /api/booking/:venue/:product 200', function() {
+            return request(app)
+                .post(`/api/booking/${venue._id.toString()}/product-1`)
+                .send({
+                    name: 'Anikan',
+                    phone_number: '123',
+                    email: 'anikan@tatooine.org',
+                    start: momentToCalendarDate(s),
+                    end:   momentToCalendarDate(e),
+                })
+                .expect(200)
+                .then(async () => {
+                    await Reservation.deleteMany({});
+                });
+        });
+    });
+
     describe('Successful booking', function() {
         let body = null;
         let r_id = null;
