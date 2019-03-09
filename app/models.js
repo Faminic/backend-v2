@@ -55,6 +55,7 @@ const reservationSchema = new mongoose.Schema({
     customer: {
         name:         String,
         phone_number: String,
+        email:        String,
     },
     payment: {
         id:    String,
@@ -133,6 +134,7 @@ venueSchema.methods.book_product = function(product_id, {customer, payment, star
     //       customer: {
     //          name: String
     //          phone_number: String
+    //          email: String
     //       }
     //       payment: {
     //          id: String

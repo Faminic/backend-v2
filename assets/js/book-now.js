@@ -138,7 +138,8 @@ $(document).ready(function(){
       "start":startDate,
       "end":endDate,
       "name":$("#inputName").val(),
-      "phone_number":$("#inputPhone").val()
+      "phone_number":$("#inputPhone").val(),
+      "email":$("#inputEmail").val(),
     }, function(data){
       window.location.assign(data.redirect);
     });

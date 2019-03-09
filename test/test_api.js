@@ -171,6 +171,7 @@ describe('Booking workflow', function() {
                 .send({
                     name: 'Anikan',
                     phone_number: '123',
+                    email: 'anikan@tatooine.org',
                     start: momentToCalendarDate(start),
                     end:   momentToCalendarDate(end),
                 })
@@ -190,6 +191,7 @@ describe('Booking workflow', function() {
             assert(!r.confirmed);
             assert.equal(r.customer.name, 'Anikan');
             assert.equal(r.customer.phone_number, '123');
+            assert.equal(r.customer.email, 'anikan@tatooine.org');
             assert(moment(r.start).isSame(start));
             assert(moment(r.end).isSame(end));
             // check that rooms are equal
@@ -219,6 +221,7 @@ describe('Booking workflow', function() {
                 .send({
                     name: 'Anikan',
                     phone_number: '123',
+                    email: 'anikan@tatooine.org',
                     start: momentToCalendarDate(start),
                     end:   momentToCalendarDate(end),
                 })
@@ -228,7 +231,7 @@ describe('Booking workflow', function() {
             return request(app)
                 .get(`/api/paypal/cancel?token=abc`)
                 .expect(302)
-                .then(r => assert(r.header.location === '/payment-cancelled'));
+                .then(r => assert.equal(r.header.location, '/payment-cancelled'));
         });
         it('Reservation should be deleted', async function() {
             const r = await Reservation.findOne({
@@ -247,6 +250,7 @@ describe('Booking workflow', function() {
                 .send({
                     name: 'Anikan',
                     phone_number: '123',
+                    email: 'anikan@tatooine.org',
                     start: momentToCalendarDate(start),
                     end:   momentToCalendarDate(end),
                 })
@@ -256,9 +260,9 @@ describe('Booking workflow', function() {
         it('POST /api/booking/:venue/:product with invalid data', async function() {
             const invalid = [
                 [ 500, {name: 'Anikan'} ],
-                [ 500, {name: 'Anikan', phone_number: '12312'} ],
-                [ 400, {name: 'Anikan', phone_number: '12312', start: momentToCalendarDate(start), end: momentToCalendarDate(start) } ],
-                [ 400, {name: 'Anikan', phone_number: '12312', start: momentToCalendarDate(end), end: momentToCalendarDate(start) } ],
+                [ 500, {name: 'Anikan', email: 'abc@abc.org', phone_number: '12312'} ],
+                [ 400, {name: 'Anikan', email: 'abc@abc.org', phone_number: '12312', start: momentToCalendarDate(start), end: momentToCalendarDate(start) } ],
+                [ 400, {name: 'Anikan', email: 'abc@abc.org', phone_number: '12312', start: momentToCalendarDate(end), end: momentToCalendarDate(start) } ],
             ];
             for (var i = 0; i < invalid.length; i++) {
                 await request(app)

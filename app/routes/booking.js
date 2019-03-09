@@ -55,8 +55,9 @@ router.post('/:venue_id/:product_id', (req, res) => {
     const start    = utils.clientDateToMoment(req.body.start);
     const end      = utils.clientDateToMoment(req.body.end);
     const customer = {
-        name:  req.body.name,
+        name:         req.body.name,
         phone_number: req.body.phone_number,
+        email:        req.body.email,
     };
     // sanity checks
     const now = moment();
@@ -65,7 +66,8 @@ router.post('/:venue_id/:product_id', (req, res) => {
         || end.diff(start, 'days') > 0
         || start.diff(now, 'days') > 31
         || !customer.name
-        || !customer.phone_number) {
+        || !customer.phone_number
+        || !customer.email) {
         res.status(400).end();
         return;
     }

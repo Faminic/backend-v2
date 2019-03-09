@@ -12,20 +12,27 @@ const IS_DEBUG = process.env.NODE_ENV === 'test';
 
 function sendReservationEmail(reservation) {
     const rooms = reservation.rooms.map(room => room.name).join(', ');
+    const html = `
+    <table>
+    <tr><th>Venue:</th><td>${reservation.venue}</td></tr>
+    <tr><th>Rooms:</th><td>${rooms}</td></tr>
+    <tr><th>Name:</th><td>${reservation.customer.name}</td></tr>
+    <tr><th>Phone Number:</th><td>${reservation.customer.phone_number}</td></tr>
+    <tr><th>Start:</th><td>${reservation.start}</td></tr>
+    <tr><th>End:</th><td>${reservation.end}</td></tr>
+    <tr><th>PayPal ID:</th><td><code>${reservation.payment.id}</code></td></tr>
+    </table>`
     email({
         from: "durhamredthunder2018@gmail.com",
         to:   "durhamredthunder2018@gmail.com",
         subject: "Automated Booking",
-        html: `
-        <table>
-        <tr><th>Venue:</th><td>${reservation.venue}</td></tr>
-        <tr><th>Rooms:</th><td>${rooms}</td></tr>
-        <tr><th>Name:</th><td>${reservation.customer.name}</td></tr>
-        <tr><th>Phone Number:</th><td>${reservation.customer.phone_number}</td></tr>
-        <tr><th>Start:</th><td>${reservation.start}</td></tr>
-        <tr><th>End:</th><td>${reservation.end}</td></tr>
-        <tr><th>PayPal ID:</th><td><code>${reservation.payment.id}</code></td></tr>
-        </table>`
+        html,
+    });
+    email({
+        from: "durhamredthunder2018@gmail.com",
+        to:   reservation.customer.email,
+        subject: "PVCC Booking Confirmation",
+        html,
     });
 }
 

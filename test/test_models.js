@@ -92,28 +92,24 @@ describe('Venue', function() {
             customer: {
                 name: 'John Doe',
                 phone_number: '123',
+                email: 'john@doe.com',
             },
             payment: {
                 id: 'abc',
                 token: 'def',
             },
         };
-        it('fails with an invalid product', function(done) {
-            venue.book_product('product-3', config)
+        it('fails with an invalid product', function() {
+            return venue.book_product('product-3', config)
                 .then(() => assert(false))
-                .catch(() => {})
-                .finally(done);
+                .catch(() => {});
         });
-        it('can book a valid product', function(done) {
-            venue.book_product('product-2', config)
-                .then(r => {
-                    _reservation = r;
-                    assert.equal(r.confirmed,    config.confirmed);
-                    assert.deepEqual(r.customer, config.customer);
-                    assert.deepEqual(r.payment,  config.payment);
-                })
-                .catch(() => assert(false))
-                .finally(done);
+        it('can book a valid product', async function() {
+            const r = await venue.book_product('product-2', config);
+            _reservation = r;
+            assert.equal(r.confirmed,    config.confirmed);
+            assert.deepEqual(r.customer, config.customer);
+            assert.deepEqual(r.payment,  config.payment);
         });
     });
 
