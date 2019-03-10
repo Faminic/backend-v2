@@ -1,3 +1,4 @@
+const process = require('process');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
@@ -18,7 +19,9 @@ local_app.prototype.init = function (app) {
     const router = new express.Router();
     // middleware
     app.use(helmet());
-    app.use(morgan('dev'));
+    if (process.env.NODE_ENV !== 'test') {
+        app.use(morgan('dev'));
+    }
     router.use(express.json());
     router.use(express.urlencoded({extended: false}));
     router.use(cookieParser());

@@ -173,7 +173,9 @@ function setup_reservations(reservations, venue_id, product_id, page) {
     }
 
     $('#add-reservation-form').submit(function() {
-        $.ajax("/booking-admin/venue/" + venue_id + "/" + product_id + "/reservations", {
+        url = "/booking-admin/venue/" + venue_id + "/" + product_id + "/reservations"
+        if ($("#force-booking").is(":checked")) url += "?force"
+        $.ajax(url, {
             method: "POST",
             data: JSON.stringify({
                 customer: {name: $("#inputName").val(), phone_number: $("#inputPhone").val()},
@@ -369,6 +371,22 @@ $(document).hashroute('/venue/:id', function(e) {
         $('#content').html(Mustache.render($('#ms-venue-form').html(), venue));
         setup_venue(venue);
         window.venue = venue;
+
+        $('#delete-venue').click(function() {
+            if (!window.confirm("Confirm delete?"))
+                return;
+            $.ajax('/booking-admin/venue/' + venue_id, {
+                method: 'DELETE',
+                success: function() {
+                    window.alert("Successfully deleted venue!");
+                    window.location.hash = "#/";
+                    reload_venues();
+                },
+                error: check_authorized_then(function() {
+                    window.alert("Cannot delete.");
+                }),
+            });
+        });
 
         $('#save').click(function() {
             $.ajax('/booking-admin/venue/' + venue_id, {

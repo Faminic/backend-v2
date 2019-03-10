@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const {within_opening_hours} = require('./booking_info');
-mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
+
+if (mongoose.connection.readyState === 0)
+    mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
 
 
 const timeString = { type: String, match: /[0-9][0-9]:[0-9][0-9]/ };
@@ -53,6 +55,7 @@ const reservationSchema = new mongoose.Schema({
     customer: {
         name:         String,
         phone_number: String,
+        email:        String,
     },
     payment: {
         id:    String,
@@ -127,9 +130,11 @@ venueSchema.methods.book_product = function(product_id, {customer, payment, star
     //   config: {
     //       start: moment
     //       end: moment
+    //       confirmed: Boolean
     //       customer: {
     //          name: String
     //          phone_number: String
+    //          email: String
     //       }
     //       payment: {
     //          id: String

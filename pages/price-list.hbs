@@ -1,0 +1,110 @@
+{{#> layout}}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+      <h1 class="home-header" style="padding-top: 50px;">{{table_title_1}}</h1>
+      <table class="table table-bordered table-hover text-center">
+        <thead>
+          <tr>
+            <th>{{table_1_header_1}}</th>
+            <th>{{table_1_header_2}}</th>
+            <th>{{table_1_header_3}}</th>
+            <th>{{table_1_header_4}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each table_1_row}}
+          <tr>
+            <td><a href={{this.facility_link}}>{{this.facility}}</a></td>
+            <td>{{this.price1}}</td>
+            <td>{{this.price2}}</td>
+            <td>{{this.price3}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-10 offset-md-1">
+      <h1 class="home-header" style="padding-top: 50px;">{{table_title_2}}</h1>
+      <table class="table table-bordered table-hover text-center">
+        <thead>
+          <tr>
+            <th>{{table_2_header_1}}</th>
+            <th>{{table_2_header_2}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each table_2_row}}
+          <tr>
+            <td>{{this.reason}}</td>
+            <td>{{this.price}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-10 offset-md-1">
+      <h1 class="home-header" style="padding-top: 50px;">{{table_title_3}}</h1>
+      <table class="table table-bordered table-hover text-center">
+        <thead>
+          <tr>
+            <th>{{table_3_header_1}}</th>
+            <th>{{table_3_header_2}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each table_3_row}}
+          <tr>
+            <td>{{this.membership_type}}</td>
+            <td>{{this.price}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-10 offset-md-1">
+      <h1 class="home-header" style="padding-top: 50px;">{{table_title_4}}</h1>
+      <table class="table table-bordered table-hover text-center">
+        <thead>
+          <tr>
+            <th>{{table_4_header_1}}</th>
+            <th>{{table_4_header_2}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each table_4_row}}
+          <tr>
+            <td>{{this.item}}</td>
+            <td>{{this.price}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-10 offset-md-1">
+      <h1 class="home-header" style="padding-top: 50px;">{{table_title_5}}</h1>
+      <table class="table table-bordered table-hover text-center">
+        <thead>
+          <tr>
+            <th>{{table_5_header_1}}</th>
+            <th>{{table_5_header_2}}</th>
+            <th>{{table_5_header_3}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each table_5_row}}
+          <tr>
+            <td>{{this.activity}}</td>
+            <td>{{this.person}}</td>
+            <td>{{this.price}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-10 offset-md-1" style="text-align: center; padding-top: 30px;">
+      {{{last_sentence}}}
+    </div>
+  </div>
+</div>
+{{/layout}}

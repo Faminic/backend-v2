@@ -7,7 +7,7 @@ const booking_info = require('../booking_info');
 const {Venue, Reservation} = require('../models');
 
 
-const IS_DEBUG = !!process.env.EUGENE_DEBUG;
+const IS_DEBUG = process.env.NODE_ENV === 'test';
 
 
 router.get('/', (req, res) => {
@@ -25,11 +25,6 @@ router.get('/', (req, res) => {
 router.get('/taken/:venue_id/:product_id', (req, res) => {
     const venue_id   = req.params.venue_id;
     const product_id = req.params.product_id;
-    // sanity check
-    if (!venue_id || !product_id) {
-        res.status(400).end();
-        return;
-    }
     Venue.findById(venue_id).
         then(venue => {
             if (!venue) throw new utils.StatusError(404);
@@ -60,17 +55,19 @@ router.post('/:venue_id/:product_id', (req, res) => {
     const start    = utils.clientDateToMoment(req.body.start);
     const end      = utils.clientDateToMoment(req.body.end);
     const customer = {
-        name:  req.body.name,
+        name:         req.body.name,
         phone_number: req.body.phone_number,
+        email:        req.body.email,
     };
     // sanity checks
     const now = moment();
     if (!start.isAfter(now)
         || !end.isAfter(start)
         || end.diff(start, 'days') > 0
-        || start.diff(now, 'days') > 31
+        || start.diff(now, 'days') > 32
         || !customer.name
-        || !customer.phone_number) {
+        || !customer.phone_number
+        || !customer.email) {
         res.status(400).end();
         return;
     }
@@ -85,8 +82,12 @@ router.post('/:venue_id/:product_id', (req, res) => {
         then(() => venue.check_product(product_id, start, end)).
         then(can_book => {
             if (!can_book) throw new utils.StatusError(400);
+            // can book => calculate prices
+            const duration  = end.diff(start, 'minutes') / 60;
+            const product   = venue.get_product(product_id);
+            const { price } = booking_info.get_price(product, duration);
             // debug => fast track to 200
-            if (IS_DEBUG)  {
+            if (IS_DEBUG) {
                 venue.book_product(product_id, {
                     start, end, customer,
                     confirmed: false,
@@ -95,12 +96,9 @@ router.post('/:venue_id/:product_id', (req, res) => {
                         id:    'def',
                     }
                 });
+                res.json({ price });
                 throw new utils.StatusError(200);
             }
-            // can book => calculate prices
-            const duration  = end.diff(start, 'minutes') / 60;
-            const product   = venue.get_product(product_id);
-            const { price } = booking_info.get_price(product, duration);
             return paypal.create_payment(`${venue.name} (${duration} hours)`, price);
         }).
         // Make reservation

@@ -199,6 +199,7 @@ option { font: inherit; }
 
     <div id='footer'>
       <button id="save">Save</button>
+      <button id="delete-venue" style="float: right;">Delete</button>
     </div>
   </script>
 
@@ -227,6 +228,7 @@ option { font: inherit; }
     </table>
     <button id="prev-page">Previous</button>
     <button id="next-page">Next</button>
+    <h4> Add a reservation</h4>
     <form id="add-reservation-form">
         <input type="text" class="form-control" id="inputName" placeholder="Name" required></input>
         <input type="text" class="form-control" id="inputPhone" placeholder="Phone" required></input>
@@ -236,9 +238,10 @@ option { font: inherit; }
         <input type="time" id="selectTimeStart" required></select>
         <label>End time </label>
         <input type="time" id="selectTimeEnd" required></select>
+        <label for="force">Ignore clashes</label>
+        <input type="checkbox" id="force-booking" name="force">
         <input type="submit" value="Add"/>
     </form>
-
   </script>
 
   <script id="reservation" type="x-tmpl-mustache">
