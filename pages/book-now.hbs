@@ -4,6 +4,7 @@
   <div class="row">
    <div class="col-sm-6 mx-auto">
     <h1>Book Now</h1>
+    <p>The Book Now form is used for one-time booking of venues/facilities across Park View Community Centre. For more specific bookings, including activities and any large scale events, or if you cannot find what you are looking for, please contact us <a href="/contact-us">here</a>.</p>
     <form id="formBookNow" method="POST">
      <div class="form-group">
       <label form="type">Full Name</label>
@@ -13,25 +14,11 @@
       <label form="type">Phone Number</label>
       <input type="text" class="form-control" id="inputPhone" required></input>
      </div>
-     <div class="form-group">
-      <label form="type">Email</label>
-      <input type="email" class="form-control" id="inputEmail" required></input>
-     </div>
-     <div class="form-group">
-      <label form="type">Booking Type</label>
-      <select class="form-control" id="selectType" required><option value="" disabled="" selected="">Please Select</option><option>Venue</option><option>Activity</option><option>Event</option></select>
-     </div>
-     <div class="form-group" id="groupVenue" style="display: none;">
+     <div class="form-group" id="groupVenue">
       <label form="type">Venue</label>
       <select class="form-control" id="selectVenue" required><option value="" disabled="" selected="">Please Select</option></select>
       <label form="type">Rooms</label>
       <select class="form-control" id="selectProduct"></select>
-     </div>
-     <div class="form-group" id="groupActivity" style="display: none;">
-      <a form="type" href="/contact-us">For booking activities contact us here.</a>
-     </div>
-     <div class="form-groupEvent" id="groupEvent" style="display: none;">
-      <a form="type" href="/contact-us">For booking events contact us here.</a>
      </div>
      <div class="form-group" id="timeType">
       <label form="type">Duration (HH:MM) (<span id="priceTag">£0</span>)</label>

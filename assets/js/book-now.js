@@ -92,16 +92,6 @@ $(document).ready(function(){
   $("#selectDate").attr("min", moment().format("YYYY-MM-DD"));
   $("#selectDate").attr("max", moment().add(31, "days").format("YYYY-MM-DD"));
 
-  function changeType() {
-    $("#groupVenue").hide();
-    $("#groupActivity").hide();
-    $("#groupEvent").hide();
-    $("#group" + $("#selectType").val()).show();
-  }
-
-
-  $("#selectType").change(changeType);
-  changeType();
 
   $("#selectVenue").change( function(){
     updateWithVenue($("#selectVenue option:selected").val());
