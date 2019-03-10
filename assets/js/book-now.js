@@ -5,40 +5,40 @@ var submitted = false;
 
 
 function fillVenues(){
-  for(let i of venues){
+  for (var i = 0; i < venues.length; i++) {
     $("#selectVenue").append($("<option>", {
-      text : i.name,
-      value : i._id
+      text : venues[i].name,
+      value : venues[i]._id,
     }));
   }
 }
 
 function updateWithVenue(venueID){
-  for(let i of venues){
-    if (venueID == i._id){
-      currentVenue = i;
-    };
+  for (var i = 0; i < venues.length; i++) {
+    if (venueID == venues[i]._id) {
+      currentVenue = venues[i];
+    }
   };
   $("#selectProduct").empty();
-  for (let i of currentVenue.products){
+  for (var i = 0; i < currentVenue.products.length; i++) {
     $("#selectProduct").append($("<option>", {
-        text : i.name,
-        value : i.id
-    }))
-  };
-};
+        text : currentVenue.products[i].name,
+        value : currentVenue.products[i].id,
+    }));
+  }
+}
 
-function getStartTimes(date, length){
+function getStartTimes(date, length) {
   const day = moment(date).format("dddd").toLowerCase();
-  let out = []
+  var out = []
 
-  let startTime = moment(moment(date).format("YYYY-MM-DD") + "T" + currentVenue.opening_hours[day].open);
-  let endTime = moment(moment(date).format("YYYY-MM-DD") + "T" + currentVenue.opening_hours[day].close).subtract(length, "hours");
+  var startTime = moment(moment(date).format("YYYY-MM-DD") + "T" + currentVenue.opening_hours[day].open);
+  var endTime = moment(moment(date).format("YYYY-MM-DD") + "T" + currentVenue.opening_hours[day].close).subtract(length, "hours");
 
   while (startTime.isSameOrBefore(endTime)) {
     out.push(moment(startTime));
     startTime.add(30, 'minutes');
-  };
+  }
   return out;
 }
 
@@ -64,19 +64,27 @@ function calculatePrice() {
 }
 
 function getAvailableTimes(venueID, productID, length) {
-  $.get("/api/booking/taken/" + venueID + "/" + productID, {}, function(data,){
+  $.get("/api/booking/taken/" + venueID + "/" + productID, {}, function(dates) {
     $("#selectTimeStart").empty();
-    let dates = data;
-    for(let startTime of getStartTimes($("#selectDate").val(), length)){
-      let applicable=true;
-      for(let y of dates){
-        let endTime = moment(startTime).add(length, "hours");
-        if (!(startTime.isSameOrAfter(moment(y[1])) || endTime.isSameOrBefore(moment(y[0])))){
-          applicable=false;
+    var startTimes = getStartTimes($("#selectDate").val(), length);
+    for (var i = 0; i < startTimes.length; i++) {
+      var startTime = startTimes[i];
+      // check if this booking is in the future
+      var applicable = moment(startTime).isAfter(moment());
+      for (var j = 0; j < dates.length; j++) {
+        var reservationStart = moment(dates[j][0]);
+        var reservationEnd   = moment(dates[j][1]);
+        var endTime = moment(startTime).add(length, "hours");
+        if (!(startTime.isSameOrAfter(reservationEnd) || endTime.isSameOrBefore(reservationStart))) {
+          applicable = false;
         }
       }
-      if(applicable){
-          $("#selectTimeStart").append($("<option />").attr("value",startTime.format("YYYY-MM-DDTHH-mm")).text(startTime.format("HH:mm")))
+      if (applicable) {
+        $("#selectTimeStart").append(
+          $("<option />")
+            .attr("value",startTime.format("YYYY-MM-DDTHH-mm"))
+            .text(startTime.format("HH:mm"))
+        );
       }
     }
   });
@@ -100,9 +108,10 @@ $(document).ready(function(){
   })
 
   $("#selectProduct").change( function(){
-    for (let i of currentVenue.products){
-      if($("#selectProduct option:selected").val() == i.id){
-        currentProduct = i;
+    for (var i = 0; i < currentVenue.products.length; i++){
+      var product = currentVenue.products[i];
+      if ($("#selectProduct option:selected").val() === product.id) {
+        currentProduct = product;
       }
     }
     getAvailableTimes(currentVenue._id, currentProduct.id, $("#selectTime").val());
@@ -124,10 +133,14 @@ $(document).ready(function(){
 
   $("#formBookNow").submit( function(event){
     event.preventDefault();
+    if (window.submitted) {
+      return;
+    }
     const startDate = $("#selectTimeStart option:selected").val();
-    let endDate = moment(startDate);
+    var endDate = moment(startDate);
     endDate.add($("#selectTime").val(), "hours");
     endDate = endDate.format("YYYY-MM-DDTHH-mm");
+
     $.post("/api/booking/" + currentVenue._id + "/" + currentProduct.id, {
       "start":startDate,
       "end":endDate,
@@ -136,14 +149,15 @@ $(document).ready(function(){
       "email":$("#inputEmail").val(),
     }, function(data){
       window.location.assign(data.redirect);
-    })
-    .done(function() {
-      $("#submission-alert-fail").fadeOut();
-      $("#submission-alert").delay(100).fadeIn(100);
-      $("#submitBooking").fadeOut();
-    })
-    .fail( function() {
-      $("#submission-alert-fail").delay(100).fadeIn(100);
+    }).fail(function() {
+      window.submitted = false;
+      $("#submission-alert-fail").fadeIn(100);
+      $("#submitBooking").fadeIn();
     });
+
+    window.submitted = true;
+    $("#submission-alert-fail").fadeOut();
+    $("#submission-alert").fadeIn(100);
+    $("#submitBooking").fadeOut();
   });
 });
