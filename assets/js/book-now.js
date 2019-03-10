@@ -90,10 +90,28 @@ function getAvailableTimes(venueID, productID, length) {
   });
 }
 
+function change_venue() {
+  updateWithVenue($("#selectVenue option:selected").val());
+  $("#selectProduct").trigger("change");
+  $("#priceTag").text("£" + calculatePrice().toFixed(2));
+}
+
+function change_product() {
+  for (var i = 0; i < currentVenue.products.length; i++){
+    var product = currentVenue.products[i];
+    if ($("#selectProduct option:selected").val() === product.id) {
+      currentProduct = product;
+    }
+  }
+  getAvailableTimes(currentVenue._id, currentProduct.id, $("#selectTime").val());
+  $("#priceTag").text("£" + calculatePrice().toFixed(2));
+}
+
 $(document).ready(function(){
   $.get("api/booking/", {}, function(data){
     venues = data;
     fillVenues();
+    loadFromLocalStorage();
   });
 
   $("#selectDate").val(moment().format("YYYY-MM-DD"));
@@ -101,22 +119,8 @@ $(document).ready(function(){
   $("#selectDate").attr("max", moment().add(31, "days").format("YYYY-MM-DD"));
 
 
-  $("#selectVenue").change( function(){
-    updateWithVenue($("#selectVenue option:selected").val());
-    $("#selectProduct").trigger("change");
-    $("#priceTag").text("£" + calculatePrice().toFixed(2));
-  })
-
-  $("#selectProduct").change( function(){
-    for (var i = 0; i < currentVenue.products.length; i++){
-      var product = currentVenue.products[i];
-      if ($("#selectProduct option:selected").val() === product.id) {
-        currentProduct = product;
-      }
-    }
-    getAvailableTimes(currentVenue._id, currentProduct.id, $("#selectTime").val());
-    $("#priceTag").text("£" + calculatePrice().toFixed(2));
-  });
+  $("#selectVenue").change(change_venue);
+  $("#selectProduct").change(change_product);
 
   $("#selectTime").change( function(){
     if ($("#selectTime").val() > 7) {
@@ -131,8 +135,9 @@ $(document).ready(function(){
     getAvailableTimes(currentVenue._id, currentProduct.id, $("#selectTime").val());
   });
 
-  $("#formBookNow").submit( function(event){
+  $("#formBookNow").submit( function(event) {
     event.preventDefault();
+    saveToLocalStorage();
     if (window.submitted) {
       return;
     }
@@ -161,3 +166,38 @@ $(document).ready(function(){
     $("#submitBooking").fadeOut();
   });
 });
+
+
+function saveToLocalStorage() {
+    localStorage.setItem('book-now.name',     $('#inputName').val());
+    localStorage.setItem('book-now.phone',    $('#inputPhone').val());
+    localStorage.setItem('book-now.email',    $('#inputEmail').val());
+    localStorage.setItem('book-now.venue',    currentVenue._id);
+    localStorage.setItem('book-now.product',  currentProduct.id);
+    localStorage.setItem('book-now.date',     $('#selectDate').val());
+}
+
+
+function loadFromLocalStorage() {
+    var name     = localStorage.getItem('book-now.name');
+    var phone    = localStorage.getItem('book-now.phone');
+    var email    = localStorage.getItem('book-now.email');
+    var venue    = localStorage.getItem('book-now.venue');
+    var product  = localStorage.getItem('book-now.product');
+    var date     = localStorage.getItem('book-now.date');
+
+    if (name && name.length > 0)  $('#inputName').val(name);
+    if (phone && phone.length > 0) $('#inputPhone').val(phone);
+    if (email && email.length > 0) $('#inputEmail').val(email);
+    if (venue && venue.length > 0) {
+        $('#selectVenue').val(venue);
+        change_venue();
+        if (product && product.length > 0) {
+            $('#selectProduct').val(product);
+            change_product();
+            if (date && date.length > 0) {
+                $('#selectDate').val(date);
+            }
+        }
+    }
+}

@@ -17,7 +17,7 @@
         </div>
         <div class="form-group">
           <label for="email">Your Email</label>
-          <input type="text" id="email" class="form-control" required>
+          <input type="email" id="email" class="form-control" required>
         </div>
         <div class="form-group">
           <label for="phone">Your Telephone</label>
@@ -26,6 +26,12 @@
         <div class="form-group">
           <label for="query">How can we help?</label>
           <textarea type="text" id="query" class="form-control" rows="10" required></textarea>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="consentBox" required>
+          <label class="form-check-label" for="consentBox">
+            Allow PVCC to store your email address and phone number for contacting you.
+          </label>
         </div>
         <button type="submit" class="btn btn-primary" id="sendbutton" style="display: block;">Send</button>
         <div class="btn btn-success" id="submission-alert" style="display: none;">
