@@ -4,7 +4,6 @@ $("#contact-us-form").on("submit", function(e) {
   var email = $("#email").val();
   var phone = $("#phone").val();
   var query = $("#query").val();
-  var test = {name: name, email: email, telephone: phone, query: query};
   $.post("/api/contact-us", {name: name, email: email, telephone: phone, query: query}, function(data) {
 
   })
