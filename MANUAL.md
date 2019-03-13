@@ -7,7 +7,9 @@
 ### Facilities
 Most facilities are bookable online. This is further explained in the "Venues" section under "Administrator". When a user navigates to the PVCC booking form, they will have to enter their full name, phone number and email. Then they will need to select a facility, after which they can select a specific room and choose a duration, specifying how long the user wishes to use the facility. Choosing a duration will automatically generate and display to the user the cost to use their chosen facility for the chosen duration. 
 
-<img>
+<p align="center">
+  <img src="user_manual_images/duration_cost.png" height="600">
+</p>
 
 The user then chooses a date, after which a list of available times based on their chosen duration, their chosen date and other users' bookings will be automatically generated for them. Finally, the user has to tick the checkbox to consent to PVCC storing their email address and phone number in case they need to contact the user.
 
