@@ -13,21 +13,29 @@ Most facilities are bookable online. This is further explained in the "Venues" s
 
 The user then chooses a date, after which a list of available times based on their chosen duration, their chosen date and other users' bookings will be automatically generated for them. Finally, the user has to tick the checkbox to consent to PVCC storing their email address and phone number in case they need to contact the user.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/consent.png" height="600">
+</p>
 
 After submitting, the user is taken to the paypal website where they follow the respective steps to confirm the payment. 
 After the payment has been successfully confirmed, the user is redirected to PVCC's website with a message telling them their payment is confirmed and highlights some booking details.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/payment_successful.PNG" height="600">
+</p>
 
 The user also has the option to cancel their payment from the paypal site, after which they are redirected back to PVCC's website with a message telling them their payment was cancelled.
 
-<img>
-<img>
+<p align="center">
+  <img src="user_manual_images/cancel.png" width="500">
+</p>
+<p align="center">
+  <img src="user_manual_images/cancel_redirect.PNG" width="500">
+</p>
 
 When the payment is successful, PVCC receives an email with the booking details, including name, phone number and the Paypal payment ID of the user.
 
-<img>
+**Insert Image Here**
 
 
 ### Activities
@@ -40,19 +48,25 @@ Basic (static) content such as text, images, titles and so on can be edited via 
 
 To log in, navigate to **[site name]/admin**, and enter the admin login details. You will see the different sites on the left-hand side. Pick the site where you want to make an edit. Content inside text boxes can just be changed and images can be changed by just dragging a new image on top of the image you want to replace. To save changes, you must press the **publish** button on the top right. To view your changes before saving them, you must press the **temp** button on the top right.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/enduro_publish.PNG" width="800">
+</p>
 
 ## Adding New Pages
 You can add a new facility or activity webpage by navigating to **[site name]/admin** and logging in. Then, you may choose Facility or Activity on the left and see **Add page** as an option. Click on that option and you will be asked to name that webpage. This name will be important, because to visit this new webpage, you will have to navigate to **[site name]/name**. 
 
-<img> <img>
+<p align="center">
+  <img src="user_manual_images/add_page.PNG" height="600">
+</p>
 
 You may then complete all text and image boxes and press **temp** to see what your webpage will look like and **publish** to apply the changes to the live site.
 
 ## Deleting Pages
 You can delete existing facility or activity webpages by navigating to **[site name]/admin** and logging in. Then, you may choose Facility or Activity on the left and choose the webpage you want to delete. Press **Delete page** on the top right and the webpage will be deleted. You may still see the webpage on the admin page, but can just refresh the admin page and it will disappear.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/delete_page.PNG" width="800">
+</p>
 
 ## More Complex Editing
 Adding, editing and deleting venues involves making changes to the site's database. As such, these tasks require the use
@@ -66,28 +80,38 @@ To log in, navigate to **[site name]/booking-admin**, and enter the admin login 
 The admin can choose whether to make a venue bookable online or not. For instance, if booking for the theatre should
 only be done by emailing or calling PVCC, the 'theatre' venue would not need to be bookable online, and its 'bookable' property should be unchecked.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/bookable.PNG" width="600">
+</p>
 
 #### Rooms
 'Rooms' are the sections into which a venue can be divided. They can be added and deleted by the administrator.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/rooms.png" width="600">
+</p>
 
 #### Products
 Products are the things that users can book and pay for. They can contain multiple rooms, and make it possible for a user to book portions of a venue (e.g. two courts of the Sports Hall). A product also has hourly, half-day and day prices (shown in pounds).
 
 Products can be added, deleted, and edited.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/products.png" width="600">
+</p>
 
 #### Reservations
 Each product has an associated list of reservations. Reservations are bookings for a product which have been made online, and can be viewed, added and deleted.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/reservations.PNG" width="800">
+</p>
 
 When adding a reservation, it is possible that the time you select for it clashes with an existing reservation, or is outside normal opening hours. To ignore any clashes, and force the booking through anyway, check the 'Ignore clashes' checkbox.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/clashes.png" width="800">
+</p>
 
 # FAQ
 **How do I issue a refund to a customer?**
@@ -96,7 +120,9 @@ Payments can be refunded on the Paypal website. To refund a payment, the payment
 
 You can find this from the booking-admin page. Select the venue, view the list of reservations for the product booked, and look for the reservation you need to refund, which contains the payment ID. Once the refund has been made, delete the reservation.
 
-<img>
+<p align="center">
+  <img src="user_manual_images/paypalID.png" width="800">
+</p>
 
 **A new facility has been built, and I want to add it to the website. How do I do this?**
 - Go to the 'booking-admin' page, log in, then add the venue, with the relevant rooms and products.
