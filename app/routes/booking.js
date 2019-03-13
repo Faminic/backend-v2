@@ -107,7 +107,7 @@ router.post('/:venue_id/:product_id', (req, res) => {
         then(({payment, info}) => {
             redirect_link = info.redirect;
             return venue.book_product(product_id, {
-                start, end, customer,
+                start, end, customer, purpose,
                 confirmed: false,
                 payment: {
                     token: info.token,
