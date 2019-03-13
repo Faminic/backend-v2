@@ -389,9 +389,17 @@ $(document).hashroute('/venue/:id', function(e) {
         });
 
         $('#save').click(function() {
+            var venueJson = {};
+            Object.assign(venueJson, venue);
+            venueJson.products = [];
+            for (var i = 0; i < venue.products.length; i++) {
+                if (venue.products[i].rooms.length > 0) {
+                    venueJson.products.push(venue.products[i]);
+                }
+            }
             $.ajax('/booking-admin/venue/' + venue_id, {
                 method: 'POST',
-                data:   JSON.stringify(venue),
+                data:   JSON.stringify(venueJson),
                 success: function() {
                     window.alert("Successfully saved changes!");
                     render_venue(venue);
