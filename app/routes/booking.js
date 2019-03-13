@@ -52,6 +52,7 @@ router.get('/taken/:venue_id/:product_id', (req, res) => {
 router.post('/:venue_id/:product_id', (req, res) => {
     const venue_id   = req.params.venue_id;
     const product_id = req.params.product_id;
+    const purpose  = req.body.purpose;
     const start    = utils.clientDateToMoment(req.body.start);
     const end      = utils.clientDateToMoment(req.body.end);
     const customer = {
@@ -67,7 +68,8 @@ router.post('/:venue_id/:product_id', (req, res) => {
         || start.diff(now, 'days') > 32
         || !customer.name
         || !customer.phone_number
-        || !customer.email) {
+        || !customer.email
+        || !purpose) {
         res.status(400).end();
         return;
     }
@@ -89,7 +91,7 @@ router.post('/:venue_id/:product_id', (req, res) => {
             // debug => fast track to 200
             if (IS_DEBUG) {
                 venue.book_product(product_id, {
-                    start, end, customer,
+                    start, end, customer, purpose,
                     confirmed: false,
                     payment: {
                         token: 'abc',

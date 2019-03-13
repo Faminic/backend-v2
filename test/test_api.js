@@ -173,6 +173,7 @@ describe('Booking workflow', function() {
                     name: 'Anikan',
                     phone_number: '123',
                     email: 'anikan@tatooine.org',
+                    purpose: 'p',
                     start: momentToCalendarDate(s),
                     end:   momentToCalendarDate(e),
                 })
@@ -193,6 +194,7 @@ describe('Booking workflow', function() {
                     name: 'Anikan',
                     phone_number: '123',
                     email: 'anikan@tatooine.org',
+                    purpose: 'p',
                     start: momentToCalendarDate(start),
                     end:   momentToCalendarDate(end),
                 })
@@ -213,6 +215,7 @@ describe('Booking workflow', function() {
             assert.equal(r.customer.name, 'Anikan');
             assert.equal(r.customer.phone_number, '123');
             assert.equal(r.customer.email, 'anikan@tatooine.org');
+            assert.equal(r.purpose, 'p');
             assert(moment(r.start).isSame(start));
             assert(moment(r.end).isSame(end));
             // check that rooms are equal
@@ -243,6 +246,7 @@ describe('Booking workflow', function() {
                     name: 'Anikan',
                     phone_number: '123',
                     email: 'anikan@tatooine.org',
+                    purpose: 'p',
                     start: momentToCalendarDate(start),
                     end:   momentToCalendarDate(end),
                 })
@@ -272,6 +276,7 @@ describe('Booking workflow', function() {
                     name: 'Anikan',
                     phone_number: '123',
                     email: 'anikan@tatooine.org',
+                    purpose: 'p',
                     start: momentToCalendarDate(start),
                     end:   momentToCalendarDate(end),
                 })
@@ -281,9 +286,9 @@ describe('Booking workflow', function() {
         it('POST /api/booking/:venue/:product with invalid data', async function() {
             const invalid = [
                 [ 500, {name: 'Anikan'} ],
-                [ 500, {name: 'Anikan', email: 'abc@abc.org', phone_number: '12312'} ],
-                [ 400, {name: 'Anikan', email: 'abc@abc.org', phone_number: '12312', start: momentToCalendarDate(start), end: momentToCalendarDate(start) } ],
-                [ 400, {name: 'Anikan', email: 'abc@abc.org', phone_number: '12312', start: momentToCalendarDate(end), end: momentToCalendarDate(start) } ],
+                [ 500, {name: 'Anikan', purpose: 'badminton', email: 'abc@abc.org', phone_number: '12312'} ],
+                [ 400, {name: 'Anikan', purpose: 'badminton', email: 'abc@abc.org', phone_number: '12312', start: momentToCalendarDate(start), end: momentToCalendarDate(start) } ],
+                [ 400, {name: 'Anikan', purpose: 'badminton', email: 'abc@abc.org', phone_number: '12312', start: momentToCalendarDate(end), end: momentToCalendarDate(start) } ],
             ];
             for (var i = 0; i < invalid.length; i++) {
                 await request(app)

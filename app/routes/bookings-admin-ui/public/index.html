@@ -66,9 +66,9 @@ input {
 
 #reservations-table { border: 1px solid #000; border-collapse: collapse; margin: 1em 0; }
 #reservations-table th { border: 1px solid #000; background-color: #EEE; padding: 0.25em; }
-#reservations-table td { border: 1px solid #000; text-align: center; }
+#reservations-table td { border: 1px solid #000; text-align: center; padding: 0; }
 #reservations-table td ul { padding: 0; list-style-type: none; }
-#reservations-table .payment-id { max-width: 6em; border: 1px solid #000; padding: 0.25em 1em; }
+#reservations-table .payment-id { border: 1px solid #000; padding: 0.25em 1em; }
 
 .product-room      { width: 20em; height: 2em; }
 .product-room span { width: 15em; }
@@ -80,10 +80,25 @@ input {
 
 select { font: inherit; }
 option { font: inherit; }
+
+#modal {
+  display: none; position: fixed; width: 100%; height: 100%; z-index: 1;
+  left: 0; top: 0; overflow: auto; background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30em;
+}
   </style>
 </head>
 <body>
   <div>
+    <div id="modal"></div>
     <div id="sidebar"></div>
     <div id="content">Hello</div>
   </div>
@@ -214,10 +229,9 @@ option { font: inherit; }
     <table width="100%" id="reservations-table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Start</th>
-          <th>End</th>
+          <th>Details</th>
+          <th style="width:9em">Start</th>
+          <th style="width:9em">End</th>
           <th>Rooms</th>
           <th>Paypal ID</th>
           <th>&nbsp;</th>
@@ -230,24 +244,37 @@ option { font: inherit; }
     <button id="next-page">Next</button>
     <h4> Add a reservation</h4>
     <form id="add-reservation-form">
-        <input type="text" class="form-control" id="inputName" placeholder="Name" required></input>
-        <input type="text" class="form-control" id="inputPhone" placeholder="Phone" required></input>
-        <label form="type">Date</label>
-        <input class="input-group date" id="selectDate" type="date" required/>
-        <label>Start time</label>
-        <input type="time" id="selectTimeStart" required></select>
-        <label>End time </label>
-        <input type="time" id="selectTimeEnd" required></select>
-        <label for="force">Ignore clashes</label>
-        <input type="checkbox" id="force-booking" name="force">
-        <input type="submit" value="Add"/>
+      <b>Customer Details</b><br/>
+        <input type="text" class="form-control" id="inputName" placeholder="Name" required></input><br/>
+        <input type="text" class="form-control" id="inputPhone" placeholder="Phone"></input><br/>
+        <input type="text" class="form-control" id="inputEmail" placeholder="Email"></input><br/>
+        <input type="text" class="form-control" id="inputPurpose" placeholder="Purpose"></input>
+      <table>
+        <tr><td><b>Date</b></td><td><input class="input-group date" id="selectDate" type="date" required/></td></tr>
+        <tr><td><b>Start time</b></td><td><input type="time" id="selectTimeStart" required></select></td></tr>
+        <tr><td><b>End time </b></td><td><input type="time" id="selectTimeEnd" required></select></td></tr>
+      </table>
+      <input type="checkbox" id="force-booking" name="force">
+      <label for="force">Ignore clashes</label>
+      <br/>
+      <input type="submit" value="Add"/>
     </form>
+  </script>
+
+  <script id="reservation-details" type="x-tmpl-mustache">
+    <div class='reservation-details-modal modal-content'>
+      <table>
+        <tr><th>Name</th><td>{{ customer.name }}</td></tr>
+        <tr><th>Email</th><td>{{ customer.email }}</td></tr>
+        <tr><th>Phone</th><td>{{ customer.phone_number }}</td></tr>
+        <tr><th>Purpose</th><td>{{ purpose }}</td></tr>
+      </table>
+    </div>
   </script>
 
   <script id="reservation" type="x-tmpl-mustache">
     <tr>
-      <td>{{customer.name}}</td>
-      <td>{{customer.phone_number}}</td>
+      <td><button class='view-reservation-details'>View</button></td>
       <td>{{start}}</td>
       <td>{{end}}</td>
       <td>
@@ -259,7 +286,6 @@ option { font: inherit; }
       <td><button class="delete-reservation">Delete</button></td>
     </tr>
   </script>
-
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

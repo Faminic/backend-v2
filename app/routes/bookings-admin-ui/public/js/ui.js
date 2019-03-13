@@ -24,6 +24,7 @@ $.ajaxSetup({
 
 
 function reload_venues() {
+    var clicked = false;
     $.ajax('/booking-admin/venues', {
         method: 'GET',
         success: function(venues) {
@@ -32,13 +33,20 @@ function reload_venues() {
                 {venues: venues}
             ));
             $("#add-venue").click(function() {
+                if (clicked)
+                    return;
                 var name = window.prompt("New Venue Name");
+                if (!name || name.length === 0) {
+                    return;
+                }
+                clicked = true;
+                $('#add-venue').text('Creating venue...');
                 $.ajax('/booking-admin/venues/', {
                     method: 'POST',
                     data: JSON.stringify({name: name}),
                     success: function(venue) {
+                        $('#add-venue').text('Add Venue');
                         window.alert("Created venue!");
-                        console.log(venue);
                         window.location.hash = "#" + venue._id;
                         reload_venues();
                     },
@@ -115,12 +123,11 @@ function formatDate(date) {
         hour = date.getHours(),
         minute = date.getMinutes(),
         second = date.getSeconds(),
-        hourFormatted = hour % 12 || 12, // hour returned in 24 hour format
-        minuteFormatted = minute < 10 ? "0" + minute : minute,
-        morning = hour < 12 ? "am" : "pm";
+        hourFormatted = hour, // hour returned in 24 hour format
+        minuteFormatted = minute < 10 ? "0" + minute : minute;
 
     return month + "/" + day + "/" + year + " " + hourFormatted + ":" +
-            minuteFormatted + morning;
+            minuteFormatted;
 }
 
 
@@ -153,6 +160,11 @@ function setup_reservations(reservations, venue_id, product_id, page) {
             end:      formatDate(reservation.end),
         }));
 
+        $reservation.find('.view-reservation-details').click(function() {
+            $('#modal').html(Mustache.render($('#reservation-details').html(), reservation));
+            $('#modal').css('display', 'block');
+        });
+
         $reservation.find(".delete-reservation").click(function() {
             var reservations = obsReservations();
             reservations.splice(reservations.indexOf(reservation), 1);
@@ -178,11 +190,15 @@ function setup_reservations(reservations, venue_id, product_id, page) {
         $.ajax(url, {
             method: "POST",
             data: JSON.stringify({
-                customer: {name: $("#inputName").val(), phone_number: $("#inputPhone").val()},
+                customer: {
+                    name: $("#inputName").val(),
+                    phone_number: $("#inputPhone").val(),
+                    email: $("#inputEmail").val(),
+                },
+                purpose: $("#inputPurpose").val(),
                 start: $("#selectDate").val() + "T" + $("#selectTimeStart").val(), 
                 end: $("#selectDate").val() + "T" + $("#selectTimeEnd").val(), 
-                confirmed: true
-
+                confirmed: true,
             }),
             success: function(r) {
                 window.alert("Reservation added");
@@ -210,6 +226,17 @@ function setup_reservations(reservations, venue_id, product_id, page) {
 
     obsReservations(reservations);
 }
+
+
+// handle modals
+(function () {
+    var modal = $('#modal');
+    modal.click(function(ev) {
+        if (ev.target === this) {
+            modal.css('display', 'none');
+        }
+    });
+})();
 
 
 function render_room(room, obsProducts, obsRooms) {

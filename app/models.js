@@ -47,6 +47,7 @@ const reservationSchema = new mongoose.Schema({
     venue:      String, // venue name
     calendarId: String, // calendarId
     eventId:    String, // eventId
+    purpose:    String,
     rooms:      [{ id: String, name: String }],
     start:      Date,
     end:        Date,
@@ -124,13 +125,14 @@ venueSchema.methods.check_product = function(product_id, start, end) {
 };
 
 
-venueSchema.methods.book_product = function(product_id, {customer, payment, start, end, confirmed}) {
+venueSchema.methods.book_product = function(product_id, {customer, payment, purpose, start, end, confirmed}) {
     // Books the product_id with configuration config.
     //   product_id: String
     //   config: {
     //       start: moment
     //       end: moment
     //       confirmed: Boolean
+    //       purpose: String,
     //       customer: {
     //          name: String
     //          phone_number: String
@@ -148,6 +150,7 @@ venueSchema.methods.book_product = function(product_id, {customer, payment, star
         venue: this.name,
         calendarId: this.calendarId,
         rooms: prod.rooms.map(room_id => this.get_room(room_id)),
+        purpose,
         customer,
         payment,
         start: start.toDate(),
