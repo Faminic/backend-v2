@@ -1,19 +1,26 @@
 # PVCC website - User Manual
-# General
-## Activities
+
+# Website Features
+
+## Booking
+
+### Facilities
+Most facilities are bookable online. This is further explained in the "Venues" section under "Administrator". When a user navigates to the PVCC booking form, they will have to enter their full name, phone number and email. Then they will need to select a facility, after which they can select a specific room and choose a duration, specifying how long the user wishes to use the facility. Choosing a duration will automatically generate and display to the user the cost to use their chosen facility for the chosen duration. The user then chooses a date, after which a list of available times based on their chosen duration and date will be automatically generated for them. Finally, the user has to tick the checkbox to consent to PVCC storing their email address and phone number in case they need to contact the user.
+
+After submitting, the user is taken to the paypal website where they follow the respective steps to confirm the payment. After the payment has been successfully confirmed, the user is redirected to PVCC's website with a message telling them their payment is confirmed and highlights some booking details.
+
+The user also has the option to cancel their payment from the paypal site, after which they are redirected back to PVCC's website with a message telling them their payment was cancelled.
+
+### Activities
 Activities (e.g. Fast Feet Football Academy) are not bookable online. 
 To make an enquiry about an activity, a user can email PVCC via the 
 Contact-Us page.
-
-## Facilities
-Most facilities are bookable online. When a user navigates to the PVCC booking form, they
-will be able to select a facility, duration and date, and a list of available times will 
-automatically be generated for them.
 
 The user can then select a time and pay for their booking via Paypal. When the payment has been confirmed, 
 they receive a payment summary, and a reservation will be created in the PVCC database. PVCC receives an email with the booking details, including name, phone number and the Paypal payment ID.
 
 # Administrator
+
 ## Editing Basic Content
 Basic (static) content can be edited via the **main admin page**.
 
