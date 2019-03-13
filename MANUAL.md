@@ -17,26 +17,30 @@ The user then chooses a date, after which a list of available times based on the
   <img src="user_manual_images/consent.png" height="600">
 </p>
 
-After submitting, the user is taken to the paypal website where they follow the respective steps to confirm the payment. 
+After submitting, the user is taken to the PayPal website where they follow the respective steps to confirm the payment. 
 After the payment has been successfully confirmed, the user is redirected to PVCC's website with a message telling them their payment is confirmed and highlights some booking details.
 
 <p align="center">
   <img src="user_manual_images/payment_successful.PNG" height="600">
 </p>
 
-The user also has the option to cancel their payment from the paypal site, after which they are redirected back to PVCC's website with a message telling them their payment was cancelled.
+The user also has the option to cancel their payment from the PayPal site, after which they are redirected back to PVCC's website.
 
 <p align="center">
-  <img src="user_manual_images/cancel.png" width="500">
+  <img src="user_manual_images/cancel.png" width="700">
 </p>
+
+The user is redirected to this webpage, telling them their payment has been cancelled.
+
 <p align="center">
-  <img src="user_manual_images/cancel_redirect.PNG" width="500">
+  <img src="user_manual_images/cancel_redirect.PNG" width="800">
 </p>
 
 When the payment is successful, PVCC receives an email with the booking details, including name, phone number and the Paypal payment ID of the user.
 
-**Insert Image Here**
-
+<p align="center">
+  <img src="user_manual_images/email.PNG" width="800">
+</p>
 
 ### Activities
 Activities (e.g. Fast Feet Football Academy) are not bookable online. To make an enquiry about an activity, a user can email PVCC via the Contact-Us page, which is linked in the booking form.
@@ -116,9 +120,9 @@ When adding a reservation, it is possible that the time you select for it clashe
 # FAQ
 **How do I issue a refund to a customer?**
 
-Payments can be refunded on the Paypal website. To refund a payment, the payment ID is required. 
+Payments can be refunded on the PayPal website. To refund a payment, the payment ID is required. 
 
-You can find this from the booking-admin page. Select the venue, view the list of reservations for the product booked, and look for the reservation you need to refund, which contains the payment ID. Once the refund has been made, delete the reservation.
+You can find this from the booking-admin page. Select the venue, view the list of reservations for the product booked, and look for the reservation you need to refund, which contains the PayPal ID. Clicking on the PayPal ID once will automatically copy it for you and you can easily paste it when needed in PayPal. Once the refund has been made, delete the reservation.
 
 <p align="center">
   <img src="user_manual_images/paypalID.png" width="800">
