@@ -149,6 +149,7 @@ $(document).ready(function(){
     $.post("/api/booking/" + currentVenue._id + "/" + currentProduct.id, {
       "start":startDate,
       "end":endDate,
+      "purpose": $("#inputPurpose").val(),
       "name":$("#inputName").val(),
       "phone_number":$("#inputPhone").val(),
       "email":$("#inputEmail").val(),
@@ -172,6 +173,7 @@ function saveToLocalStorage() {
     localStorage.setItem('book-now.name',     $('#inputName').val());
     localStorage.setItem('book-now.phone',    $('#inputPhone').val());
     localStorage.setItem('book-now.email',    $('#inputEmail').val());
+    localStorage.setItem('book-now.purpose',  $('#inputPurpose').val());
     localStorage.setItem('book-now.venue',    currentVenue._id);
     localStorage.setItem('book-now.product',  currentProduct.id);
     localStorage.setItem('book-now.date',     $('#selectDate').val());
@@ -182,6 +184,7 @@ function loadFromLocalStorage() {
     var name     = localStorage.getItem('book-now.name');
     var phone    = localStorage.getItem('book-now.phone');
     var email    = localStorage.getItem('book-now.email');
+    var purpose  = localStorage.getItem('book-now.purpose');
     var venue    = localStorage.getItem('book-now.venue');
     var product  = localStorage.getItem('book-now.product');
     var date     = localStorage.getItem('book-now.date');
@@ -189,6 +192,7 @@ function loadFromLocalStorage() {
     if (name && name.length > 0)  $('#inputName').val(name);
     if (phone && phone.length > 0) $('#inputPhone').val(phone);
     if (email && email.length > 0) $('#inputEmail').val(email);
+    if (purpose && purpose.length > 0) $('#inputPurpose').val(purpose);
     if (venue && venue.length > 0) {
         $('#selectVenue').val(venue);
         change_venue();

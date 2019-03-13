@@ -154,6 +154,7 @@ protected.post('/venue/:id/:product_id/reservations', (req, res) => {
             return venue.book_product(req.params.product_id, {
                 customer:  req.body.customer,
                 payment:   req.body.payment,
+                purpose:   req.body.purpose,
                 start:     start,
                 end:       end,
                 confirmed: true,
