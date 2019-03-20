@@ -88,16 +88,20 @@ function make_conflict_query(s_, e_) {
     //        s'    e'
     //  |----|       |-------|
     //  s'   e'     s'       e'
+    //  |--------------------|
+    //  s'                   e'
     //
     // 3 cases to handle:
     //   (1) overlap     s <= s' and e' <= e
     //   (2) clip left   s' < s < e'
     //   (3) clip right  s' < e < e'
+    //   (4) engulfed    s' <= s and e <= e'
     return {
         $or: [
             /* (1) */ { start: { $lte: s_ }, end: { $gte: e_ }, },
             /* (2) */ { start: { $gt: s_, $lt: e_ } },
             /* (3) */ { end:   { $gt: s_, $lt: e_ } },
+            /* (4) */ { start: { $gte: s_ }, end: { $lte: e_ }, },
         ]
     };
 }
